@@ -1,0 +1,17 @@
+{
+  "name": "piano-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "/lib/main/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotstar": "^1.0.0",
+    "easymidi": "^1.0.3",
+    "node-gyp": "^5.0.7",
+    "pi-spi": "^1.2.1"
+  }
+}
