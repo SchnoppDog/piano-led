@@ -1,0 +1,2 @@
+module.exports.port = port_number
+module.exports.ipPi = "IP-Adress"

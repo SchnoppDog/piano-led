@@ -1,1 +1,5 @@
 node_modules
+configs/mainConfig.js
+lib/old_expModules/runScript.js
+lib/old_expModules/existPiano.js
+lib/test

@@ -1,0 +1,52 @@
+<html>
+    <body>
+        <h3>
+            Preset Colors
+        </h3>
+        <hr />
+        <form action="/colorPageDefine" method="POST">
+            <input type="submit" value="Red" name="buttonRed"/>
+        </form>
+        <form action="/colorPageDefine" method="POST">
+            <input type="submit" value="Green" name="buttonGreen"/>
+        </form>
+        <form action="/colorPageDefine" method="POST">
+            <input type="submit" value="Blue" name="buttonBlue"/>
+        </form>
+        <form action="/colorPageDefine" method="POST">
+            <input type="submit" value="Orange" name="buttonOrange"/>
+        </form>
+        <form action="/colorPageDefine" method="POST">
+            <input type="submit" value="Purple" name="buttonPurple"/>
+        </form>
+        <form action="/colorPageDefine" method="POST">
+            <input type="submit" value="Cyan" name="buttonCyan"/>
+        </form>
+        <form action="/colorPageDefine" method="POST">
+            <input type="submit" value="Yellow" name="buttonYellow"/>
+        </form>
+        <form action="/colorPageDefine" method="POST">
+            <input type="submit" value="LED Off" name="buttonOff"/>
+        </form>
+        <form action="/colorPageDefine" method="POST">
+            <input type="submit" value="Default" name="buttonDefault"/>
+        </form>
+        <hr />
+        <h3>
+            Define your own Color
+        </h3>
+        <hr />
+        <form action="/colorPageDefine" method="POST">
+            <input placeholder="Red-Value" name="inputRed"/>
+            <input placeholder="Green-Value" name="inputGreen"/>
+            <input placeholder="Blue-Value" name="inputBlue"/>
+            <button>Submit</button>
+        </form>
+        <p id="colorPressed"></p>
+        <script>
+            function buttonPressed() {
+                document.getElementById("colorPressed").innerHTML = "Color Send"
+            }
+        </script>
+    </body>
+</html>
