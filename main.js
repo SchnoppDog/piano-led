@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const colorApp = express()
 const colorAppConfig = require('../piano-project/configs/mainConfig')
 
+//Default Values if Script fails or has to restart
 let red = 128
 let green = 128
 let blue = 128
@@ -14,7 +15,7 @@ const alpha = 0.5
 
 colorApp.use(bodyParser.urlencoded({extended: false}))
 colorApp.use(morgan('short'))
-colorApp.use(express.static('./lib/sites'))
+colorApp.use(express.static('./lib/sites'))     //to access the html files in it. Can be named anything you like
 
 colorApp.post("/colorPageDefine", (req,res) => {
     console.log("Accessed colorPageDefine")
