@@ -1,5 +1,6 @@
 const pianoMidi = require('easymidi')
 const usbDetect = require('usb-detection')
+const convert = require('color-convert')
 const ledStrip  = require('../piano-project/lib/expModules/lightStrip.js')
 const express = require('express')
 const morgan = require('morgan')
@@ -55,12 +56,19 @@ colorApp.post("/colorPageDefine", (req,res) => {
         red = 100
         green = 100
         blue = 100
-    } else if(req.body.inputRed) {
-        red = req.body.inputRed
-    } else if (req.body.inputGreen) {
-        green = req.body.inputGreen
-    } else if(req.body.inputBlue) {
-        blue = req.body.inputBlue
+    } else if(req.body.favColor) {
+        colorArray = convert.hex.rgb(`${req.body.favColor}`)
+        red = colorArray[0]
+        green = colorArray[1]
+        blue = colorArray[2]
+
+        if(red > 255) {
+            res.send("<p>Color Value is too big! Please reconsider!</p>")
+        } else if(green > 255) {
+            res.send("<p>Color Value is too big! Please reconsider!</p>")
+        } else if(blue > 255) {
+            res.send("<p>Color Value is too big! Please reconsider!</p>")
+        }
     }
     res.redirect(`http://${colorAppConfig.ipPi}:${colorAppConfig.port}/colorPage.html`)
 })

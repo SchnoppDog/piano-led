@@ -9,10 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "color-convert": "^2.0.1",
     "dotstar": "^1.0.0",
     "easymidi": "^1.0.3",
+    "express": "^4.17.1",
     "forever": "^1.0.0",
     "fs": "0.0.1-security",
+    "morgan": "^1.9.1",
     "node-cron": "^2.0.3",
     "node-gyp": "^5.0.7",
     "pi-spi": "^1.2.1",
