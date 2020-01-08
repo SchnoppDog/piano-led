@@ -1,25 +1,21 @@
 {
-  "name": "piano-project",
-  "version": "1.0.0",
-  "description": "",
-  "main": "/lib/main/index.js",
+  "name": "piano-led-visualizer",
+  "version": "1.0.2",
+  "description": "With this project you can make your own piano lighten up!",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Jannik Meyer",
+  "license": "MIT",
   "dependencies": {
     "color-convert": "^2.0.1",
     "dotstar": "^1.0.0",
     "easymidi": "^1.0.3",
     "express": "^4.17.1",
-    "forever": "^1.0.0",
-    "fs": "0.0.1-security",
     "morgan": "^1.9.1",
-    "node-cron": "^2.0.3",
     "node-gyp": "^5.0.7",
     "pi-spi": "^1.2.1",
-    "usb": "^1.6.2",
     "usb-detection": "^4.7.0"
   }
 }

@@ -1,4 +1,5 @@
 node_modules
+package-lock.json
 configs/mainConfig.js
 lib/old_expModules/runScript.js
 lib/old_expModules/existPiano.js
