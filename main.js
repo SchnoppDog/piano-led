@@ -20,56 +20,10 @@ colorApp.use(express.static('./lib/sites'))     //to access the html files in it
 
 colorApp.post("/colorPageDefine", (req,res) => {
     console.log("Accessed colorPageDefine")
-    if(req.body.buttonRed) {
-        red = 100
-        green = 0
-        blue = 0
-    } else if(req.body.buttonGreen) {
-        red = 0
-        green = 100
-        blue = 0
-    } else if(req.body.buttonBlue) {
-        red = 0
-        green = 0
-        blue = 100
-    } else if(req.body.buttonOrange) {
-        red = 255
-        green = 128
-        blue = 0
-    } else if(req.body.buttonPurple) {
-        red = 100
-        green = 0
-        blue = 100
-    } else if(req.body.buttonCyan) {
-        red = 0
-        green = 100
-        blue = 100
-    } else if(req.body.buttonYellow) {
-        red = 100
-        green = 100
-        blue = 0
-    } else if(req.body.buttonOff) {
-        red = 0
-        green = 0
-        blue = 0
-    } else if(req.body.buttonDefault) {
-        red = 100
-        green = 100
-        blue = 100
-    } else if(req.body.favColor) {
-        colorArray = convert.hex.rgb(`${req.body.favColor}`)
+        colorArray = convert.hex.rgb(`${req.body.color}`)
         red = colorArray[0]
         green = colorArray[1]
         blue = colorArray[2]
-
-        if(red > 255) {
-            res.send("<p>Color Value is too big! Please reconsider!</p>")
-        } else if(green > 255) {
-            res.send("<p>Color Value is too big! Please reconsider!</p>")
-        } else if(blue > 255) {
-            res.send("<p>Color Value is too big! Please reconsider!</p>")
-        }
-    }
     res.redirect(`http://${colorAppConfig.ipPi}:${colorAppConfig.port}/colorPage.html`)
 })
 
