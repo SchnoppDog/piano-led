@@ -1,6 +1,6 @@
 node_modules
 package-lock.json
-configs/mainConfig.js
-lib/old_expModules/runScript.js
-lib/old_expModules/existPiano.js
-lib/test
+backend/config.js
+backend/lib/old_expModules/runScript.js
+backend/lib/old_expModules/existPiano.js
+backend/lib/test

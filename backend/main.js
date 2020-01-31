@@ -1,12 +1,11 @@
 const pianoMidi = require('easymidi')
 const usbDetect = require('usb-detection')
 const convert = require('color-convert')
-const ledStrip  = require('../piano-project/lib/expModules/lightStrip.js')
+const ledStrip  = require('../backend/lib/expModules/lightStrip.js')
 const express = require('express')
-const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const colorApp = express()
-const colorAppConfig = require('../piano-project/configs/mainConfig')
+const colorAppConfig = require('../backend/config')
 
 //Default Values if Script fails or has to restart
 let red = 128
@@ -15,7 +14,6 @@ let blue = 128
 const alpha = 0.5
 
 colorApp.use(bodyParser.urlencoded({extended: false}))
-colorApp.use(morgan('short'))
 colorApp.use(express.static('./lib/sites'))     //to access the html files in it. Can be named anything you like
 
 colorApp.post("/colorPageDefine", (req,res) => {
