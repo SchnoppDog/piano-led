@@ -1,58 +1,62 @@
 <! DOCTYPE html>
-<html>
+<html lang="de">
     <head>
         <title>Color Define!</title>
         <link rel="stylesheet" href="css/style.css">
+        <link rel="icon" type="image/png" href="img/favicon.png">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
         
     </head>
     <body>
-        <h3>
-            Preset Colors
-        </h3>
-        <hr />
-        <form action="/colorPageDefine" method="POST">
-            <button id="btnRed" type="submit" value="#800000" name="color">Red</button>
-        </form>
-        <form action="/colorPageDefine" method="POST">
-            <button id="btnGreen" type="submit" value="#008000" name="color">Green</button>
-        </form>
-        <form action="/colorPageDefine" method="POST">
-            <button id="btnBlue" type="submit" value="#000080" name="color">Blue</button>
-        </form>
-        <form action="/colorPageDefine" method="POST">
-            <button id="btnOrange" type="submit" value="#ff6600" name="color">Orange</button>
-        </form>
-        <form action="/colorPageDefine" method="POST">
-            <button id="btnPurple" type="submit" value="#800080" name="color">Purple</button>
-        </form>
-        <form action="/colorPageDefine" method="POST">
-            <button id="btnCyan" type="submit" value="#00ffff" name="color">Cyan</button>
-        </form>
-        <form action="/colorPageDefine" method="POST">
-            <button id="btnYellow" type="submit" value="#ffff00" name="color">Yellow</button>
-        </form>
-        <form action="/colorPageDefine" method="POST">
-            <button id="btnOff" type="submit" value="#000000" name="color">LED Off</button>
-        </form>
-        <form action="/colorPageDefine" method="POST">
-            <button id="btnDefault" type="submit" value="#808080" name="color">Default</button>
-        </form>
-        <hr />
-        <h3>
-            Define your own Color
-        </h3>
-        <hr />
-        <form action="/colorPageDefine" method="POST">
-            Select your favorite color: <input type="color" name="color" value="#ffffff"/><br />
-            <button>Submit</button>
-        </form>
-        <p id="colorPressed"></p>
-        <script>
-            function buttonPressed() {
-                document.getElementById("colorPressed").innerHTML = "Color Send"
-            }
-        </script>
+        <header>
+            <img src="img/header.jpg">
+            <h1>Piano-LED-Strip Functions</h1>
+        </header>
+        <section>
+            <div class="window">
+                <h3>Preset Colors</h3>
+                <hr />
+                <form action="/colorPageDefine" method="POST">
+                    <button id="btnRed" type="submit" value="#800000" name="color">Red</button>
+                
+               
+                    <button id="btnGreen" type="submit" value="#008000" name="color">Green</button>
+                
+               
+                    <button id="btnBlue" type="submit" value="#000080" name="color">Blue</button>
+              
+                
+                    <button id="btnOrange" type="submit" value="#ff6600" name="color">Orange</button>
+                
+                
+                    <button id="btnPurple" type="submit" value="#800080" name="color">Purple</button>
+                
+             
+                    <button id="btnCyan" type="submit" value="#00ffff" name="color">Cyan</button>
+               
+                
+                    <button id="btnYellow" type="submit" value="#ffff00" name="color">Yellow</button>
+                
+               
+                    <button id="btnOff" type="submit" value="#000000" name="color">LED Off</button>
+             
+                    <button id="btnDefault" type="submit" value="#808080" name="color">Default</button>
+                </form>
+            </div>
+            <div class="window">
+                <h3>Define your own Color!</h3>
+                <hr />
+                <form action="/colorPageDefine" method="POST">
+                <p>Select your favorite color: 
+                <input type="color" name="color" value="#ffffff"/><br />
+                </p>
+                <button type="submit">Submit</button>
+            </form>
+            </div>
+        </section>
+        <footer>
+            <h2>More coming soon!</h2>
+        </footer>
     </body>
 </html>

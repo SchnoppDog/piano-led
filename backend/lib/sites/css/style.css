@@ -1,3 +1,77 @@
+body {
+	font-family: times;
+	
+}
+
+header {
+	text-align: center;
+	background-color: rgb(5,149,252);
+	border-radius: 5px;
+	border-bottom: 5px solid blue;
+	padding: 1px;
+	margin: 0px;
+	overflow: hidden;
+}
+
+section {
+	background-color: rgb(161,215,255);
+	padding: 1px;
+	border-radius: 5px;
+	margin: 0px;
+	height: auto;
+}
+
+footer {
+	text-align: center;
+	background-color: rgb(5,149,252);
+	border-radius: 5px;
+	border-top: 5px solid blue;
+	padding: 1px;
+	margin: 0px;
+}
+
+h1,h2,h3 {
+	font-family: times;
+	color: white;
+	text-shadow: 0px 0px 5px black;
+}
+
+p {
+	font-size: 24px;
+}
+
+input[type=color] {
+	background-color: silver;
+	height: 30px;
+	width: 65px;
+	border-radius: 5px;
+}
+
+input[type=color]:hover {
+	background-color: lime;
+}
+
+.window {
+	width: 33%;
+	height: auto;
+	margin: 0px;
+	padding: 2px;
+	/*border: 2px solid blue;*/
+	display: inline-block;
+	vertical-align: top;
+}
+
+form {
+	margin: 0px;
+	padding: 2px;
+}
+
+hr {
+	width: auto;
+	height: 2px;
+	background-color: blue;
+}
+
 button {
 	font-size: 20px;
 	border-radius: 10px;
@@ -5,6 +79,13 @@ button {
 	height: 40px;
 	padding: 5px;
 	overflow: hidden;
+	margin: 3px;
+	cursor: pointer;
+}
+
+button[type=submit]:hover {
+	background-color: rgb(3,255,120);
+	color: red;
 }
 
 button:active {
@@ -36,12 +117,12 @@ button:active {
 
 #btnBlue {
 	background-color: rgb(0,0,255);
-	color: rgb(0,0,127);
+	color: rgb(128,128,128);
 }
 
 #btnBlue:hover {
 	background-color: rgb(0,0,127);
-	color: rgb(0,0,255);
+	color: rgb(255,255,255);
 }
 
 #btnOrange {
