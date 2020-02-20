@@ -14,7 +14,7 @@ let blue = 128
 const alpha = 0.5
 
 colorApp.use(bodyParser.urlencoded({extended: false}))
-colorApp.use(express.static('./lib/sites'))     //to access the html files in it. Can be named anything you like
+colorApp.use(express.static(colorAppConfig.html.public))     //to access the html files in it. Can be named anything you like
 
 colorApp.post("/colorPageDefine", (req,res) => {
     console.log("Accessed colorPageDefine")
@@ -22,7 +22,12 @@ colorApp.post("/colorPageDefine", (req,res) => {
         red = colorArray[0]
         green = colorArray[1]
         blue = colorArray[2]
-    res.redirect(`http://${colorAppConfig.ipPi}:${colorAppConfig.port}/colorPage.html`)
+    res.redirect(`http://${colorAppConfig.server.ipPi}:${colorAppConfig.server.port}/colorPage`)
+    res.end()
+})
+
+colorApp.get("/colorPage", (req, res) => {
+    res.sendFile(`${config.html.views}/colorPage.html`)
 })
 
 usbDetect.startMonitoring()
@@ -45,4 +50,4 @@ usbDetect.on('add',(device) => {
     }
 })
 
-colorApp.listen(colorAppConfig.port, "0.0.0.0")
+colorApp.listen(colorAppConfig.server.port, "0.0.0.0")

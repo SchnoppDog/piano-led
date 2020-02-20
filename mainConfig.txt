@@ -1,2 +1,11 @@
-module.exports.port = port_number
-module.exports.ipPi = "IP-Adress"
+config 							= {}
+
+config.html						= {}
+config.html.public				= `${__dirname}/../frontend/public`
+config.html.views				= `${__dirname}/views`
+
+config.server 					= {}
+config.server.port				= port
+config.server.ipPi				= "pi-ip"
+
+module.exports					= config
