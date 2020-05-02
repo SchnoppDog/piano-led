@@ -1,0 +1,9 @@
+.border-hd {
+    border-bottom: 5px solid blue;
+}
+
+.border-ft {
+    color: white;
+    border-top: 5px solid blue;
+    background-color: #0595FC;
+}

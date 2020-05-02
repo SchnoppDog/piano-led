@@ -30,6 +30,14 @@ colorApp.get("/colorPage", (req, res) => {
     res.sendFile(`${config.html.views}/colorPage.html`)
 })
 
+colorApp.get("/testColorPage", (req, res) => {
+    res.sendFile(`${config.html.views}/testColorPage.html`)
+})
+
+colorApp.get("/testButton/:colorValue", (req, res) => {
+    
+})
+
 usbDetect.startMonitoring()
 usbDetect.on('add',(device) => { 
     if(device.deviceName === "Digital_Piano") {
