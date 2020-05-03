@@ -34,6 +34,14 @@ colorApp.get("/testColorPage", (req, res) => {
     res.sendFile(`${config.html.views}/testColorPage.html`)
 })
 
+colorApp.get("/setColor/:colorValue", async (req, res) => {
+    const colorValue = req.params.colorValue
+    const arrayRGB   = convert.hex.rgb(colorValue)
+
+    console.log(arrayRGB)
+    res.json({ status_code: "Set Color!"})
+})
+
 colorApp.get("/testButton/:colorValue", (req, res) => {
     
 })
