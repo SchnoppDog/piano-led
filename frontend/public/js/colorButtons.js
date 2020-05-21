@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    generateColorButtons()
+    buildColorButtons()
 
     const colorButtons = document.getElementsByClassName("colorButtonsClass")
 
@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 })
 
-function generateColorButtons() {
+function buildColorButtons() {
     const colorButtonsName = ["Red","Green","Blue","Orange","Purple","Cyan","Yellow","LEDs Off","Default"]
     const colorCodes       = ["#800000","#008000","#000080","#ff6600","#800080","#008888","#ffff00","#000000","#808080"]
     const bgColors         = ["#880000","#008800","#000088","#ff6600","#880088","#00ffff","#ffff00","#000000","#ffffff"]
@@ -31,12 +31,35 @@ function generateColorButtons() {
 }
 
 async function setColor(event) {
-    let splitHashtag     = event.target.value
+    const showAlertId = document.getElementById('show-alert')
+    let splitHashtag = event.target.value
     if(splitHashtag === undefined) {
     } else {
         let buttonColorValue = splitHashtag.split("#")[1]
         console.log(buttonColorValue)
-        let res              = await fetch(`/setColor/${buttonColorValue}`)
-        // let statusCode       = res.json()
+        let statusMessage = await fetch(`/setColor?colorValue=${buttonColorValue}`, {
+            method: 'post'
+        }).then((response) => {
+            return response.json()
+        })
+        
+        if(statusMessage.statusCode === 200) {
+            const alertSuccess = document.createElement("div")
+            alertSuccess.setAttribute("class", "alert alert-success alert-dismissible show fade mx-auto alert-sd")
+            alertSuccess.setAttribute("role", "alert")
+            alertSuccess.setAttribute("id", "alertSuccess")
+            alertSuccess.textContent = statusMessage.message
+            showAlertId.appendChild(alertSuccess)
+        } else {
+            const alertWarning = document.createElement("div")
+            alertWarning.setAttribute("class", "alert alert-warning alert-dismissible show fade mx-auto alert-sd")
+            alertWarning.setAttribute("role", "alert")
+            alertWarning.textContent = statusMessage.message
+            showAlertId.appendChild(alertWarning)
+        }
+        const targetAlerts = document.getElementsByClassName("alert-sd")
+        setTimeout(() => {
+            $(targetAlerts).fadeOut()
+        }, 3000)
     }
 }
