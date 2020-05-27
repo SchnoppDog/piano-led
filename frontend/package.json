@@ -1,0 +1,15 @@
+{
+  "name": "frontend_piano",
+  "version": "1.0.2",
+  "description": "Frontend-Content for LED-Piano",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "a-color-picker": "^1.2.1",
+    "vanilla-picker": "^2.10.1"
+  }
+}

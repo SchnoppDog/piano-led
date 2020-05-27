@@ -1,0 +1,65 @@
+<! DOCTYPE html>
+<html lang="de">
+    <head>
+        <title>Color Define!</title>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="icon" type="image/png" href="img/favicon.png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        
+    </head>
+    <body>
+        <header>
+            <img src="img/header.jpg">
+            <h1>Piano-LED-Strip Functions</h1>
+        </header>
+        <section>
+            <div class="window">
+                <h3>Preset Colors</h3>
+                <hr />
+                <form action="/colorPageDefine" method="POST">
+                    <button id="btnRed" type="submit" value="#800000" name="color">Red</button>
+                
+               
+                    <button id="btnGreen" type="submit" value="#008000" name="color">Green</button>
+                
+               
+                    <button id="btnBlue" type="submit" value="#000080" name="color">Blue</button>
+              
+                
+                    <button id="btnOrange" type="submit" value="#ff6600" name="color">Orange</button>
+                
+                
+                    <button id="btnPurple" type="submit" value="#800080" name="color">Purple</button>
+                
+             
+                    <button id="btnCyan" type="submit" value="#00ffff" name="color">Cyan</button>
+               
+                
+                    <button id="btnYellow" type="submit" value="#ffff00" name="color">Yellow</button>
+                
+               
+                    <button id="btnOff" type="submit" value="#000000" name="color">LED Off</button>
+             
+                    <button id="btnDefault" type="submit" value="#808080" name="color">Default</button>
+                </form>
+            </div>
+            <div class="window">
+                <h3>Define your own Color!</h3>
+                <hr />
+                <form action="/colorPageDefine" method="POST">
+                <p>Select your favorite color: 
+                <input type="color" name="color" value="#ffffff"/><br />
+                </p>
+                <button type="submit">Submit</button>
+            </form>
+            </div>
+        </section>
+        <footer>
+            <h2>More coming soon!</h2>
+        </footer>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</html>

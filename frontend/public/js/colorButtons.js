@@ -37,7 +37,7 @@ async function setColor(event) {
     } else {
         let buttonColorValue = splitHashtag.split("#")[1]
         console.log(buttonColorValue)
-        let statusMessage = await fetch(`/setColor?colorValue=${buttonColorValue}`, {
+        let statusMessage = await fetch(`/set-color?colorValue=${buttonColorValue}`, {
             method: 'post'
         }).then((response) => {
             return response.json()

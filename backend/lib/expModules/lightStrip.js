@@ -33,20 +33,67 @@ exports.lightOn = function(keyNote,r,g,b,a) {
 }
 
 //same goes for lightOff the LEDs for each key
-exports.lightOff = function(keyNote) {
+exports.lightOff = function(keyNote, options) {
+  let r,g,b,a
+  let durationTime
+    if(options) {
+      if(options.isFreeze === 'true') {
+        r        = options.freezeOpts.rgba.red
+        g        = options.freezeOpts.rgba.green
+        b        = options.freezeOpts.rgba.blue
+        a        = options.freezeOpts.rgba.alpha
+        durationTime = options.freezeOpts.duration
+        freeze   = true
+      } else {
+        freeze = false
+        durationTime = 0
+      }
+    }
+
     const ledNum1 = keyNote - keyLed1 + (keyNote - keyLed2)
     const ledNum2 = keyNote - keyLed1 + (keyNote - keyLed1)
     if(keyNote >= firstRangeKey && keyNote <= lastRangeKey) {
       if(ledNum1 === -1) {
-        strip.set(ledNum2,0,0,0,0)
-        strip.sync()
-      } else if(ledNum2 === 144) {
-          strip.set(ledNum1,0,0,0,0)
+        if(freeze) {
+          strip.set(ledNum2,r,g,b,a)
+          setTimeout(() => {
+            strip.set(ledNum2,0,0,0,0)
+            strip.sync()
+          }, durationTime)
+          strip.set(ledNum2,0,0,0,0)
           strip.sync()
+        } else {
+          strip.set(ledNum2,0,0,0,0)
+          strip.sync()
+        }
+      } else if(ledNum2 === 144) {
+        if(freeze) {
+          strip.set(ledNum2,r,g,b,a)
+          setTimeout(() => {
+            strip.set(ledNum2,0,0,0,0)
+            strip.sync()
+          }, durationTime)
+          strip.set(ledNum2,0,0,0,0)
+          strip.sync()
+        } else {
+          strip.set(ledNum2,0,0,0,0)
+          strip.sync()
+        }
       } else {
+        if(freeze) {
+          strip.set(ledNum1,r,g,b,a)
+          strip.set(ledNum2,r,g,b,a)
+          strip.sync()
+          setTimeout(() => {
+            strip.set(ledNum1,0,0,0,0)
+            strip.set(ledNum2,0,0,0,0)
+            strip.sync()
+          }, durationTime)
+        } else {
           strip.set(ledNum1,0,0,0,0)
           strip.set(ledNum2,0,0,0,0)
           strip.sync()
+        }
       }
     }
 }
