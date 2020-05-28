@@ -3,4 +3,11 @@ package-lock.json
 backend/config.js
 backend/lib/old_expModules/runScript.js
 backend/lib/old_expModules/existPiano.js
-backend/lib/test
+backend/lib/test/inputs
+backend/lib/test/polyAftertouch
+backend/lib/test/rainbowStrip
+backend/views/colorPage_old.html
+frontend/node_modules
+frontend/package.json
+frontend/package-lock.json
+frontend/public/js/colorPicker.js

@@ -1,3 +1,4 @@
+//Generating new colors every key-press
 function _getRandomColor() {
     let round       = Math.round
     let random      = Math.random

@@ -1,3 +1,5 @@
+//Making a post to set the random-color
+//Different response-cases are shown in different ways
 async function randomColor() {
     let res = await fetch(`/random-color`, {
         method: 'post'
@@ -26,6 +28,7 @@ async function randomColor() {
     }, 3000)
 }
 
+//Set the css-style and behaviour of the random-color-button
 function randomColorButton() {
     let buttonId = document.getElementById("randomColor")
     let r,g,b
@@ -55,6 +58,8 @@ function randomColorButton() {
     buttonId.appendChild(style)
 }
 
+//Setting and deactivating the freeze-option
+//Ads a response-handler
 async function keyFreeze(event) {
     const showAlertId = document.getElementById('key-freeze-alert')
     let isFreeze

@@ -33,9 +33,11 @@ exports.lightOn = function(keyNote,r,g,b,a) {
 }
 
 //same goes for lightOff the LEDs for each key
+//if freezeoption is set the pressed keys stay lit after given time has passed
 exports.lightOff = function(keyNote, options) {
   let r,g,b,a
   let durationTime
+  console.log("before if: ", options.freezeOpts.duration)
     if(options) {
       if(options.isFreeze === 'true') {
         r        = options.freezeOpts.rgba.red
@@ -44,12 +46,14 @@ exports.lightOff = function(keyNote, options) {
         a        = options.freezeOpts.rgba.alpha
         durationTime = options.freezeOpts.duration
         freeze   = true
+        console.log("inside if: ", options.freezeOpts.duration)
       } else {
         freeze = false
         durationTime = 0
       }
     }
-
+    console.log("after if: ", options.freezeOpts.duration)
+    console.log("durationTime: ", durationTime)
     const ledNum1 = keyNote - keyLed1 + (keyNote - keyLed2)
     const ledNum2 = keyNote - keyLed1 + (keyNote - keyLed1)
     if(keyNote >= firstRangeKey && keyNote <= lastRangeKey) {

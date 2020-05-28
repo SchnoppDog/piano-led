@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 })
 
+//Function for generating each preset-color-button
 function buildColorButtons() {
     const colorButtonsName = ["Red","Green","Blue","Orange","Purple","Cyan","Yellow","LEDs Off","Default"]
     const colorCodes       = ["#800000","#008000","#000080","#ff6600","#800080","#008888","#ffff00","#000000","#808080"]
@@ -30,6 +31,8 @@ function buildColorButtons() {
     }
 }
 
+//function for setting each color with a post-request
+//added response handler for user note
 async function setColor(event) {
     const showAlertId = document.getElementById('show-alert')
     let splitHashtag = event.target.value
