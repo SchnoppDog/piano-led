@@ -4,7 +4,7 @@ This is a selfmade project inspired by videos from pianist Rousseau on Youtube. 
 ## Updates
 Hey there folks! It's been a long time since this project was released! After 5 Months I had some time to work on this project again. Here are the details what's new in this project:
 ### Added
-- **New HTML-Design:** With the support of jquery, popper.js and bootstrap the new Color-Page.html-File looks now a lot better than in the first version. On this site you can set your personal preferences for color of the strip provided by preset-color-buttons or a random-color-function. You can also add a time how much the keys should stay lit after pressing them 
+- **New HTML-Design:** With the support of jquery, popper.js and bootstrap the new Color-Page.html-File looks now a lot better than in the first version. On this site you can set your personal preferences for color of the strip provided by preset-color-buttons or a random-color-function. You can also add a time how long the keys should stay lit after pressing them 
 - **Random-Color-Button:** If you use this feature each new pressed key will light up in a different color. 
 - **Freeze-Option:** After releasing the key your light will stay lit for a specifig amount of seconds. You can decide if between 1-5 seconds (floating numbers not supported yet!)
 ### Removed
