@@ -10,10 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 //Function for generating each preset-color-button
 function buildColorButtons() {
-    const colorButtonsName = ["Red","Green","Blue","Orange","Purple","Cyan","Yellow","LEDs Off","Default"]
-    const colorCodes       = ["#800000","#008000","#000080","#ff6600","#800080","#008888","#ffff00","#000000","#808080"]
-    const bgColors         = ["#880000","#008800","#000088","#ff6600","#880088","#00ffff","#ffff00","#000000","#ffffff"]
-    const styleBtnIds      = ["btnRed","btnGreen","btnBlue","btnOrange","btnPurple","btnCyan","btnYellow","btnOff","btnDefault"]
+    const colorButtonsName = ["Red","Green","Blue","Orange","Purple","Cyan","Yellow","Scooter","Wine Berry",
+                            "Bahama Blue","Tropical Forest","Crimson","Jade","Cerulean","Radical Red","Limeade","Grassy Green","Grenadier","LEDs Off","Default"]
+    const colorCodes       = ["#800000","#008000","#000080","#ff6600","#800080","#008888","#ffff00","#2ab7ca","#651e3e",
+                            "#005b96","#00664d","#d11141","#00b159","#00aedb","#ff3377","#4db300","#1eb300","#c94300","#000000","#808080"]
+    const bgColors         = ["#880000","#008800","#000088","#ff6600","#880088","#00ffff","#ffff00","#2ab7ca","#651e3e",
+                            "#005b96","#00664d","#d11141","#00b159","#00aedb","#ff3377","#4db300","#1eb300","#c94300","#000000","#ffffff"]
+    const styleBtnIds      = ["btnRed","btnGreen","btnBlue","btnOrange","btnPurple","btnCyan","btnYellow","btnScooter","btnWBerry",
+                            "btnBBlue","btnTropForest","btnCrimson","btnJade","btnCerulean","btnRRed","btnLimeade","btnGraGreen","btnGrenadier","btnOff","btnDefault"]
     const colorButtonsId   = document.getElementById("colorButtons")
 
     for(let counter = 0; counter < colorCodes.length; counter++) {
