@@ -1,6 +1,6 @@
 module.exports = {
   apps : [{
-    name: 'API',
+    name: 'LED-Piano',
     script: 'main.js',
 
     // Options reference: https://pm2.keymetrics.io/docs/usage/application-declaration/

@@ -22,6 +22,10 @@ let freezeTime = 0
 colorApp.use(bodyParser.urlencoded({extended: false}))
 colorApp.use(express.static(colorAppConfig.html.public))     //to access the html files in it. Can be named anything you like
 
+colorApp.get("/", (req, res) => {
+    res.redirect("/color-page")
+})
+
 //Displaying Color-Page HTML-File
 colorApp.get("/color-page", (req, res) => {
     res.sendFile(`${config.html.views}/colorPage.html`)
