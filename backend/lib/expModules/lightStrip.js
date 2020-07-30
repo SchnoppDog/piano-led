@@ -1,18 +1,18 @@
-const dotstar = require('dotstar')
-const SPI = require('pi-spi')
-const spi = SPI.initialize('/dev/spidev0.1')    //Pins: SCLK: 23 | MOSI: 19
-const stripLength = 144   //max LED number
-const strip = new dotstar.Dotstar(spi, {
+const dotstar         = require('dotstar')
+const SPI             = require('pi-spi')
+const spi             = SPI.initialize('/dev/spidev0.1')    //Pins: SCLK: 23 | MOSI: 19
+const stripLength     = 144   //max LED number
+const strip           = new dotstar.Dotstar(spi, {
     length: stripLength
 })
-const maxKeys = 72    //Maximum Keys for all LEDs (each key 2 LEDs, but first and last key has only 1 LED)
-const firstRangeKey = 31    //First Key-number for first LED
-const lastRangeKey = firstRangeKey + maxKeys    //Last Key-Number for last LED
+const maxKeys         = 72    //Maximum Keys for all LEDs (each key 2 LEDs, but first and last key has only 1 LED)
+const firstRangeKey   = 31    //First Key-number for first LED
+const lastRangeKey    = firstRangeKey + maxKeys    //Last Key-Number for last LED
 //Static values for lighten up the corresponding LED to each key
 //Beware: keyLED1 and keyLED2 needs to be adjusted if firstRangeKey is a other key-number than 31
 //Adjusting like: keyLed1 = firstRangeKey | keyLed2 = firstRangeKey + 1
-const keyLed1 = 31    
-const keyLed2 = 32
+const keyLed1         = 31    
+const keyLed2         = 32
 
 exports.lightOn = function(keyNote,r,g,b,a) {
     const ledNum1 = keyNote - keyLed1 + (keyNote - keyLed2)   //I.E: 31-31+(31-32)=-1

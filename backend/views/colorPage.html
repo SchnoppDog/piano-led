@@ -27,9 +27,11 @@
                 <div class="col mt-2 mb-2">
                     <h3>Color-Effects</h3>
                     <hr>
-                    <div id="show-alert-randomColor">
+                    <div id="show-alert-colorEffects">
                     </div>
                     <button type="button" class="btn m-1" id="randomColor" value="Random Color" onclick="randomColor()">Random Color</button>
+                    <button type="button" class="btn btn-primary m-1" id="change-bg-lighting" value="BG-Color" onclick="setBgLighting(this.value)" disabled>Change BG-Lighting</button>
+                    <button type="button" class="btn btn-dark m-1" id="bg-lighting-off" value="BG-Color-On-Off" onclick="setBgLighting(this.value)">BG-Lighting On/Off</button>
                 </div>
             </div>
             <div class="row">
@@ -64,5 +66,6 @@
     <script src="js/dist/bootstrap.bundle.js"></script>
     <script src="js/colorButtons.js"></script>
     <script src="js/colorEffects.js"></script>
+    <script src="js/createAlert.js"></script>
     <!-- <script src="js/colorPicker.js"></script> -->
 </html>

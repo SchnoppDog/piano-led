@@ -1,31 +1,22 @@
 //Making a post to set the random-color
 //Different response-cases are shown in different ways
+
+//global variables:
+let counterBgColorOnOff = 1
+
 async function randomColor() {
     let res = await fetch(`/random-color`, {
         method: 'post'
     }).then((response) => {
         return response.json()
     })
-    const showAlertId = document.getElementById('show-alert-randomColor')
+    const showAlertId = document.getElementById('show-alert-colorEffects')
 
     if(res.statusCode === 200) {
-        const alertSuccess = document.createElement("div")
-        alertSuccess.setAttribute("class", "alert alert-success alert-dismissible show fade mx-auto alert-sd")
-        alertSuccess.setAttribute("role", "alert")
-        alertSuccess.setAttribute("id", "alertSuccess")
-        alertSuccess.textContent = res.message
-        showAlertId.appendChild(alertSuccess)
+        createAlert(showAlertId, res.message, 'success')
     } else {
-        const alertWarning = document.createElement("div")
-        alertWarning.setAttribute("class", "alert alert-danger alert-dismissible show fade mx-auto alert-sd")
-        alertWarning.setAttribute("role", "alert")
-        alertWarning.textContent = res.message
-        showAlertId.appendChild(alertWarning)
+        createAlert(showAlertId, res.message, 'danger')
     }
-    const targetAlerts = document.getElementsByClassName("alert-sd")
-    setTimeout(() => {
-        $(targetAlerts).fadeOut()
-    }, 3000)
 }
 
 //Set the css-style and behaviour of the random-color-button
@@ -90,29 +81,52 @@ async function keyFreeze(event) {
     }
 
     if(res.statusCode === 200) {
-        const alertSuccess = document.createElement("div")
-        alertSuccess.setAttribute("class", "alert alert-success alert-dismissible show fade mx-auto alert-sd")
-        alertSuccess.setAttribute("role", "alert")
-        alertSuccess.setAttribute("id", "alertSuccess")
-        alertSuccess.textContent = res.message
-        showAlertId.appendChild(alertSuccess)
+        createAlert(showAlertId, res.message, 'success')
     } else if(res.statusCode === 205) {
-        const alertWarning = document.createElement("div")
-        alertWarning.setAttribute("class", "alert alert-warning alert-dismissible show fade mx-auto alert-sd")
-        alertWarning.setAttribute("role", "alert")
-        alertWarning.textContent = res.message
-        showAlertId.appendChild(alertWarning)
+        createAlert(showAlertId, res.message, 'warning')
     } else {
-        const alertDanger = document.createElement("div")
-        alertDanger.setAttribute("class", "alert alert-danger alert-dismissible show fade mx-auto alert-sd")
-        alertDanger.setAttribute("role", "alert")
-        alertDanger.textContent = res.message
-        showAlertId.appendChild(alertDanger)
+        createAlert(showAlertId, res.message, 'danger')
     }
-    const targetAlerts = document.getElementsByClassName("alert-sd")
-    setTimeout(() => {
-        $(targetAlerts).fadeOut()
-    }, 3000)
+}
+
+async function setBgLighting(btnValue) {
+    const showAlertId = document.getElementById('show-alert-colorEffects')
+    let res
+    if(btnValue === 'BG-Color') {
+        let bgColor = true
+        res         = await fetch(`/bg-lighting?bgColor=${bgColor}`, {
+            method: 'post'
+        }).then((response) => {
+            return response.json()
+        })
+
+        if(res.statusCode === 200) {
+            createAlert(showAlertId, res.message, 'success')
+        } else {
+            createAlert(showAlertId, res.message, 'warning')
+        }
+    } else if(btnValue === 'BG-Color-On-Off') {
+        counterBgColorOnOff++
+
+        if(counterBgColorOnOff % 2 === 0) {
+            document.getElementById('change-bg-lighting').removeAttribute('disabled')
+        } else {
+            document.getElementById('change-bg-lighting').setAttribute('disabled', "true")
+        }
+
+        let bgColorOnOff    = true
+        res                 = await fetch(`/bg-lighting-on-off?bgColorOnOff=${bgColorOnOff}`, {
+            method: 'post'
+        }).then((response) => {
+            return response.json()
+        })
+
+        if(res.statusCode === 200) {
+            createAlert(showAlertId, res.message, 'success')
+        } else {
+            createAlert(showAlertId, res.message, 'danger')
+        }
+    }
 }
 
 randomColorButton()

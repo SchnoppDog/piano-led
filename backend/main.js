@@ -9,15 +9,38 @@ const colorApp       = express()
 const colorAppConfig = require('../backend/config')
 
 //Default Values if Script fails or has to restart
-let red = 128
-let green = 128
-let blue = 128
-const alpha = 0.5
-let randomColor = false
-let randColOnOff = 0
-let freezeOpts = {}
-let isFreeze = 'false'
-let freezeTime = 0
+let red                     = 128
+let green                   = 128
+let blue                    = 128
+const alpha                 = 0.5
+let randomColor             = false
+let randColOnOff            = 0
+let counterBgColor          = 1
+let counterBgColorOnOff     = 1
+let freezeTime              = 0
+let stripOpts               = {
+    isFreeze: 'false',
+    freezeOpts: {
+        rgba: {
+            red: 0,
+            green: 0,
+            blue: 0,
+            alpha: alpha
+        },
+        duration: freezeTime
+    },
+    isBgColor: 'false',
+    isBgColorOnOff: 'false',
+    bgColorOpts: {
+        rgba: {
+            red: 0,
+            green: 0,
+            blue: 0,
+            alpha: alpha
+        }
+    }
+}
+
 
 colorApp.use(bodyParser.urlencoded({extended: false}))
 colorApp.use(express.static(colorAppConfig.html.public))     //to access the html files in it. Can be named anything you like
@@ -35,36 +58,178 @@ colorApp.get("/color-page", (req, res) => {
 colorApp.post("/set-color", (req, res) => {
     const colorValue = req.query.colorValue
     const arrayRGB   = convert.hex.rgb(colorValue)
-    randomColor = false    //if preset color is choosen random-color will turn off automatically
+    randomColor      = false    //if preset color is choosen random-color will turn off automatically
     randColOnOff++         //needed for showing the correct respond-message in random-color
-    red = arrayRGB[0]
-    green = arrayRGB[1]
-    blue = arrayRGB[2]
+    // red              = arrayRGB[0]
+    // green            = arrayRGB[1]
+    // blue             = arrayRGB[2]
 
     //need to be set as String cause boolean value is converted to a string
     //setting new freeze-options with new color
-    if(isFreeze === 'true') {
-        freezeOpts = {
-            isFreeze: isFreeze,
-            freezeOpts: {
-                rgba: {
-                    red: red,
-                    green: green,
-                    blue: blue,
-                    alpha: alpha
-                },
-                duration: freezeTime
+    console.log("isBgColor: ", stripOpts.isBgColor)
+    console.log("isBgColorOnOff: ", stripOpts.isBgColorOnOff)
+
+    if(stripOpts.isBgColorOnOff === 'true') {
+        if(stripOpts.isBgColor === 'true') {
+            if(stripOpts.isFreeze === 'true') {
+                stripOpts = {
+                    isFreeze: stripOpts.isFreeze,
+                    freezeOpts: {
+                        rgba: {
+                            red: arrayRGB[0],
+                            green: arrayRGB[1],
+                            blue: arrayRGB[2],
+                            alpha: alpha
+                        },
+                        duration: stripOpts.freezeOpts.duration
+                    },
+                    isBgColor: stripOpts.isBgColor,
+                    isBgColorOnOff: stripOpts.isBgColorOnOff,
+                    bgColorOpts: {
+                        rgba: {
+                            red: arrayRGB[0],
+                            green: arrayRGB[1],
+                            blue: arrayRGB[2],
+                            alpha: alpha
+                        }
+                    }
+                }
+            } else {
+                stripOpts = {
+                    isFreeze: stripOpts.isFreeze,
+                    freezeOpts: {
+                        rgba: {
+                            red: 0,
+                            green: 0,
+                            blue: 0,
+                            alpha: alpha
+                        },
+                        duration: 0
+                    },
+                    isBgColor: stripOpts.isBgColor,
+                    isBgColorOnOff: stripOpts.isBgColorOnOff,
+                    bgColorOpts: {
+                        rgba: {
+                            red: arrayRGB[0],
+                            green: arrayRGB[1],
+                            blue: arrayRGB[2],
+                            alpha: alpha
+                        }
+                    }
+                }
+            }
+        } else {
+            red     = arrayRGB[0]
+            green   = arrayRGB[1]
+            blue    = arrayRGB[2]
+
+            if(stripOpts.isFreeze === 'true') {
+                stripOpts = {
+                    isFreeze: stripOpts.isFreeze,
+                    freezeOpts: {
+                        rgba: {
+                            red: red,
+                            green: green,
+                            blue: blue,
+                            alpha: alpha
+                        },
+                        duration: stripOpts.freezeOpts.duration
+                    },
+                    isBgColor: stripOpts.isBgColor,
+                    isBgColorOnOff: stripOpts.isBgColorOnOff,
+                    bgColorOpts: {
+                        rgba: {
+                            red: stripOpts.bgColorOpts.rgba.red,
+                            green: stripOpts.bgColorOpts.rgba.green,
+                            blue: stripOpts.bgColorOpts.rgba.blue,
+                            alpha: alpha
+                        }
+                    }
+                }
+            } else {
+                stripOpts = {
+                    isFreeze: stripOpts.isFreeze,
+                    freezeOpts: {
+                        rgba: {
+                            red: 0,
+                            green: 0,
+                            blue: 0, 
+                            alpha: alpha
+                        },
+                        duration: 0
+                    },
+                    isBgColor: stripOpts.isBgColor,
+                    isBgColorOnOff: stripOpts.isBgColorOnOff,
+                    bgColorOpts: {
+                        rgba: {
+                            red: stripOpts.bgColorOpts.rgba.red,
+                            green: stripOpts.bgColorOpts.rgba.green,
+                            blue: stripOpts.bgColorOpts.rgba.blue,
+                            alpha: alpha
+                        }
+                    }
+                }
             }
         }
     } else {
-        //turning of freezeoption if it is not set
-        freezeOpts = {
-            isFreeze: isFreeze,
-            freezeOpts: {
-                duration: 0
+        red     = arrayRGB[0]
+        green   = arrayRGB[1]
+        blue    = arrayRGB[2]
+
+        if(stripOpts.isFreeze === 'true') {
+            stripOpts = {
+                isFreeze: stripOpts.isFreeze,
+                freezeOpts: {
+                    rgba: {
+                        red: red,
+                        green: green,
+                        blue: blue,
+                        alpha: alpha
+                    },
+                    duration: stripOpts.freezeOpts.duration
+                },
+                isBgColor: stripOpts.isBgColor,
+                isBgColorOnOff: stripOpts.isBgColorOnOff,
+                bgColorOpts: {
+                    rgba: {
+                        red: stripOpts.bgColorOpts.rgba.red,
+                        green: stripOpts.bgColorOpts.rgba.green,
+                        blue: stripOpts.bgColorOpts.rgba.blue,
+                        alpha: alpha
+                    }
+                }
+            }
+        } else {
+            stripOpts = {
+                isFreeze: stripOpts.isFreeze,
+                freezeOpts: {
+                    rgba: {
+                        red: 0,
+                        green: 0,
+                        blue: 0,
+                        alpha: alpha
+                    },
+                    duration: 0
+                },
+                isBgColor: stripOpts.isBgColor,
+                isBgColorOnOff: stripOpts.isBgColorOnOff,
+                bgColorOpts: {
+                    rgba: {
+                        red: stripOpts.bgColorOpts.rgba.red,
+                        green: stripOpts.bgColorOpts.rgba.green,
+                        blue: stripOpts.bgColorOpts.rgba.blue,
+                        alpha: alpha
+                    }
+                }
             }
         }
     }
+    console.log("Strip-Opts:")
+    console.log(stripOpts)
+    console.log("Lighton-Function: ")
+    console.log("red: ", red)
+    console.log("green: ", green)
+    console.log("blue: ", blue)
     res.json({ statusCode: 200, message: "Color set!"})
 })
 
@@ -85,18 +250,28 @@ colorApp.post("/random-color", (req, res) => {
 
 //setting key-freeze option
 colorApp.post("/key-freeze", (req, res) => {
-    freezeTime = parseInt(req.query.freeze_time) * 1000 
-    isFreeze   = req.query.is_freeze
-    freezeOpts = {
+    let isFreeze   = req.query.is_freeze
+    freezeTime     = parseInt(req.query.freeze_time) * 1000 
+    stripOpts = {
         isFreeze: isFreeze,
         freezeOpts: {
             rgba: {
-                red: red,
-                green: green,
-                blue: blue,
+                red: stripOpts.freezeOpts.rgba.red,
+                green: stripOpts.freezeOpts.rgba.green,
+                blue: stripOpts.freezeOpts.rgba.blue,
                 alpha: alpha
             },
             duration: freezeTime
+        },
+        isBgColor: stripOpts.isBgColor,
+        isBgColorOnOff: stripOpts.isBgColorOnOff,
+        bgColorOpts: {
+            rgba: {
+                red: stripOpts.bgColorOpts.rgba.red,
+                green: stripOpts.bgColorOpts.rgba.green,
+                blue: stripOpts.bgColorOpts.rgba.blue,
+                alpha: alpha
+            }
         }
     }
     if(isFreeze === 'false') {
@@ -107,6 +282,82 @@ colorApp.post("/key-freeze", (req, res) => {
         res.json({ statusCode: 205, message: "Your time is too high/low!"})
     } else {
         res.json({ statusCode: 200, message: "Freeze has been set!"})
+    }
+})
+
+colorApp.post('/bg-lighting-on-off', (req, res) => {
+    let bgColorOnOff = req.query.bgColorOnOff
+
+    if(bgColorOnOff === 'true') {
+        counterBgColorOnOff++
+        if(counterBgColorOnOff % 2 === 0) {
+            bgColorOnOff = 'true'
+            res.json({ statusCode: 200, message: "BG-Color turned On!" })
+        } else {
+            bgColorOnOff = 'false'
+            res.json({ statusCode: 400, message: "BG-Color turned Off!" })
+        }
+    }
+
+    stripOpts = {
+        isFreeze: stripOpts.isFreeze,
+        freezeOpts: {
+            rgba: {
+                red: stripOpts.freezeOpts.rgba.red,
+                green: stripOpts.freezeOpts.rgba.green,
+                blue: stripOpts.freezeOpts.rgba.blue,
+                alpha: alpha
+            },
+            duration: stripOpts.freezeOpts.duration
+        },
+        isBgColorOnOff: bgColorOnOff,
+        isBgColor: stripOpts.isBgColor,
+        bgColorOpts: {
+            rgba: {
+                red: stripOpts.bgColorOpts.rgba.red,
+                green: stripOpts.bgColorOpts.rgba.green,
+                blue: stripOpts.bgColorOpts.rgba.blue,
+                alpha: alpha
+            }
+        }
+    }
+})
+
+colorApp.post('/bg-lighting', (req, res) => {
+    let bgColor         = req.query.bgColor
+    
+    if(bgColor === 'true') {
+        counterBgColor++
+        if(counterBgColor % 2 === 0) {
+            bgColor = 'true'
+            res.json({ statusCode: 200, message: "Edit Background-Color" })
+        } else {
+            bgColor = 'false'
+            res.json({ statusCode: 205, message: "Edit Key-Color" })
+        }
+    }
+
+    stripOpts = {
+        isFreeze: stripOpts.isFreeze,
+        freezeOpts: {
+            rgba: {
+                red: stripOpts.freezeOpts.rgba.red,
+                green: stripOpts.freezeOpts.rgba.green,
+                blue: stripOpts.freezeOpts.rgba.blue,
+                alpha: alpha
+            },
+            duration: stripOpts.freezeOpts.duration
+        },
+        isBgColorOnOff: stripOpts.isBgColorOnOff,
+        isBgColor: bgColor,
+        bgColorOpts: {
+            rgba: {
+                red: stripOpts.bgColorOpts.rgba.red,
+                green: stripOpts.bgColorOpts.rgba.green,
+                blue: stripOpts.bgColorOpts.rgba.blue,
+                alpha: alpha
+            }
+        }
     }
 })
 
@@ -129,8 +380,8 @@ usbDetect.on('add',(device) => {
                         green         = rgbValues[1]
                         blue          = rgbValues[2]
 
-                        freezeOpts = {
-                            isFreeze: isFreeze,
+                        stripOpts = {
+                            isFreeze: stripOpts.isFreeze,
                             freezeOpts: {
                                 rgba: {
                                     red: red,
@@ -138,7 +389,17 @@ usbDetect.on('add',(device) => {
                                     blue: blue,
                                     alpha: alpha
                                 },
-                                duration: freezeTime
+                                duration: stripOpts.freezeOpts.duration
+                            },
+                            isBgColor: stripOpts.isBgColor,
+                            isBgColorOnOff: stripOpts.isBgColorOnOff,
+                            bgColorOpts: {
+                                rgba: {
+                                    red: red,
+                                    green: green,
+                                    blue: blue,
+                                    alpha: alpha
+                                }
                             }
                         }
                     }
@@ -146,7 +407,7 @@ usbDetect.on('add',(device) => {
                 }
             }else {
                 if(msg.note === msg.note) {
-                    ledStrip.lightOff(msg.note, freezeOpts)
+                    ledStrip.lightOff(msg.note, stripOpts)
                 }
             }
         })
