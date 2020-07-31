@@ -14,6 +14,16 @@ const lastRangeKey    = firstRangeKey + maxKeys    //Last Key-Number for last LE
 const keyLed1         = 31    
 const keyLed2         = 32
 
+exports.setBgLight = function(bgOptions) {
+  let red     = bgOptions.bgColorOpts.rgba.red
+  let green   = bgOptions.bgColorOpts.rgba.green
+  let blue    = bgOptions.bgColorOpts.rgba.blue
+  let alpha   = bgOptions.bgColorOpts.rgba.alpha
+
+  strip.all(red, green, blue, alpha)
+  strip.sync()
+}
+
 exports.lightOn = function(keyNote,r,g,b,a) {
     const ledNum1 = keyNote - keyLed1 + (keyNote - keyLed2)   //I.E: 31-31+(31-32)=-1
     const ledNum2 = keyNote - keyLed1 + (keyNote - keyLed1)   //31-31+(31-31)=0 etc...
@@ -37,6 +47,10 @@ exports.lightOn = function(keyNote,r,g,b,a) {
 exports.lightOff = function(keyNote, options) {
   let r,g,b,a
   let durationTime
+  let freeze
+  let bgRed, bgGreen, bgBlue, bgAlpha
+  let isBgColor
+
     if(options) {
       if(options.isFreeze === 'true') {
         r        = options.freezeOpts.rgba.red
@@ -49,6 +63,18 @@ exports.lightOff = function(keyNote, options) {
         freeze = false
         durationTime = 0
       }
+      if(options.isBgColorOnOff === 'true') {
+        bgRed       = options.bgColorOpts.rgba.red
+        bgGreen     = options.bgColorOpts.rgba.green
+        bgBlue      = options.bgColorOpts.rgba.blue
+        bgAlpha     = options.bgColorOpts.rgba.alpha
+        isBgColor   = options.isBgColorOnOff
+      } else {
+        bgRed       = 0
+        bgGreen     = 0
+        bgBlue      = 0
+        bgAlpha     = 0
+      }
     }
     const ledNum1 = keyNote - keyLed1 + (keyNote - keyLed2)
     const ledNum2 = keyNote - keyLed1 + (keyNote - keyLed1)
@@ -57,26 +83,26 @@ exports.lightOff = function(keyNote, options) {
         if(freeze) {
           strip.set(ledNum2,r,g,b,a)
           setTimeout(() => {
-            strip.set(ledNum2,0,0,0,0)
+            strip.set(ledNum2,bgRed,bgGreen,bgBlue,bgAlpha)
             strip.sync()
           }, durationTime)
-          strip.set(ledNum2,0,0,0,0)
+          strip.set(ledNum2,bgRed,bgGreen,bgBlue,bgAlpha)
           strip.sync()
         } else {
-          strip.set(ledNum2,0,0,0,0)
+          strip.set(ledNum2,bgRed,bgGreen,bgBlue,bgAlpha)
           strip.sync()
         }
       } else if(ledNum2 === 144) {
         if(freeze) {
           strip.set(ledNum2,r,g,b,a)
           setTimeout(() => {
-            strip.set(ledNum2,0,0,0,0)
+            strip.set(ledNum2,bgRed,bgGreen,bgBlue,bgAlpha)
             strip.sync()
           }, durationTime)
-          strip.set(ledNum2,0,0,0,0)
+          strip.set(ledNum2,bgRed,bgGreen,bgBlue,bgAlpha)
           strip.sync()
         } else {
-          strip.set(ledNum2,0,0,0,0)
+          strip.set(ledNum2,bgRed,bgGreen,bgBlue,bgAlpha)
           strip.sync()
         }
       } else {
@@ -85,13 +111,13 @@ exports.lightOff = function(keyNote, options) {
           strip.set(ledNum2,r,g,b,a)
           strip.sync()
           setTimeout(() => {
-            strip.set(ledNum1,0,0,0,0)
-            strip.set(ledNum2,0,0,0,0)
+            strip.set(ledNum1,bgRed,bgGreen,bgBlue,bgAlpha)
+            strip.set(ledNum2,bgRed,bgGreen,bgBlue,bgAlpha)
             strip.sync()
           }, durationTime)
         } else {
-          strip.set(ledNum1,0,0,0,0)
-          strip.set(ledNum2,0,0,0,0)
+          strip.set(ledNum1,bgRed,bgGreen,bgBlue,bgAlpha)
+          strip.set(ledNum2,bgRed,bgGreen,bgBlue,bgAlpha)
           strip.sync()
         }
       }

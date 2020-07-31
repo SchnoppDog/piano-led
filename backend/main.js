@@ -58,6 +58,10 @@ colorApp.get("/color-page", (req, res) => {
 colorApp.post("/set-color", (req, res) => {
     const colorValue = req.query.colorValue
     const arrayRGB   = convert.hex.rgb(colorValue)
+    let bgRed, bgGreen, bgBlue
+    bgRed            = ((arrayRGB[0] / 2) / 2) / 2
+    bgGreen          = ((arrayRGB[1] / 2) / 2) /2
+    bgBlue           = ((arrayRGB[2] / 2) / 2) /2
     randomColor      = false    //if preset color is choosen random-color will turn off automatically
     randColOnOff++         //needed for showing the correct respond-message in random-color
     // red              = arrayRGB[0]
@@ -87,9 +91,9 @@ colorApp.post("/set-color", (req, res) => {
                     isBgColorOnOff: stripOpts.isBgColorOnOff,
                     bgColorOpts: {
                         rgba: {
-                            red: arrayRGB[0],
-                            green: arrayRGB[1],
-                            blue: arrayRGB[2],
+                            red: bgRed,       //arrayRGB[0]
+                            green: bgGreen,     //arrayRGB[1]
+                            blue: bgBlue,      //arrayRGB[2]
                             alpha: alpha
                         }
                     }
@@ -110,14 +114,15 @@ colorApp.post("/set-color", (req, res) => {
                     isBgColorOnOff: stripOpts.isBgColorOnOff,
                     bgColorOpts: {
                         rgba: {
-                            red: arrayRGB[0],
-                            green: arrayRGB[1],
-                            blue: arrayRGB[2],
+                            red: bgRed,
+                            green: bgGreen,
+                            blue: bgBlue,
                             alpha: alpha
                         }
                     }
                 }
             }
+            ledStrip.setBgLight(stripOpts)
         } else {
             red     = arrayRGB[0]
             green   = arrayRGB[1]
@@ -139,9 +144,9 @@ colorApp.post("/set-color", (req, res) => {
                     isBgColorOnOff: stripOpts.isBgColorOnOff,
                     bgColorOpts: {
                         rgba: {
-                            red: stripOpts.bgColorOpts.rgba.red,
-                            green: stripOpts.bgColorOpts.rgba.green,
-                            blue: stripOpts.bgColorOpts.rgba.blue,
+                            red: 0,        //stripOpts.bgColorOpts.rgba.red
+                            green: 0,    //stripOpts.bgColorOpts.rgba.green
+                            blue: 0,      //stripOpts.bgColorOpts.rgba.blue
                             alpha: alpha
                         }
                     }
@@ -295,6 +300,29 @@ colorApp.post('/bg-lighting-on-off', (req, res) => {
             res.json({ statusCode: 200, message: "BG-Color turned On!" })
         } else {
             bgColorOnOff = 'false'
+            stripOpts = {
+                isFreeze: stripOpts.isFreeze,
+                freezeOpts: {
+                    rgba: {
+                        red: stripOpts.freezeOpts.rgba.red,
+                        green: stripOpts.freezeOpts.rgba.green,
+                        blue: stripOpts.freezeOpts.rgba.blue,
+                        alpha: alpha
+                    },
+                    duration: stripOpts.freezeOpts.duration
+                },
+                isBgColorOnOff: bgColorOnOff,
+                isBgColor: stripOpts.isBgColor,
+                bgColorOpts: {
+                    rgba: {
+                        red: 0,
+                        green: 0,
+                        blue: 0,
+                        alpha: alpha
+                    }
+                }
+            }
+            ledStrip.setBgLight(stripOpts)
             res.json({ statusCode: 400, message: "BG-Color turned Off!" })
         }
     }
@@ -402,6 +430,7 @@ usbDetect.on('add',(device) => {
                                 }
                             }
                         }
+                        ledStrip.setBgLight(stripOpts)
                     }
                     ledStrip.lightOn(msg.note,red,green,blue,alpha)
                 }
