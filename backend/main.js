@@ -144,9 +144,9 @@ colorApp.post("/set-color", (req, res) => {
                     isBgColorOnOff: stripOpts.isBgColorOnOff,
                     bgColorOpts: {
                         rgba: {
-                            red: 0,        //stripOpts.bgColorOpts.rgba.red
-                            green: 0,    //stripOpts.bgColorOpts.rgba.green
-                            blue: 0,      //stripOpts.bgColorOpts.rgba.blue
+                            red: stripOpts.bgColorOpts.rgba.red,        //stripOpts.bgColorOpts.rgba.red
+                            green: stripOpts.bgColorOpts.rgba.green,    //stripOpts.bgColorOpts.rgba.green
+                            blue: stripOpts.bgColorOpts.rgba.blue,      //stripOpts.bgColorOpts.rgba.blue
                             alpha: alpha
                         }
                     }
@@ -197,9 +197,9 @@ colorApp.post("/set-color", (req, res) => {
                 isBgColorOnOff: stripOpts.isBgColorOnOff,
                 bgColorOpts: {
                     rgba: {
-                        red: stripOpts.bgColorOpts.rgba.red,
-                        green: stripOpts.bgColorOpts.rgba.green,
-                        blue: stripOpts.bgColorOpts.rgba.blue,
+                        red: 0,        //stripOpts.bgColorOpts.rgba.red
+                        green: 0,       //stripOpts.bgColorOpts.rgba.green
+                        blue: 0,        //stripOpts.bgColorOpts.rgba.blue
                         alpha: alpha
                     }
                 }
@@ -220,21 +220,21 @@ colorApp.post("/set-color", (req, res) => {
                 isBgColorOnOff: stripOpts.isBgColorOnOff,
                 bgColorOpts: {
                     rgba: {
-                        red: stripOpts.bgColorOpts.rgba.red,
-                        green: stripOpts.bgColorOpts.rgba.green,
-                        blue: stripOpts.bgColorOpts.rgba.blue,
+                        red: 0,
+                        green: 0,
+                        blue: 0,
                         alpha: alpha
                     }
                 }
             }
         }
     }
-    console.log("Strip-Opts:")
-    console.log(stripOpts)
-    console.log("Lighton-Function: ")
-    console.log("red: ", red)
-    console.log("green: ", green)
-    console.log("blue: ", blue)
+    // console.log("Set-Color:")
+    // console.log(stripOpts)
+    // console.log("Lighton-Function: ")
+    // console.log("red: ", red)
+    // console.log("green: ", green)
+    // console.log("blue: ", blue)
     res.json({ statusCode: 200, message: "Color set!"})
 })
 
