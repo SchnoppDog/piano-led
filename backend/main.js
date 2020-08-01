@@ -70,9 +70,6 @@ colorApp.post("/set-color", (req, res) => {
 
     //need to be set as String cause boolean value is converted to a string
     //setting new freeze-options with new color
-    console.log("isBgColor: ", stripOpts.isBgColor)
-    console.log("isBgColorOnOff: ", stripOpts.isBgColorOnOff)
-
     if(stripOpts.isBgColorOnOff === 'true') {
         if(stripOpts.isBgColor === 'true') {
             if(stripOpts.isFreeze === 'true') {
@@ -389,6 +386,39 @@ colorApp.post('/bg-lighting', (req, res) => {
     }
 })
 
+colorApp.post("/bg-lighting-random", (req, res) => {
+    let randRgbValues = colorEffects.getRandomColor()
+    let randRed       = randRgbValues[0] / 6
+    let randGreen     = randRgbValues[1] / 6
+    let randBlue      = randRgbValues[2] / 6
+
+    stripOpts = {
+        isFreeze: stripOpts.isFreeze,
+        freezeOpts: {
+            rgba: {
+                red: stripOpts.freezeOpts.rgba.red,
+                green: stripOpts.freezeOpts.rgba.green,
+                blue: stripOpts.freezeOpts.rgba.blue,
+                alpha: alpha
+            },
+            duration: stripOpts.freezeOpts.duration
+        },
+        isBgColorOnOff: stripOpts.isBgColorOnOff,
+        isBgColor: stripOpts.isBgColor,
+        bgColorOpts: {
+            rgba: {
+                red: randRed,
+                green: randGreen,
+                blue: randBlue,
+                alpha: alpha
+            }
+        }
+    }
+    ledStrip.setBgLight(stripOpts)
+
+    res.json({ statusCode: 200, message: "Random Color Applied!" })
+})
+
 //Starting Monitoring Service for piano
 //You need to edit this "if"-Statemant if your piano has a other name than shown here
 usbDetect.startMonitoring()
@@ -423,9 +453,9 @@ usbDetect.on('add',(device) => {
                             isBgColorOnOff: stripOpts.isBgColorOnOff,
                             bgColorOpts: {
                                 rgba: {
-                                    red: red,
-                                    green: green,
-                                    blue: blue,
+                                    red: stripOpts.bgColorOpts.rgba.red,
+                                    green: stripOpts.bgColorOpts.rgba.green,
+                                    blue: stripOpts.bgColorOpts.rgba.blue,
                                     alpha: alpha
                                 }
                             }

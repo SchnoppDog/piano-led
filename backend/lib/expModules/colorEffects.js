@@ -118,8 +118,6 @@ function _getRandomColor() {
     // }
 
     let res = [r,g,b]
-    console.log(res)
-
     return res
 }
 

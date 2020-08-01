@@ -21,7 +21,8 @@ async function randomColor() {
 
 //Set the css-style and behaviour of the random-color-button
 function randomColorButton() {
-    let buttonId = document.getElementById("randomColor")
+    let buttonId        = document.getElementById("randomColor")
+    let bgLightButtonId = document.getElementById("bg-lighting-rand-color")
     let r,g,b
     let red = [], green = [], blue = []
 
@@ -36,9 +37,10 @@ function randomColorButton() {
     }
     
     let css = 
-    `#randomColor { background-color: rgb(${red[0]},${green[1]},${blue[2]});
-                    color: white; }
-    #randomColor:hover { background-image: linear-gradient(120deg, rgb(${red[0]},${green[0]},${blue[0]}), rgb(${red[1]},${green[1]},${blue[1]}), rgb(${red[2]},${green[2]},${blue[2]}), rgb(${red[3]},${green[3]},${blue[3]})); }`
+    `#randomColor { background-color: rgb(${red[0]},${green[1]},${blue[2]}); color: white; }
+    #randomColor:hover { background-image: linear-gradient(120deg, rgb(${red[0]},${green[0]},${blue[0]}), rgb(${red[1]},${green[1]},${blue[1]}), rgb(${red[2]},${green[2]},${blue[2]}), rgb(${red[3]},${green[3]},${blue[3]})); }
+    #bg-lighting-rand-color { background-color: rgb(${red[0]},${green[1]},${blue[2]}); color: white; }
+    #bg-lighting-rand-color:hover { background-image: linear-gradient(120deg, rgb(${red[0]},${green[0]},${blue[0]}), rgb(${red[1]},${green[1]},${blue[1]}), rgb(${red[2]},${green[2]},${blue[2]}), rgb(${red[3]},${green[3]},${blue[3]})); }`
 
     let style = document.createElement("style")
     if(style.styleSheet) {
@@ -47,6 +49,7 @@ function randomColorButton() {
         style.appendChild(document.createTextNode(css))
     }
     buttonId.appendChild(style)
+    bgLightButtonId.appendChild(style)
 }
 
 //Setting and deactivating the freeze-option
@@ -110,8 +113,15 @@ async function setBgLighting(btnValue) {
 
         if(counterBgColorOnOff % 2 === 0) {
             document.getElementById('change-bg-lighting').removeAttribute('disabled')
+            document.getElementById('bg-lighting-rand-color').removeAttribute('disabled')
+            document.getElementById('change-bg-lighting').style.cursor      = null
+            document.getElementById('bg-lighting-rand-color').style.cursor  = null
+            
         } else {
             document.getElementById('change-bg-lighting').setAttribute('disabled', "true")
+            document.getElementById('bg-lighting-rand-color').setAttribute('disabled', 'true')
+            document.getElementById('change-bg-lighting').style.cursor      = "wait"
+            document.getElementById('bg-lighting-rand-color').style.cursor  = "wait"
         }
 
         let bgColorOnOff    = true
@@ -126,6 +136,21 @@ async function setBgLighting(btnValue) {
         } else {
             createAlert(showAlertId, res.message, 'danger')
         }
+    }
+}
+
+async function setBgRandomLighting() {
+    const showAlertId = document.getElementById('show-alert-bgLighting')
+    let res           = await fetch('/bg-lighting-random', {
+        method: 'post'
+    }).then((response) => {
+        return response.json()
+    })
+    console.log(res.message)
+    if(res.statusCode === 200) {
+        createAlert(showAlertId, res.message, 'success')
+    } else {
+        createAlert(showAlertId, res.message, 'danger')
     }
 }
 
