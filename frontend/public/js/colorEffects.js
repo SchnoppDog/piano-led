@@ -90,7 +90,7 @@ async function keyFreeze(event) {
 }
 
 async function setBgLighting(btnValue) {
-    const showAlertId = document.getElementById('show-alert-colorEffects')
+    const showAlertId = document.getElementById('show-alert-bgLighting')
     let res
     if(btnValue === 'BG-Color') {
         let bgColor = true
