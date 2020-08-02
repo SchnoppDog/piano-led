@@ -294,7 +294,7 @@ colorApp.post('/bg-lighting-on-off', (req, res) => {
         counterBgColorOnOff++
         if(counterBgColorOnOff % 2 === 0) {
             bgColorOnOff = 'true'
-            res.json({ statusCode: 200, message: "BG-Color turned On!" })
+            res.json({ statusCode: 200, message: "BG-Color turned On!", bgState: bgColorOnOff })
         } else {
             bgColorOnOff = 'false'
             stripOpts = {
@@ -320,7 +320,7 @@ colorApp.post('/bg-lighting-on-off', (req, res) => {
                 }
             }
             ledStrip.setBgLight(stripOpts)
-            res.json({ statusCode: 400, message: "BG-Color turned Off!" })
+            res.json({ statusCode: 400, message: "BG-Color turned Off!", bgState: bgColorOnOff })
         }
     }
 
