@@ -40,6 +40,16 @@ let stripOpts               = {
         }
     }
 }
+// let onPressOpts             = {
+//     color: {
+//         rgba: {
+//             red: red,
+//             green: green,
+//             blue: blue,
+//             alpha: alpha
+//         }
+//     }
+// }
 
 
 colorApp.use(bodyParser.urlencoded({extended: false}))
@@ -235,6 +245,25 @@ colorApp.post("/set-color", (req, res) => {
     res.json({ statusCode: 200, message: "Color set!"})
 })
 
+colorApp.post("/your-key-color", (req, res) => {
+    red         = Math.round(req.query.red)     //yourRed
+    green       = Math.round(req.query.green)   //yourGreen
+    blue        = Math.round(req.query.blue)    //yourBlue
+
+    // onPressOpts         = {
+    //     color: {
+    //         rgba: {
+    //             red: yourRed,
+    //             green: yourGreen,
+    //             blue: yourBlue,
+    //             alpha: alpha
+    //         }
+    //     }
+    // }
+    
+    res.json({ statusCode: 200, message: 'Your color has been set!' })
+})
+
 //setting the random color
 colorApp.post("/random-color", (req, res) => {
     randColOnOff++      //need for sending the correct respond message
@@ -417,6 +446,38 @@ colorApp.post("/bg-lighting-random", (req, res) => {
     ledStrip.setBgLight(stripOpts)
 
     res.json({ statusCode: 200, message: "Random Color Applied!" })
+})
+
+colorApp.post("/your-bg-color", (req, res) => {
+    let yourBgRed       = Math.round(req.query.red) / 6
+    let yourBgGreen     = Math.round(req.query.green) / 6
+    let yourBgBlue      = Math.round(req.query.blue) / 6
+
+    stripOpts = {
+        isFreeze: stripOpts.isFreeze,
+        freezeOpts: {
+            rgba: {
+                red: stripOpts.freezeOpts.rgba.red,
+                green: stripOpts.freezeOpts.rgba.green,
+                blue: stripOpts.freezeOpts.rgba.blue,
+                alpha: alpha
+            },
+            duration: stripOpts.freezeOpts.duration
+        },
+        isBgColorOnOff: stripOpts.isBgColorOnOff,
+        isBgColor: stripOpts.isBgColor,
+        bgColorOpts: {
+            rgba: {
+                red: yourBgRed,
+                green: yourBgGreen,
+                blue: yourBgBlue,
+                alpha: alpha
+            }
+        }
+    }
+
+    ledStrip.setBgLight(stripOpts)
+    res.json({ statusCode: 200, message: 'Your color has been set!' })    
 })
 
 //Starting Monitoring Service for piano

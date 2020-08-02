@@ -1,7 +1,8 @@
 <!DOCTYPE html>
     <head>
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-        <link rel="stylesheet" type="text/css" href="css/pickr-1.7.2.css">
+        <link rel="stylesheet" type="text/css" href="css/pickr-nano-1.7.2.css">
+        <link rel="stylesheet" type="text/css" href="css/pickr-classic-1.7.2.css">
         <link rel="icon" type="image/png" href="img/favicon.png">
         <link rel="stylesheet" type="text/css" href="css/newStyle.css">
         <meta charset="UTF-8">
@@ -30,8 +31,9 @@
                     <hr class="horizontalRuler">
                     <div id="show-alert-bgLighting">
                     </div>
-                    <button type="button" class="btn m-1" id="bg-lighting-rand-color" value="BG-Lighting-Rand" onclick="setBgRandomLighting()" disabled>Random BG-Color</button>
-                    <button type="button" class="btn btn-primary m-1" id="change-bg-lighting" value="BG-Color" onclick="setBgLighting(this.value)" disabled>Change BG-Lighting</button>
+                    <button type="button" class="btn" id="bgColorPicker">Your Color</button>
+                    <button type="button" class="btn m-1" id="bg-lighting-rand-color" value="BG-Lighting-Rand" onclick="setBgRandomLighting()">Random BG-Color</button>
+                    <button type="button" class="btn btn-primary m-1" id="change-bg-lighting" value="BG-Color" onclick="setBgLighting(this.value)">Change BG-Lighting</button>
                     <button type="button" class="btn btn-dark m-1" id="bg-lighting-off" value="BG-Color-On-Off" onclick="setBgLighting(this.value)">BG-Lighting On/Off</button>
                 </div>
             </div>
@@ -39,8 +41,10 @@
                 <div class="col mt-2 mb-2">
                     <h3>Your Color!</h3>
                     <hr class="horizontalRuler">
-                    <!-- <div class="colorPicker" acp-color="#00ff00"></div> -->
-                    <div id="colorPicker"></div>
+                    <div id="show-alert-key-picker"></div>
+                    <button type="button" class="btn" id="keyColorPicker">Your Color</button>
+                    <!-- <div id="colorPicker"></div> -->
+                    <!-- <button type="button" id="colorPicker">Color Picker</button> -->
                     <!-- <button type="button" class="btn btn-primary" id="colorPicker">Color Picker</button> -->
                 </div>
                 <div class="col mt-2 mb-2">
@@ -80,6 +84,7 @@
     <script src="js/dist/pickr-1.7.2.js"></script>
     <script src="js/colorButtons.js"></script>
     <script src="js/colorEffects.js"></script>
+    <script src="js/colorPicker.js"></script>
     <script src="js/createAlert.js"></script>
     <!-- <script src="js/colorPicker.js"></script> -->
 </html>

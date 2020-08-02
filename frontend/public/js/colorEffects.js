@@ -62,7 +62,6 @@ async function keyFreeze(event) {
     if(!event) {
         isFreeze   = false
         freezeTime = 0
-        console.log(isFreeze)
         res        = await fetch(`key-freeze?freeze_time=${freezeTime}&is_freeze=${isFreeze}`, {
             method: 'post'
         }).then((response) => {
@@ -80,7 +79,6 @@ async function keyFreeze(event) {
             return response.json()
         })
         inputField.value = ''
-        console.log(true)
     }
 
     if(res.statusCode === 200) {
@@ -121,14 +119,18 @@ async function setBgLighting(btnValue) {
         if(res.bgState === 'true') {
             document.getElementById('change-bg-lighting').removeAttribute('disabled')
             document.getElementById('bg-lighting-rand-color').removeAttribute('disabled')
-            document.getElementById('change-bg-lighting').style.cursor      = null
-            document.getElementById('bg-lighting-rand-color').style.cursor  = null
+            document.getElementById('bgColorPicker').removeAttribute('disabled')
+            document.getElementById('change-bg-lighting').style.cursor      = 'auto'
+            document.getElementById('bg-lighting-rand-color').style.cursor  = 'auto'
+            document.getElementById('bgColorPicker').style.cursor           = 'auto'
             
         } else {
             document.getElementById('change-bg-lighting').setAttribute('disabled', "true")
             document.getElementById('bg-lighting-rand-color').setAttribute('disabled', 'true')
+            document.getElementById('bgColorPicker').setAttribute('disabled', 'true')
             document.getElementById('change-bg-lighting').style.cursor      = "wait"
             document.getElementById('bg-lighting-rand-color').style.cursor  = "wait"
+            document.getElementById('bgColorPicker').style.cursor           = 'wait'
         }
 
         if(res.statusCode === 200) {
