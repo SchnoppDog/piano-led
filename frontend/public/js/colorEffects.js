@@ -111,7 +111,14 @@ async function setBgLighting(btnValue) {
     } else if(btnValue === 'BG-Color-On-Off') {
         counterBgColorOnOff++
 
-        if(counterBgColorOnOff % 2 === 0) {
+        let bgColorOnOff    = true
+        res                 = await fetch(`/bg-lighting-on-off?bgColorOnOff=${bgColorOnOff}`, {
+            method: 'post'
+        }).then((response) => {
+            return response.json()
+        })
+
+        if(res.bgState === 'true') {
             document.getElementById('change-bg-lighting').removeAttribute('disabled')
             document.getElementById('bg-lighting-rand-color').removeAttribute('disabled')
             document.getElementById('change-bg-lighting').style.cursor      = null
@@ -123,13 +130,6 @@ async function setBgLighting(btnValue) {
             document.getElementById('change-bg-lighting').style.cursor      = "wait"
             document.getElementById('bg-lighting-rand-color').style.cursor  = "wait"
         }
-
-        let bgColorOnOff    = true
-        res                 = await fetch(`/bg-lighting-on-off?bgColorOnOff=${bgColorOnOff}`, {
-            method: 'post'
-        }).then((response) => {
-            return response.json()
-        })
 
         if(res.statusCode === 200) {
             createAlert(showAlertId, res.message, 'success')
@@ -154,4 +154,6 @@ async function setBgRandomLighting() {
     }
 }
 
-randomColorButton()
+document.addEventListener('DOMContentLoaded', () => {
+    randomColorButton()
+})
