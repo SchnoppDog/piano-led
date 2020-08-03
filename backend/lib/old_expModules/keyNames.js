@@ -1,4 +1,6 @@
-//Old File no need
+/*
+    This is a depracated file. There is no need to use it anymore. Still remaining for future test purpose
+*/
 exports.getKeyName = function (keyNote) {
     let keyNameArray = ["C","Cis","D","Dis","E","F","Fis","G","Gis","A","Ais","H"]      //12 Noten
     let keyCount = 12       //12 Notes for one Octave

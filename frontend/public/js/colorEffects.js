@@ -4,6 +4,7 @@
 //global variables:
 let counterBgColorOnOff = 1
 
+//Setting the random-color for the keys
 async function randomColor() {
     let res = await fetch(`/random-color`, {
         method: 'post'
@@ -90,6 +91,7 @@ async function keyFreeze(event) {
     }
 }
 
+//Setting either general background-lighting to on or off and setting the color
 async function setBgLighting(btnValue) {
     const showAlertId = document.getElementById('show-alert-bgLighting')
     let res
@@ -116,6 +118,7 @@ async function setBgLighting(btnValue) {
             return response.json()
         })
 
+        //Button-Behaviour if for each background-button-on/off press
         if(res.bgState === 'true') {
             document.getElementById('change-bg-lighting').removeAttribute('disabled')
             document.getElementById('bg-lighting-rand-color').removeAttribute('disabled')
@@ -141,6 +144,7 @@ async function setBgLighting(btnValue) {
     }
 }
 
+//Setting the random color as background-color
 async function setBgRandomLighting() {
     const showAlertId = document.getElementById('show-alert-bgLighting')
     let res           = await fetch('/bg-lighting-random', {

@@ -1,3 +1,8 @@
+/*
+    This section is for the two color-picker for background-color and key-color.
+    For more information read here: https://github.com/Simonwep/pickr#readme
+*/
+
 let keyColorPicker              = document.getElementById('keyColorPicker')
 let bgColorPicker               = document.getElementById('bgColorPicker')
 let showKeyAlertId              = document.getElementById('show-alert-key-picker')

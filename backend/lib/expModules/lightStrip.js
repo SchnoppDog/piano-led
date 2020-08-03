@@ -14,6 +14,7 @@ const lastRangeKey    = firstRangeKey + maxKeys    //Last Key-Number for last LE
 const keyLed1         = 31    
 const keyLed2         = 32
 
+//Setting the backround-light for the strip
 exports.setBgLight = function(bgOptions) {
   let red     = bgOptions.bgColorOpts.rgba.red
   let green   = bgOptions.bgColorOpts.rgba.green
@@ -44,6 +45,7 @@ exports.lightOn = function(keyNote,r,g,b,a) {
 
 //same goes for lightOff the LEDs for each key
 //if freezeoption is set the pressed keys stay lit after given time has passed
+//if background-color set to true color after the key press remains on the set background-color
 exports.lightOff = function(keyNote, options) {
   let r,g,b,a
   let durationTime

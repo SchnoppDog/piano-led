@@ -40,6 +40,7 @@ let stripOpts               = {
         }
     }
 }
+//For future implementation needed
 // let onPressOpts             = {
 //     color: {
 //         rgba: {
@@ -69,20 +70,35 @@ colorApp.post("/set-color", (req, res) => {
     const colorValue = req.query.colorValue
     const arrayRGB   = convert.hex.rgb(colorValue)
     let bgRed, bgGreen, bgBlue
+    //Dimming the background-light
     bgRed            = ((arrayRGB[0] / 2) / 2) / 2
     bgGreen          = ((arrayRGB[1] / 2) / 2) /2
     bgBlue           = ((arrayRGB[2] / 2) / 2) /2
     randomColor      = false    //if preset color is choosen random-color will turn off automatically
     randColOnOff++         //needed for showing the correct respond-message in random-color
-    // red              = arrayRGB[0]
-    // green            = arrayRGB[1]
-    // blue             = arrayRGB[2]
 
-    //need to be set as String cause boolean value is converted to a string
-    //setting new freeze-options with new color
+    /* Setting various options for various behaviours such as:
+        - Is the general On-Off-Button for the Background-Color turned on or off?
+        - Is the Background-Button set to "Edit-Key-Color" or something else?
+        - Is the freeze-Option set?
+        ...
+        Notice: Booleans must be String since they are handled here as Strings
+    */
     if(stripOpts.isBgColorOnOff === 'true') {
+        /* 
+            If true color for background-lighting can be set
+            If false color is set to 0 and background-options are inaccessible
+        */
         if(stripOpts.isBgColor === 'true') {
+            /*
+                If true Background-Color can be set
+                If false Background-Color is deactivated and key-color can be set
+            */
             if(stripOpts.isFreeze === 'true') {
+                /*
+                    If true Freeze is activated with the correspondending color
+                    If false Freeze is deactivated
+                */
                 stripOpts = {
                     isFreeze: stripOpts.isFreeze,
                     freezeOpts: {
@@ -98,9 +114,9 @@ colorApp.post("/set-color", (req, res) => {
                     isBgColorOnOff: stripOpts.isBgColorOnOff,
                     bgColorOpts: {
                         rgba: {
-                            red: bgRed,       //arrayRGB[0]
-                            green: bgGreen,     //arrayRGB[1]
-                            blue: bgBlue,      //arrayRGB[2]
+                            red: bgRed,      
+                            green: bgGreen,    
+                            blue: bgBlue,      
                             alpha: alpha
                         }
                     }
@@ -151,9 +167,9 @@ colorApp.post("/set-color", (req, res) => {
                     isBgColorOnOff: stripOpts.isBgColorOnOff,
                     bgColorOpts: {
                         rgba: {
-                            red: stripOpts.bgColorOpts.rgba.red,        //stripOpts.bgColorOpts.rgba.red
-                            green: stripOpts.bgColorOpts.rgba.green,    //stripOpts.bgColorOpts.rgba.green
-                            blue: stripOpts.bgColorOpts.rgba.blue,      //stripOpts.bgColorOpts.rgba.blue
+                            red: stripOpts.bgColorOpts.rgba.red,        
+                            green: stripOpts.bgColorOpts.rgba.green,    
+                            blue: stripOpts.bgColorOpts.rgba.blue,      
                             alpha: alpha
                         }
                     }
@@ -204,9 +220,9 @@ colorApp.post("/set-color", (req, res) => {
                 isBgColorOnOff: stripOpts.isBgColorOnOff,
                 bgColorOpts: {
                     rgba: {
-                        red: 0,        //stripOpts.bgColorOpts.rgba.red
-                        green: 0,       //stripOpts.bgColorOpts.rgba.green
-                        blue: 0,        //stripOpts.bgColorOpts.rgba.blue
+                        red: 0,        
+                        green: 0,       
+                        blue: 0,        
                         alpha: alpha
                     }
                 }
@@ -236,12 +252,6 @@ colorApp.post("/set-color", (req, res) => {
             }
         }
     }
-    // console.log("Set-Color:")
-    // console.log(stripOpts)
-    // console.log("Lighton-Function: ")
-    // console.log("red: ", red)
-    // console.log("green: ", green)
-    // console.log("blue: ", blue)
     res.json({ statusCode: 200, message: "Color set!"})
 })
 
@@ -250,6 +260,7 @@ colorApp.post("/your-key-color", (req, res) => {
     green       = Math.round(req.query.green)   //yourGreen
     blue        = Math.round(req.query.blue)    //yourBlue
 
+    //Needed for future implementation
     // onPressOpts         = {
     //     color: {
     //         rgba: {
@@ -264,7 +275,7 @@ colorApp.post("/your-key-color", (req, res) => {
     res.json({ statusCode: 200, message: 'Your color has been set!' })
 })
 
-//setting the random color
+//setting the random color for keys
 colorApp.post("/random-color", (req, res) => {
     randColOnOff++      //need for sending the correct respond message
     if(randColOnOff % 2 === 0) {
@@ -316,6 +327,7 @@ colorApp.post("/key-freeze", (req, res) => {
     }
 })
 
+//Setting general background-color to on or off
 colorApp.post('/bg-lighting-on-off', (req, res) => {
     let bgColorOnOff = req.query.bgColorOnOff
 
@@ -377,6 +389,7 @@ colorApp.post('/bg-lighting-on-off', (req, res) => {
     }
 })
 
+//Setting the state for the background-color
 colorApp.post('/bg-lighting', (req, res) => {
     let bgColor         = req.query.bgColor
     
@@ -415,6 +428,7 @@ colorApp.post('/bg-lighting', (req, res) => {
     }
 })
 
+//Setting a random color to the background-color for the entire strip
 colorApp.post("/bg-lighting-random", (req, res) => {
     let randRgbValues = colorEffects.getRandomColor()
     let randRed       = randRgbValues[0] / 6
@@ -448,6 +462,7 @@ colorApp.post("/bg-lighting-random", (req, res) => {
     res.json({ statusCode: 200, message: "Random Color Applied!" })
 })
 
+//Setting the custom-color of the user as background-color
 colorApp.post("/your-bg-color", (req, res) => {
     let yourBgRed       = Math.round(req.query.red) / 6
     let yourBgGreen     = Math.round(req.query.green) / 6
@@ -481,13 +496,13 @@ colorApp.post("/your-bg-color", (req, res) => {
 })
 
 //Starting Monitoring Service for piano
-//You need to edit this "if"-Statemant if your piano has a other name than shown here
+//You need to edit the first "if"-Statemant if your piano has a other name than shown here
 usbDetect.startMonitoring()
 usbDetect.on('add',(device) => { 
     if(device.deviceName === "Digital_Piano") {
         console.log("Device found!")
         
-        //Edit this const if your input-name of your piano is different than shown here
+        //Edit this variable if your input-name of your piano is different than shown here
         const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
         midiInput.on('noteon', (msg) => {
             if(msg.velocity > 0 ) {
