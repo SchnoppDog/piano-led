@@ -6,17 +6,10 @@ This is a selfmade project inspired by videos from pianist Rousseau on Youtube. 
 ## General Information
 There are several Readme-Files for different purposes:
 - Are you a beginner and have no experience in Linux, NodeJS or whatsoever? Click on this [Beginner's-Guide](.github/readme_files/BEGINNER.md)
-- You do have some knowledge about Linux and or NodeJs? Go to the normal [Installation-Guide](#-Installation-Guide) in this file.
+- You do have some knowledge about Linux and or NodeJs? Go to the normal [Installation-Guide](#-Installation) in this file.
 - You want to develop this program for yourself? I provide some starting hints in this [Developer-File](.github/readme_files/DEV.md)
 - If you're interested in recent Updates just follow this [Update-File](.github/readme_files/UPDATES.md)
-## Updates
-Hey there folks! It's been a long time since this project was released! After 5 Months I had some time to work on this project again. Here are the details what's new in this project:
-### Added
-- **New HTML-Design:** With the support of jquery, popper.js and bootstrap the new Color-Page.html-File looks now a lot better than in the first version. On this site you can set your personal preferences for color of the strip provided by preset-color-buttons or a random-color-function. You can also add a time how long the keys should stay lit after pressing them 
-- **Random-Color-Button:** If you use this feature each new pressed key will light up in a different color. 
-- **Freeze-Option:** After releasing the key your light will stay lit for a specifig amount of seconds. You can decide if between 1-5 seconds (floating numbers not supported yet!)
-### Removed
-- **Color-Picker:** At this moment you can't select your own color anymore. This feature is currently under maintenance.
+# Installation 
 ## What you need
 - A standard piano with 88 keys
 - A piano with USB-MIDI (if you own a piano with standard MIDI-Interfaces then get a MIDI-to-USB-cable)
