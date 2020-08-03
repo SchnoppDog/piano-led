@@ -50,7 +50,7 @@ Now comes a more tricky part of this installation-guide, but don't worry.
 ### Creating and updating mainConfig.js
 First open the file called `mainConfig.txt`. Copy the text and close the file again. Navigate to `backend` and create a new file called `config.js`. Open up `config.js` and paste your copied text. Change the `config.server.port` to `8080` 
 ```
-module.exports.port = 8080
+config.server.port = 8080
 ```
 Then change the `config.server.ipPi` to your rapsberry pi's IPv4-adress. If you don't know how to obtain the ipv4-adress of your rapsberry pi simply type `ifoncfig | grep inet` into the terminal. The output should be like this:
 ```
@@ -58,7 +58,7 @@ inet 192.168.0.0  netmask 255.255.255.0  broadcast 192.168.0.255
 ```
 Copy your inet number (in this example 192.168.0.0) and paste it into the `config.server.ipPi` variable:
 ```
-module.exports.ipPi = "192.168.0.0"
+config.server.ipPi = "192.168.0.0"
 ```
 Quotation marks are need.
 
@@ -89,7 +89,7 @@ usbDetect.startMonitoring()
 usbDetect.on('add',(device) => { 
     if(device.deviceName === "Digital_Piano")
 ```
-Replace in this if-statemant the `Digital_Paino` with your saved value (the value you copied in the second step). In this if-statemant you should also see this:
+Replace in this if-statemant the `Digital_Piano` with your saved value (the value you copied in the second step). In this if-statemant you should also see this:
 ```
 const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
 ``` 
@@ -113,6 +113,7 @@ To wire up your strip you need four female-to-female wires:
 - One for 5V. Color is often red.
 - One for DATA. Color is often green.
 - One for Clock-Rate. Color is often blue  
+  
 Now you need to connect all four wires to each correspondending color on the strip. After connecting the wires to the strip you need to connect them to the raspberry pi too. The pins needed for raspberry pi version 3 can be reviewed with this [pinout](https://pinout.xyz).
 Simply connect GND to GND, 5V to 5V, Clock-Rate to Pin 23 (SCLK) and DATA to Pin 19 (MOSI) on your pi.
 
