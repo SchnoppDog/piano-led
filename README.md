@@ -3,12 +3,14 @@
 
 ## About
 This is a selfmade project inspired by videos from pianist Rousseau on Youtube. With this project you can light up your piano just like rousseau and other people on youtube. This project is entirely written in Node.js and a bit of HTML. I take no warranties that the project works for you.
+
 ## General Information
 There are several Readme-Files for different purposes:
 - Are you a beginner and have no experience in Linux, NodeJS or whatsoever? Click on this [Beginner's-Guide](.github/readme_files/BEGINNER.md)
-- You do have some knowledge about Linux and or NodeJs? Go to the normal [Installation-Guide](#-Installation) in this file.
+- You do have some knowledge about Linux and or NodeJs? Go to the normal [Installation-Guide](#installation) in this file.
 - You want to develop this program for yourself? I provide some starting hints in this [Developer-File](.github/readme_files/DEV.md)
 - If you're interested in recent Updates just follow this [Update-File](.github/readme_files/UPDATES.md)
+
 # Installation 
 ## What you need
 - A standard piano with 88 keys
