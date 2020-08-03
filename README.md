@@ -1,5 +1,5 @@
 # piano-led
-<img src=".github/imgaes/title_screen.jpg">
+<img src=".github/images/title_screen.jpg">
 
 ## About
 This is a selfmade project inspired by videos from pianist Rousseau on Youtube. With this project you can light up your piano just like rousseau and other people on youtube. This project is entirely written in Node.js and a bit of HTML. I take no warranties that the project works for you.
