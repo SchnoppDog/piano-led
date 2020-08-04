@@ -536,7 +536,6 @@ usbDetect.on('add',(device) => {
                                 }
                             }
                         }
-                        ledStrip.setBgLight(stripOpts)
                     }
                     ledStrip.lightOn(msg.note,red,green,blue,alpha)
                 }
