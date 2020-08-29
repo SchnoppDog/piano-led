@@ -426,6 +426,7 @@ colorApp.post('/bg-lighting', (req, res) => {
             }
         }
     }
+
 })
 
 //Setting a random color to the background-color for the entire strip
