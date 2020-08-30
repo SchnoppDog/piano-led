@@ -42,6 +42,7 @@ sudo apt install python3
 sudo apt install gcc
 sudo apt install g++
 sudo apt install libasound2-dev
+sudo apt-get install libudev-dev
 ```
 If you're done installing verify the nodejs-package with those two commands:
 ```
@@ -51,7 +52,7 @@ npm -v
 The outputs for `node -v` should be v10.15.2 or higher and for `npm -v` 5.8.0 or higher
 
 ## Copying the Project
-Navigate into any directory you want to install this project. I recommend using the `documents` folder. Download the project into your directory using `git clone https://github.com/SchnoppDog/piano-led.git`. After your download change into the newly created directory called led piano. Now use the command `npm install` to install the project with its modules.
+Navigate into any directory you want to install this project. I recommend using the `documents` folder. Download the project into your directory using `git clone https://github.com/SchnoppDog/piano-led.git`. After your download change into the newly created directory called led piano. Delete the `package-lock.json` file. Now use the command `npm install` to install the project with its modules.
 
 ## Updating variables
 ### Creating and Updating config.js
@@ -90,7 +91,7 @@ const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
 Replace `Digital Piano:Digital Piano MIDI 1 20:0` with your stored value from step one. **After changing these files don't forget to save them!**
 
 ## Installing PM2
-Now you are nearly done! All you need is to put the `main.js`-file into startup using pm2. This is used to make sure your script is running even if the pi unexpectedly shuts down or needs to be restarted. To install pm2 simply navigate into the root-directory and type `npm install pm2 -g`. After the installation navigate to `/backend` and run this command: `pm2 start ecosystem.config.js`. Your output should be like this:
+Now you are nearly done! All you need is to put the `main.js`-file into startup using pm2. This is used to make sure your script is running even if the pi unexpectedly shuts down or needs to be restarted. To install pm2 simply navigate into the root-directory and type `sudo npm install pm2 -g`. After the installation navigate to `/backend` and run this command: `pm2 start ecosystem.config.js`. Your output should be like this:
 ```
 LED-Piano    │ default     │ 1.0.2   │ cluster │ 23556    │ 14h    │ 1    │ online    │ 2.6%     │ 49.9mb   │ pi       │ disabled 
 ```

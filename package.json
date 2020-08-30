@@ -1,8 +1,8 @@
 {
-  "name": "piano-led-visualizer",
+  "name": "piano-led",
   "version": "1.0.2",
   "description": "With this project you can make your own piano lighten up!",
-  "main": "main.js",
+  "main": "backend/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
