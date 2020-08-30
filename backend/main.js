@@ -426,6 +426,7 @@ colorApp.post('/bg-lighting', (req, res) => {
             }
         }
     }
+
 })
 
 //Setting a random color to the background-color for the entire strip
@@ -536,7 +537,6 @@ usbDetect.on('add',(device) => {
                                 }
                             }
                         }
-                        ledStrip.setBgLight(stripOpts)
                     }
                     ledStrip.lightOn(msg.note,red,green,blue,alpha)
                 }
