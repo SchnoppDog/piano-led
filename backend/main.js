@@ -148,16 +148,68 @@ colorApp.post("/your-key-color", (req, res) => {
 
 //setting the random color for keys
 colorApp.post("/random-color", (req, res) => {
-    randColOnOff++      //need for sending the correct respond message
-    if(randColOnOff % 2 === 0) {
-        randomColor = false
-        red = 128
-        green = 128
-        blue = 128
-        res.json({ statusCode: 205, message: "Random Color Off!"})
+    let randRgbValues               = colorEffects.getRandomColor()
+    let randRed                     = randRgbValues[0]
+    let randGreen                   = randRgbValues[1]
+    let randBlue                    = randRgbValues[2]
+
+    if(stripOpts.isBgColorOnOff === "true") {
+        if(stripOpts.isBgColor === "true") {
+            stripOpts.bgColorOpts.rgba.red          = randRed / 6
+            stripOpts.bgColorOpts.rgba.green        = randGreen / 6
+            stripOpts.bgColorOpts.rgba.blue         = randBlue / 6 
+            ledStrip.setBgLight(stripOpts)
+
+            res.json({ statusCode: 200, message: `Random Color Set! Color is RGB ${randRed}, ${randGreen}, ${randBlue}` })
+        } else {
+            red     = randRed
+            green   = randGreen
+            blue    = randBlue
+
+            res.json({ statusCode: 200, message: `Random Color Set! Color is RGB ${randRed}, ${randGreen}, ${randBlue}` })
+        }
     } else {
-        randomColor = true
-        res.json({ statusCode: 200, message: "Random Color set!"})
+        red     = randRed
+        green   = randGreen
+        blue    = randBlue
+
+        res.json({ statusCode: 200, message: `Random Color Set! Color is RGB ${randRed}, ${randGreen}, ${randBlue}` })
+    }
+})
+
+colorApp.post("/random-color-per-press", (req, res) => {
+    if(stripOpts.isBgColorOnOff === "true") {
+        if(stripOpts.isBgColor === "true") {
+            res.json({ statusCode: 400, message: "Background-Color Active! Switch to Key-Color to activate this function!" })
+        } else {
+            randColOnOff++      //need for sending the correct respond message
+            if(randColOnOff % 2 === 0) {
+                red         = 128
+                green       = 128
+                blue        = 128
+                randomColor = false
+                
+                res.json({ statusCode: 205, message: "Random-Color per Press OFF!" })
+            } else {
+                randomColor = true
+
+                res.json({ statusCode: 200, message: "Random-Color per Press ON!" })
+            }
+        }
+    } else {
+        randColOnOff++      //need for sending the correct respond message
+        if(randColOnOff % 2 === 0) {
+            red         = 128
+            green       = 128
+            blue        = 128
+            randomColor = false
+            
+            res.json({ statusCode: 205, message: "Random-Color per Press OFF!" })
+        } else {
+            randomColor = true
+
+            res.json({ statusCode: 200, message: "Random-Color per Press ON!" })
+        }
     }
 })
 
@@ -217,21 +269,6 @@ colorApp.post('/bg-lighting', (req, res) => {
         }
     }
     stripOpts.isBgColor = bgColor
-})
-
-//Setting a random color to the background-color for the entire strip
-colorApp.post("/bg-lighting-random", (req, res) => {
-    let randRgbValues                   = colorEffects.getRandomColor()
-    let randRed                         = randRgbValues[0] / 6
-    let randGreen                       = randRgbValues[1] / 6
-    let randBlue                        = randRgbValues[2] / 6
-
-    stripOpts.bgColorOpts.rgba.red      = randRed
-    stripOpts.bgColorOpts.rgba.green    = randGreen
-    stripOpts.bgColorOpts.rgba.blue     = randBlue
-    ledStrip.setBgLight(stripOpts)
-
-    res.json({ statusCode: 200, message: "Random Color Applied!" })
 })
 
 //Setting the custom-color of the user as background-color

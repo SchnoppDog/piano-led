@@ -11,13 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
 //Function for generating each preset-color-button
 function buildColorButtons() {
     const colorButtonsName = ["Red","Green","Blue","Orange","Purple","Cyan","Yellow","Scooter","Wine Berry",
-                            "Bahama Blue","Tropical Forest","Crimson","Jade","Cerulean","Radical Red","Limeade","Grassy Green","Grenadier","LEDs Off","Default"]
+                            "Bahama Blue","Tropical Forest","Crimson","Jade","Cerulean","Radical Red","Limeade","Grassy Green","Grenadier","LEDs Off","Default", "Random", "Rand p. Press"]
     const colorCodes       = ["#800000","#008000","#000080","#ff6600","#800080","#008888","#ffff00","#2ab7ca","#651e3e",
-                            "#005b96","#00664d","#d11141","#00b159","#00aedb","#ff3377","#4db300","#1eb300","#c94300","#000000","#808080"]
+                            "#005b96","#00664d","#d11141","#00b159","#00aedb","#ff3377","#4db300","#1eb300","#c94300","#000000","#808080", "none", "none"]
     const bgColors         = ["#880000","#008800","#000088","#ff6600","#880088","#00ffff","#ffff00","#2ab7ca","#651e3e",
-                            "#005b96","#00664d","#d11141","#00b159","#00aedb","#ff3377","#4db300","#1eb300","#c94300","#000000","#ffffff"]
+                            "#005b96","#00664d","#d11141","#00b159","#00aedb","#ff3377","#4db300","#1eb300","#c94300","#000000","#ffffff", "none", "none"]
     const styleBtnIds      = ["btnRed","btnGreen","btnBlue","btnOrange","btnPurple","btnCyan","btnYellow","btnScooter","btnWBerry",
-                            "btnBBlue","btnTropForest","btnCrimson","btnJade","btnCerulean","btnRRed","btnLimeade","btnGraGreen","btnGrenadier","btnOff","btnDefault"]
+                            "btnBBlue","btnTropForest","btnCrimson","btnJade","btnCerulean","btnRRed","btnLimeade","btnGraGreen","btnGrenadier","btnOff","btnDefault", "randomColor", "randPerPress"]
     const colorButtonsId   = document.getElementById("colorButtons")
 
     for(let counter = 0; counter < colorCodes.length; counter++) {
@@ -38,35 +38,51 @@ function buildColorButtons() {
 //function for setting each color with a post-request
 //added response handler for user note
 async function setColor(event) {
-    const showAlertId = document.getElementById('show-alert')
-    let splitHashtag = event.target.value
-    if(splitHashtag === undefined) {
-    } else {
-        let buttonColorValue = splitHashtag.split("#")[1]
-        console.log(buttonColorValue)
-        let statusMessage = await fetch(`/set-color?colorValue=${buttonColorValue}`, {
+    const showAlertId       = document.getElementById('show-alert')
+    let splitHashtag        = event.target.value
+    let statusMessage
+
+    if(event.target.id === "randomColor") {
+        statusMessage = await fetch(`/random-color`, {
             method: 'post'
         }).then((response) => {
             return response.json()
         })
-        
-        if(statusMessage.statusCode === 200) {
-            const alertSuccess = document.createElement("div")
-            alertSuccess.setAttribute("class", "alert alert-success alert-dismissible show fade mx-auto alert-sd")
-            alertSuccess.setAttribute("role", "alert")
-            alertSuccess.setAttribute("id", "alertSuccess")
-            alertSuccess.textContent = statusMessage.message
-            showAlertId.appendChild(alertSuccess)
-        } else {
-            const alertWarning = document.createElement("div")
-            alertWarning.setAttribute("class", "alert alert-warning alert-dismissible show fade mx-auto alert-sd")
-            alertWarning.setAttribute("role", "alert")
-            alertWarning.textContent = statusMessage.message
-            showAlertId.appendChild(alertWarning)
-        }
-        const targetAlerts = document.getElementsByClassName("alert-sd")
-        setTimeout(() => {
-            $(targetAlerts).fadeOut()
-        }, 3000)
+
+    } else if(event.target.id === "randPerPress") {
+        statusMessage = await fetch(`/random-color-per-press`, {
+            method: 'post'
+        }).then((response) => {
+            return response.json()
+        })
+    } else {
+        if(splitHashtag !== undefined) { 
+            let buttonColorValue = splitHashtag.split("#")[1]
+            statusMessage = await fetch(`/set-color?colorValue=${buttonColorValue}`, {
+                method: 'post'
+            }).then((response) => {
+                return response.json()
+            })
+        } else {  }
     }
+
+    if(statusMessage.statusCode === 200) {
+        const alertSuccess = document.createElement("div")
+        alertSuccess.setAttribute("class", "alert alert-success alert-dismissible show fade mx-auto alert-sd")
+        alertSuccess.setAttribute("role", "alert")
+        alertSuccess.setAttribute("id", "alertSuccess")
+        alertSuccess.textContent = statusMessage.message
+        showAlertId.appendChild(alertSuccess)
+    } else {
+        const alertWarning = document.createElement("div")
+        alertWarning.setAttribute("class", "alert alert-warning alert-dismissible show fade mx-auto alert-sd")
+        alertWarning.setAttribute("role", "alert")
+        alertWarning.textContent = statusMessage.message
+        showAlertId.appendChild(alertWarning)
+    }
+
+    const targetAlerts = document.getElementsByClassName("alert-sd")
+    setTimeout(() => {
+        $(targetAlerts).fadeOut()
+    }, 3000)
 }
