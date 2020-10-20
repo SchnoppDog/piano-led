@@ -2,7 +2,7 @@
     This section is for the two color-picker for background-color and key-color.
     For more information read here: https://github.com/Simonwep/pickr#readme
 */
-
+// ############################## Color Picker for Custom Background- and Key-Color #####################
 let colorPickerDivId            = document.getElementById('colorPickerDiv')
 let showAlertId                 = document.getElementById('show-alert')
 let colorPickerButton           = document.createElement('button')
@@ -109,3 +109,6 @@ colorPicker.on('init', pickr => {
         }
     }
 })
+
+// #################################### Form-Color-Picker ###################################
+

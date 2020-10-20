@@ -56,6 +56,18 @@
                     </form>
                 </div>
                 <div class="col-sm mt-2 mb-2">
+                    <h3>Color-Shuffle</h3>
+                    <hr>
+                    <div id="colorShuffleAlert">
+                    </div>
+                    <form onsubmit="createColorShuffleForm(event)">
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="shuffleInputNumber" aria-describedby="colorShuffleHelp" placeholder="How many color-inputs?" required>
+                            <small id="colorShuffleHelp" class="form-text text-muted">Note: Minimum is: 2, maximum is: 6</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger float-right" id="cancelColorShuffle" onclick="createColorShuffleForm()">Stop Shuffle</button>
+                    </form>
                 </div>
             </div>
         </div>
