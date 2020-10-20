@@ -19,6 +19,7 @@ function buildColorButtons() {
     const styleBtnIds      = ["btnRed","btnGreen","btnBlue","btnOrange","btnPurple","btnCyan","btnYellow","btnScooter","btnWBerry",
                             "btnBBlue","btnTropForest","btnCrimson","btnJade","btnCerulean","btnRRed","btnLimeade","btnGraGreen","btnGrenadier","btnOff","btnDefault", "randomColor", "randPerPress"]
     const colorButtonsId   = document.getElementById("colorButtons")
+    //const customColPicker  = document.getElementById("customColorPicker")
 
     for(let counter = 0; counter < colorCodes.length; counter++) {
         let button      = document.createElement("button")
@@ -33,6 +34,15 @@ function buildColorButtons() {
         button.appendChild(document.createTextNode(node))
         colorButtonsId.appendChild(button)
     }
+    let customColorButton   = document.createElement("button")
+    let customColorNode     = "Color Picker"
+    let customColorId       = "colorPicker"     
+    
+    customColorButton.setAttribute("class", "btn m-1")
+    customColorButton.setAttribute("id", `${customColorId}`)
+    customColorButton.setAttribute("type", "button")
+    customColorButton.appendChild(document.createTextNode(customColorNode))
+    //customColPicker.appendChild(customColorButton)
 }
 
 //function for setting each color with a post-request
@@ -55,7 +65,10 @@ async function setColor(event) {
         }).then((response) => {
             return response.json()
         })
+    } else if(event.target.id === "colorButtons") {
+
     } else {
+        console.log(event.target.id)
         if(splitHashtag !== undefined) { 
             let buttonColorValue = splitHashtag.split("#")[1]
             statusMessage = await fetch(`/set-color?colorValue=${buttonColorValue}`, {
@@ -63,26 +76,16 @@ async function setColor(event) {
             }).then((response) => {
                 return response.json()
             })
-        } else {  }
+        }
     }
 
-    if(statusMessage.statusCode === 200) {
-        const alertSuccess = document.createElement("div")
-        alertSuccess.setAttribute("class", "alert alert-success alert-dismissible show fade mx-auto alert-sd")
-        alertSuccess.setAttribute("role", "alert")
-        alertSuccess.setAttribute("id", "alertSuccess")
-        alertSuccess.textContent = statusMessage.message
-        showAlertId.appendChild(alertSuccess)
-    } else {
-        const alertWarning = document.createElement("div")
-        alertWarning.setAttribute("class", "alert alert-warning alert-dismissible show fade mx-auto alert-sd")
-        alertWarning.setAttribute("role", "alert")
-        alertWarning.textContent = statusMessage.message
-        showAlertId.appendChild(alertWarning)
-    }
+    if(statusMessage !== undefined) {
+        if(statusMessage.statusCode >= 200 && statusMessage.statusCode <= 299) {
+            createAlert(showAlertId, `${statusMessage.message}`, 'success')
+        } else if(statusMessage.statusCode >= 300 && statusMessage.statusCode <= 399) {
 
-    const targetAlerts = document.getElementsByClassName("alert-sd")
-    setTimeout(() => {
-        $(targetAlerts).fadeOut()
-    }, 3000)
+        } else if(statusMessage.statusCode >= 400 && statusMessage.statusCode <= 499) {
+            createAlert(showAlertId, `${statusMessage.message}`, 'danger')
+        }
+    }
 }

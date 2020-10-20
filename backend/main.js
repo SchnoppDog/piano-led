@@ -126,26 +126,6 @@ colorApp.post("/set-color", (req, res) => {
     res.json({ statusCode: 200, message: "Color set!"})
 })
 
-colorApp.post("/your-key-color", (req, res) => {
-    red         = Math.round(req.query.red)     //yourRed
-    green       = Math.round(req.query.green)   //yourGreen
-    blue        = Math.round(req.query.blue)    //yourBlue
-
-    //Needed for future implementation
-    // onPressOpts         = {
-    //     color: {
-    //         rgba: {
-    //             red: yourRed,
-    //             green: yourGreen,
-    //             blue: yourBlue,
-    //             alpha: alpha
-    //         }
-    //     }
-    // }
-    
-    res.json({ statusCode: 200, message: 'Your color has been set!' })
-})
-
 //setting the random color for keys
 colorApp.post("/random-color", (req, res) => {
     let randRgbValues               = colorEffects.getRandomColor()
@@ -180,7 +160,7 @@ colorApp.post("/random-color", (req, res) => {
 colorApp.post("/random-color-per-press", (req, res) => {
     if(stripOpts.isBgColorOnOff === "true") {
         if(stripOpts.isBgColor === "true") {
-            res.json({ statusCode: 400, message: "Background-Color Active! Switch to Key-Color to activate this function!" })
+            res.json({ statusCode: 403, message: "Background-Color Active! Switch to Key-Color to activate this function!" })
         } else {
             randColOnOff++      //need for sending the correct respond message
             if(randColOnOff % 2 === 0) {
@@ -189,7 +169,7 @@ colorApp.post("/random-color-per-press", (req, res) => {
                 blue        = 128
                 randomColor = false
                 
-                res.json({ statusCode: 205, message: "Random-Color per Press OFF!" })
+                res.json({ statusCode: 418, message: "Random-Color per Press OFF!" })
             } else {
                 randomColor = true
 
@@ -204,12 +184,41 @@ colorApp.post("/random-color-per-press", (req, res) => {
             blue        = 128
             randomColor = false
             
-            res.json({ statusCode: 205, message: "Random-Color per Press OFF!" })
+            res.json({ statusCode: 418, message: "Random-Color per Press OFF!" })
         } else {
             randomColor = true
 
             res.json({ statusCode: 200, message: "Random-Color per Press ON!" })
         }
+    }
+})
+
+colorApp.post("/custom-color", (req, res) => {
+    let customRed       = Math.round(req.query.red)
+    let customGreen     = Math.round(req.query.green)
+    let customBlue      = Math.round(req.query.blue)
+
+    if(stripOpts.isBgColorOnOff === 'true') {
+        if(stripOpts.isBgColor === 'true') {
+            stripOpts.bgColorOpts.rgba.red      = customRed / 6
+            stripOpts.bgColorOpts.rgba.green    = customGreen / 6
+            stripOpts.bgColorOpts.rgba.blue     = customBlue / 6
+
+            ledStrip.setBgLight(stripOpts)
+            res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
+        } else {
+            red     = customRed
+            green   = customGreen
+            blue    = customBlue
+
+            res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
+        } 
+    } else {
+        red     = customRed
+        green   = customGreen
+        blue    = customBlue
+
+        res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
     }
 })
 
@@ -269,20 +278,6 @@ colorApp.post('/bg-lighting', (req, res) => {
         }
     }
     stripOpts.isBgColor = bgColor
-})
-
-//Setting the custom-color of the user as background-color
-colorApp.post("/your-bg-color", (req, res) => {
-    let yourBgRed                           = Math.round(req.query.red) / 6
-    let yourBgGreen                         = Math.round(req.query.green) / 6
-    let yourBgBlue                          = Math.round(req.query.blue) / 6
-
-    stripOpts.bgColorOpts.rgba.red          = yourBgRed
-    stripOpts.bgColorOpts.rgba.green        = yourBgGreen
-    stripOpts.bgColorOpts.rgba.blue         = yourBgBlue
-
-    ledStrip.setBgLight(stripOpts)
-    res.json({ statusCode: 200, message: 'Your color has been set!' })    
 })
 
 //Starting Monitoring Service for piano

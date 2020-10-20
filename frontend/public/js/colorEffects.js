@@ -106,15 +106,11 @@ async function setBgLighting(btnValue) {
         //Button-Behaviour if for each background-button-on/off press
         if(res.bgState === 'true') {
             document.getElementById('change-bg-lighting').removeAttribute('disabled')
-            document.getElementById('bgColorPicker').removeAttribute('disabled')
             document.getElementById('change-bg-lighting').style.cursor      = 'auto'
-            document.getElementById('bgColorPicker').style.cursor           = 'auto'
             
         } else {
             document.getElementById('change-bg-lighting').setAttribute('disabled', "true")
-            document.getElementById('bgColorPicker').setAttribute('disabled', 'true')
             document.getElementById('change-bg-lighting').style.cursor      = "wait"
-            document.getElementById('bgColorPicker').style.cursor           = 'wait'
         }
 
         if(res.statusCode === 200) {

@@ -20,32 +20,27 @@
         </nav>
         <div class="container-fluid" style="background-color: #A1D7FF;">
             <div class="row">
-                <div class="col-sm mt-2 mb-2 colorButtonsClass" id="colorButtons">
-                    <h3>Preset Colors</h3>
+                <div class="col-sm mt-2 mb-2">
+                    <h3>Choose your Color</h3>
                     <hr class="horizontalRuler">
                     <div id="show-alert">
                     </div>
+                    <div class="colorButtonsClass" id="colorButtons">
+                    </div>
+                    <div id="colorPickerDiv">
+                        <!-- <button type="button" class="btn m-1" id="colorPicker">Color Picker</button> -->
+                    </div>
                 </div>
                 <div class="col-sm mt-2 mb-2">
-                    <h3>Background-Lighting</h3>
+                    <h3>Background- and Key-Lighting</h3>
                     <hr class="horizontalRuler">
                     <div id="show-alert-bgLighting">
                     </div>
-                    <button type="button" class="btn" id="bgColorPicker">Your Color</button>
                     <button type="button" class="btn btn-primary m-1" id="change-bg-lighting" value="BG-Color" onclick="setBgLighting(this.value)">Change BG-Lighting</button>
                     <button type="button" class="btn btn-dark m-1" id="bg-lighting-off" value="BG-Color-On-Off" onclick="setBgLighting(this.value)">BG-Lighting On/Off</button>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm mt-2 mb-2">
-                    <h3>Your Color!</h3>
-                    <hr class="horizontalRuler">
-                    <div id="show-alert-key-picker"></div>
-                    <button type="button" class="btn" id="keyColorPicker">Your Color</button>
-                    <!-- <div id="colorPicker"></div> -->
-                    <!-- <button type="button" id="colorPicker">Color Picker</button> -->
-                    <!-- <button type="button" class="btn btn-primary" id="colorPicker">Color Picker</button> -->
-                </div>
                 <div class="col-sm mt-2 mb-2">
                     <h3>Key-Freeze</h3>
                     <hr>
@@ -59,6 +54,8 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <button type="button" class="btn btn-danger float-right" id="cancelFreeze" onclick="keyFreeze()">Stop Freeze</button>
                     </form>
+                </div>
+                <div class="col-sm mt-2 mb-2">
                 </div>
             </div>
         </div>
