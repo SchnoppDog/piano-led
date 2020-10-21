@@ -66,6 +66,10 @@ colorApp.get("/color-page", (req, res) => {
     res.sendFile(`${config.html.views}/colorPage.html`)
 })
 
+colorApp.get("/color-picker-test", (req, res) => {
+    res.sendFile(`${config.html.views}/color-picker-test.html`)
+})
+
 //Setting Preset-Color
 colorApp.post("/set-color", (req, res) => {
     const colorValue = req.query.colorValue
