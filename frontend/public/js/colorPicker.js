@@ -120,6 +120,12 @@ function createColorShuffleForm(event) {
     let shuffleInput        = document.getElementById("shuffleInputNumber")
     let inputNumber         = shuffleInput.value
     let isColorShuffle      = false
+    let colorArrayRed       = []
+    let colorArrayGreen     = []
+    let colorArrayBlue      = []
+    let colorRGBA           = []
+
+    //console.log(event.submitter.id)
 
     if(!event) {
         console.log("No Event! isColorShuffle set to false")
@@ -146,7 +152,7 @@ function createColorShuffleForm(event) {
             let createDivFormRow
             let shufflePicker
             let createShuffleColorInput
-            let createShuffleColorInputDiv
+            let shuffleInputArray       = []
 
             shuffleInput.value          = ''
             getShuffleInputId.innerHTML = ''
@@ -162,24 +168,32 @@ function createColorShuffleForm(event) {
 
                 let createDivCol            = document.createElement("div")
                 createShuffleColorInput     = document.createElement("input")
-                createShuffleColorInputDiv  = document.createElement("div")
+                shuffleInputArray[counter]  = createShuffleColorInput
 
                 createShuffleColorInput.setAttribute("type", "button")
                 createShuffleColorInput.setAttribute("class", "form-control mt-1 mb-1")
                 createShuffleColorInput.setAttribute("value", `Color ${counter+1}`)
                 createShuffleColorInput.style.color = 'white'
                 createDivCol.setAttribute("class", "col-sm")
-                createShuffleColorInputDiv.appendChild(createShuffleColorInput)
-                createDivCol.appendChild(createShuffleColorInputDiv)
+                createDivCol.appendChild(shuffleInputArray[counter])
                 createDivFormRow.appendChild(createDivCol)
 
-                shufflePicker               = new Pickr({
-                    el: createShuffleColorInputDiv,
+                $(createShuffleColorInput).data('inputNumber', counter+1)
+
+                createSubmitButton.setAttribute("type", "button")
+                createSubmitButton.setAttribute("class", "btn btn-primary mb-2")
+                createSubmitButton.innerHTML = 'Submit'
+                createForm.appendChild(createDivFormGroup)
+                createForm.appendChild(createSubmitButton)
+                getShuffleInputId.appendChild(createForm)
+
+                shufflePicker               = Pickr.create({
+                    el: shuffleInputArray[counter],
                     container: 'div',
                     theme: 'classic',
                     default: '#000000',
                     defaultRepresentation: 'RGBA',
-                    useAsButton: false,
+                    useAsButton: true,
                     position: 'right-start',
                     swatches: [
                         'rgba(255,255,255,1)',
@@ -222,23 +236,39 @@ function createColorShuffleForm(event) {
                         }
                     }
                 })
+
+                shufflePicker.on('init', pickr => {
+                    shuffleInputArray[counter].style.backgroundColor    = pickr.getColor().toRGBA().toString(0)
+                }).on('clear', pickr => {
+                    shuffleInputArray[counter].style.backgroundColor    = '#000000'
+                    pickr.setColor('#000000')
+                    pickr.show()
+                }).on('cancel', pickr => {
+                    pickr.hide()
+                }).on('save', (color, pickr) => {
+                    if(pickr !== null) {
+                        shuffleInputArray[counter].style.backgroundColor    = pickr.getColor().toRGBA().toString(0)
+                        colorRGBA                                           = pickr.getSelectedColor().toRGBA()
+                    } else {
+                        shuffleInputArray[counter].style.backgroundColor    = '#000000'
+                        colorRGBA                                           = [0, 0, 0]
+                    }
+                    // console.log("Array-Element No: ", $(shuffleInputArray[counter]).data('inputNumber'), " With Color-RGBA: ", pickr.getColor().toRGBA())
+
+
+                    /*
+                        Idee funktioniert soweit, muss dann noch weiter bearbeitet werden. Nächster Schritt wäre die Color-Values so aufzubereiten, dass diese mittels submit-button und vllt einer neuen Funktion an eine Route verschickt werden.
+                    */
+                    colorArrayRed[$(shuffleInputArray[counter]).data('inputNumber')]    = colorRGBA[0]
+                    colorArrayGreen[$(shuffleInputArray[counter]).data('inputNumber')]  = colorRGBA[1]
+                    colorArrayBlue[$(shuffleInputArray[counter]).data('inputNumber')]   = colorRGBA[2]
+
+                    console.log("Array-Element No: ", $(shuffleInputArray[counter]).data('inputNumber'), " With Color-RGBA: ", colorArrayRed[$(shuffleInputArray[counter]).data('inputNumber')], " ", colorArrayGreen[$(shuffleInputArray[counter]).data('inputNumber')], " ", colorArrayBlue[$(shuffleInputArray[counter]).data('inputNumber')])
+
+                    pickr.hide()
+                })
             }
 
-            createSubmitButton.setAttribute("type", "button")
-            createSubmitButton.setAttribute("class", "btn btn-primary mb-2")
-            createSubmitButton.innerHTML = 'Submit'
-            createForm.appendChild(createDivFormGroup)
-            createForm.appendChild(createSubmitButton)
-            getShuffleInputId.appendChild(createForm)
-
-            // Note: Picker funktionieren noch nicht richtig es wird immer nur ein Picker mit Farben etc ausgewählt. Muss sich weiter erkundigt werden!
-            // shufflePicker.on('save', pickr => {
-            //     console.log('init', pickr)
-            //     createShuffleColorInput.style.backgroundColor    = pickr.getColor().toRGBA().toString(0)
-            // })
-            shufflePicker.on('save', (color, instance) => {
-                console.log('save', color, instance);
-            })
         }
     }
 
@@ -289,6 +319,9 @@ function addNewColorPicker() {
             save: true
         }
         }
+  })
+  pickr.on('save', (color, picker) => {
+      console.log('save', color, picker)
   })
 }
 
