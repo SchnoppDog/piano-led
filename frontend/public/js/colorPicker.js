@@ -74,7 +74,7 @@ function customColor() {
     }).on('clear', pickr => {
         // colorPickerButton.innerHTML                = pickr.getColor().toRGBA().toString(0)
         colorPickerButton.style.backgroundColor    = '#000000'
-        colorClear                              = true
+        colorClear                                 = true
         pickr.setColor('#000000')
         pickr.show()
     }).on('cancel', pickr => {
@@ -114,25 +114,36 @@ function customColor() {
 
 // #################################### Form-Color-Picker ###################################
 
-function createColorShuffleForm(event) {
+let colorArrayRed           = []
+let colorArrayGreen         = []
+let colorArrayBlue          = []
+let generatedShuffleInput   = 0
+let isColorShuffle          = false
+
+async function createColorShuffleForm(event) {
     const showAlertId       = document.getElementById("colorShuffleAlert")
     let getShuffleInputId   = document.getElementById("shuffleColorInputs")
     let shuffleInput        = document.getElementById("shuffleInputNumber")
     let inputNumber         = shuffleInput.value
-    let isColorShuffle      = false
-    let colorArrayRed       = []
-    let colorArrayGreen     = []
-    let colorArrayBlue      = []
     let colorRGBA           = []
-
-    //console.log(event.submitter.id)
+    colorArrayRed           = []
+    colorArrayGreen         = []
+    colorArrayBlue          = []
+    isColorShuffle      = false
+    generatedShuffleInput   = 0
 
     if(!event) {
-        console.log("No Event! isColorShuffle set to false")
         isColorShuffle = false
         shuffleInput.value = ''
         getShuffleInputId.innerHTML = ''
 
+        let res = await fetch(`/set-shuffle-colors?isColorShuffle=${isColorShuffle}`, {
+            method: 'post'
+        }).then((response) => {
+            return response.json()
+        })
+
+        createAlert(showAlertId, res.message, 'danger')
     } else {
         if(inputNumber < 2) {
             event.preventDefault()
@@ -143,7 +154,6 @@ function createColorShuffleForm(event) {
             shuffleInput.value          = ''
             createAlert(showAlertId, 'Input-number it too high! Choose a lower number!', 'warning')
         } else {
-            console.log("An Event happend! isColorShuffle set to true")
             event.preventDefault()
 
             let createForm              = document.createElement("form")
@@ -178,10 +188,11 @@ function createColorShuffleForm(event) {
                 createDivCol.appendChild(shuffleInputArray[counter])
                 createDivFormRow.appendChild(createDivCol)
 
-                $(createShuffleColorInput).data('inputNumber', counter+1)
+                $(createShuffleColorInput).data('inputNumber', counter)
 
                 createSubmitButton.setAttribute("type", "button")
                 createSubmitButton.setAttribute("class", "btn btn-primary mb-2")
+                createSubmitButton.setAttribute("onclick", "setShuffleColor()")
                 createSubmitButton.innerHTML = 'Submit'
                 createForm.appendChild(createDivFormGroup)
                 createForm.appendChild(createSubmitButton)
@@ -222,7 +233,6 @@ function createColorShuffleForm(event) {
                         opacity: false,
                         hue: true,
             
-                        // Input / output Options
                         interaction: {
                             hex: false,
                             rgba: true,
@@ -246,86 +256,53 @@ function createColorShuffleForm(event) {
                 }).on('cancel', pickr => {
                     pickr.hide()
                 }).on('save', (color, pickr) => {
-                    if(pickr !== null) {
+                    if(color !== null) {
                         shuffleInputArray[counter].style.backgroundColor    = pickr.getColor().toRGBA().toString(0)
                         colorRGBA                                           = pickr.getSelectedColor().toRGBA()
                     } else {
                         shuffleInputArray[counter].style.backgroundColor    = '#000000'
                         colorRGBA                                           = [0, 0, 0]
                     }
-                    // console.log("Array-Element No: ", $(shuffleInputArray[counter]).data('inputNumber'), " With Color-RGBA: ", pickr.getColor().toRGBA())
 
-
-                    /*
-                        Idee funktioniert soweit, muss dann noch weiter bearbeitet werden. Nächster Schritt wäre die Color-Values so aufzubereiten, dass diese mittels submit-button und vllt einer neuen Funktion an eine Route verschickt werden.
-                    */
                     colorArrayRed[$(shuffleInputArray[counter]).data('inputNumber')]    = colorRGBA[0]
                     colorArrayGreen[$(shuffleInputArray[counter]).data('inputNumber')]  = colorRGBA[1]
                     colorArrayBlue[$(shuffleInputArray[counter]).data('inputNumber')]   = colorRGBA[2]
-
-                    console.log("Array-Element No: ", $(shuffleInputArray[counter]).data('inputNumber'), " With Color-RGBA: ", colorArrayRed[$(shuffleInputArray[counter]).data('inputNumber')], " ", colorArrayGreen[$(shuffleInputArray[counter]).data('inputNumber')], " ", colorArrayBlue[$(shuffleInputArray[counter]).data('inputNumber')])
-
                     pickr.hide()
                 })
+                generatedShuffleInput++
             }
-
         }
     }
 
 }
 
-// ################################## Color Picker Test ############################
-
-function addNewColorPicker() {
-    const container = document.getElementById("picker")
-    const newElement = document.createElement("div")
-
-    container.appendChild(newElement)
-
-    const pickr = new Pickr({
-        el: newElement,
-        default: '#42445A',
-        theme: 'classic',
-        lockOpacity: true,
-
-        swatches: [
-        'rgba(244, 67, 54, 1)',
-        'rgba(233, 30, 99, 0.95)',
-        'rgba(156, 39, 176, 0.9)',
-        'rgba(103, 58, 183, 0.85)',
-        'rgba(63, 81, 181, 0.8)',
-        'rgba(33, 150, 243, 0.75)',
-        'rgba(3, 169, 244, 0.7)',
-        'rgba(0, 188, 212, 0.7)',
-        'rgba(0, 150, 136, 0.75)',
-        'rgba(76, 175, 80, 0.8)',
-        'rgba(139, 195, 74, 0.85)',
-        'rgba(205, 220, 57, 0.9)',
-        'rgba(255, 235, 59, 0.95)',
-        'rgba(255, 193, 7, 1)'
-        ],
-
-        components: {
-        preview: true,
-        opacity: true,
-        hue: true,
-
-        interaction: {
-            hex: true,
-            rgba: true,
-            hsva: true,
-            input: true,
-            clear: true,
-            save: true
+async function setShuffleColor() {
+    for(let counter = 0; counter < generatedShuffleInput; counter++) {
+        if(!colorArrayRed[counter]) {
+            colorArrayRed[counter]      = 0
         }
+        if(!colorArrayGreen[counter]) {
+            colorArrayGreen[counter]    = 0
         }
-  })
-  pickr.on('save', (color, picker) => {
-      console.log('save', color, picker)
-  })
+        if(!colorArrayBlue[counter]) {
+            colorArrayBlue[counter]     = 0
+        }
+    }
+
+    let showAlertId = document.getElementById("colorShuffleAlert")
+
+    let res = await fetch(`/set-shuffle-colors?isColorShuffle=${isColorShuffle}&genShufInput=${generatedShuffleInput}&colorArrayRed=${colorArrayRed}&colorArrayGreen=${colorArrayGreen}&colorArrayBlue=${colorArrayBlue}`, {
+        method: 'post'
+    }).then((response) => {
+        return response.json()
+    })
+
+    if(res.statusCode >= 200 && res.statusCode <= 299) {
+        createAlert(showAlertId, res.message, 'success')
+    } else {
+        createAlert(showAlertId, res.message, 'danger')
+    }
 }
-
-
 
 // #################################### Call all functions ################################
 customColor()

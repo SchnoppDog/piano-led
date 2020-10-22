@@ -284,6 +284,32 @@ colorApp.post('/bg-lighting', (req, res) => {
     stripOpts.isBgColor = bgColor
 })
 
+
+colorApp.post("/set-shuffle-colors", (req, res) => {
+    let colorArrayRed       = []
+    let colorArrayGreen     = []
+    let colorArrayBlue      = []
+    let isColorShuffle      = req.query.isColorShuffle
+    let numberOfInputs      = parseInt(req.query.genShufInput)
+
+    if(isColorShuffle === 'true') {
+
+        colorArrayRed       = req.query.colorArrayRed.split(',').map(Number)
+        colorArrayGreen     = req.query.colorArrayGreen.split(',').map(Number)
+        colorArrayBlue      = req.query.colorArrayBlue.split(',').map(Number)
+
+        for(let counter = 0; counter < numberOfInputs; counter++) {
+            colorArrayRed[counter]      = Math.round(colorArrayRed[counter])
+            colorArrayGreen[counter]    = Math.round(colorArrayGreen[counter])
+            colorArrayBlue[counter]     = Math.round(colorArrayBlue[counter])
+        }
+
+        res.json({ statusCode: 200, message: 'In progress' })
+    } else {
+        res.json({ statusCode: 400, message: 'In progress' })
+    }
+})
+
 //Starting Monitoring Service for piano
 //You need to edit the first "if"-Statemant if your piano has a other name than shown here
 usbDetect.startMonitoring()
