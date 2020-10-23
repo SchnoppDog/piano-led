@@ -60,19 +60,6 @@ let stripOpts               = {
     }
 }
 
-//For future implementation needed
-// let onPressOpts             = {
-//     color: {
-//         rgba: {
-//             red: red,
-//             green: green,
-//             blue: blue,
-//             alpha: alpha
-//         }
-//     }
-// }
-
-
 colorApp.use(bodyParser.urlencoded({extended: false}))
 colorApp.use(express.static(colorAppConfig.html.public))     //to access the html files in it. Can be named anything you like
 
@@ -174,7 +161,9 @@ colorApp.post("/set-color", (req, res) => {
     }
 })
 
-//setting the random color for keys
+/*
+    Background-Light and Key-Light can be randomly set via this function. It only sets the color randomly once after pressing the "random-color"-button on the webpage.
+*/
 colorApp.post("/random-color", (req, res) => {
     let randRgbValues               = colorEffects.getRandomColor()
     let randRed                     = randRgbValues[0]
@@ -213,6 +202,11 @@ colorApp.post("/random-color", (req, res) => {
     }
 })
 
+/*
+    This function is only intended for the key-color. After every key-press a new random color is generated.
+    The true generation of the color is handled quite at the of the code.
+    This function is only accessible when the key-color is choosen instead of the background-lighting. Also the shuffle-color has to be off
+*/
 colorApp.post("/random-color-per-press", (req, res) => {
     if(stripOpts.isBgColorOnOff === "true") {
         if(stripOpts.isBgColor === "true") {
@@ -265,6 +259,10 @@ colorApp.post("/random-color-per-press", (req, res) => {
     }
 })
 
+/*
+    Here you can set the custom color for either background-lighting or key-color.
+    The key-color is only accessible if the color-shuffle is turned off
+*/
 colorApp.post("/custom-color", (req, res) => {
     let customRed       = Math.round(req.query.red)
     let customGreen     = Math.round(req.query.green)
@@ -278,7 +276,10 @@ colorApp.post("/custom-color", (req, res) => {
 
             ledStrip.setBgLight(stripOpts)
             res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
+        } else if(stripOpts.isColorShuffle === 'true') {
+            res.json({ statusCode: 403, message: 'Color-Shuffle is ON! Deactivate Color-Shuffle!' })
         } else {
+
             red                                         = customRed
             green                                       = customGreen
             blue                                        = customBlue
@@ -290,15 +291,19 @@ colorApp.post("/custom-color", (req, res) => {
             res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
         } 
     } else {
-        red                                         = customRed
-        green                                       = customGreen
-        blue                                        = customBlue
+        if(stripOpts.isColorShuffle === 'true') {
+            res.json({ statusCode: 403, message: 'Color-Shuffle is ON! Deactivate Color-Shuffle!' })
+        } else {
+            red                                         = customRed
+            green                                       = customGreen
+            blue                                        = customBlue
 
-        stripOpts.lightOnColorOpts.rgba.red         = red
-        stripOpts.lightOnColorOpts.rgba.gren        = green
-        stripOpts.lightOnColorOpts.rgba.blue        = blue
+            stripOpts.lightOnColorOpts.rgba.red         = red
+            stripOpts.lightOnColorOpts.rgba.gren        = green
+            stripOpts.lightOnColorOpts.rgba.blue        = blue
 
-        res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
+            res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
+        }
     }
 })
 
@@ -362,7 +367,6 @@ colorApp.post('/bg-lighting', (req, res) => {
 
 
 colorApp.post("/set-shuffle-colors", (req, res) => {
-    // Next Step: Bei lightStrip.js programmieren!
     let colorArrayRed       = []
     let colorArrayGreen     = []
     let colorArrayBlue      = []
