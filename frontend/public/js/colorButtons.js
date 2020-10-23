@@ -68,7 +68,6 @@ async function setColor(event) {
     } else if(event.target.id === "colorButtons") {
 
     } else {
-        console.log(event.target.id)
         if(splitHashtag !== undefined) { 
             let buttonColorValue = splitHashtag.split("#")[1]
             statusMessage = await fetch(`/set-color?colorValue=${buttonColorValue}`, {
@@ -83,7 +82,7 @@ async function setColor(event) {
         if(statusMessage.statusCode >= 200 && statusMessage.statusCode <= 299) {
             createAlert(showAlertId, `${statusMessage.message}`, 'success')
         } else if(statusMessage.statusCode >= 300 && statusMessage.statusCode <= 399) {
-
+            createAlert(showAlertId, statusMessage.message, 'warning')
         } else if(statusMessage.statusCode >= 400 && statusMessage.statusCode <= 499) {
             createAlert(showAlertId, `${statusMessage.message}`, 'danger')
         }

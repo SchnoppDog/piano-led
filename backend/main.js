@@ -9,10 +9,10 @@ const colorApp       = express()
 const colorAppConfig = require('../backend/config')
 
 //Default Values if Script fails or has to restart
+const alpha                 = 0.5
 let red                     = 128
 let green                   = 128
 let blue                    = 128
-const alpha                 = 0.5
 let randomColor             = false
 let randColOnOff            = 0
 let counterBgColor          = 1
@@ -29,6 +29,7 @@ let stripOpts               = {
         },
         duration: freezeTime
     },
+    isRandColPerKey: 'false',
     isBgColor: 'false',
     isBgColorOnOff: 'false',
     bgColorOpts: {
@@ -36,6 +37,16 @@ let stripOpts               = {
             red: 0,
             green: 0,
             blue: 0,
+            alpha: alpha
+        }
+    },
+    isColorShuffle: 'false',
+    isColorShuffleRandom: 'false',
+    colorShuffleOpts: {
+        rgba: {
+            arrayRed: [],
+            arrayGreen: [],
+            arrayBlue: [],
             alpha: alpha
         }
     }
@@ -57,6 +68,7 @@ let stripOpts               = {
 colorApp.use(bodyParser.urlencoded({extended: false}))
 colorApp.use(express.static(colorAppConfig.html.public))     //to access the html files in it. Can be named anything you like
 
+// Redirection to the color-page if root-route is typed in
 colorApp.get("/", (req, res) => {
     res.redirect("/color-page")
 })
@@ -64,10 +76,6 @@ colorApp.get("/", (req, res) => {
 //Displaying Color-Page HTML-File
 colorApp.get("/color-page", (req, res) => {
     res.sendFile(`${config.html.views}/colorPage.html`)
-})
-
-colorApp.get("/color-picker-test", (req, res) => {
-    res.sendFile(`${config.html.views}/color-picker-test.html`)
 })
 
 //Setting Preset-Color
@@ -79,14 +87,16 @@ colorApp.post("/set-color", (req, res) => {
     bgRed            = ((arrayRGB[0] / 2) / 2) / 2
     bgGreen          = ((arrayRGB[1] / 2) / 2) /2
     bgBlue           = ((arrayRGB[2] / 2) / 2) /2
-    console.log(arrayRGB)
 
     /* Setting various options for various behaviours such as:
         - Is the general On-Off-Button for the Background-Color turned on or off?
         - Is the Background-Button set to "Edit-Key-Color" or something else?
         - Is the freeze-Option set?
+        - Is the Color-Shuffle-Option set?
         ...
-        Notice: Booleans must be String since they are handled here as Strings
+        Notice: Booleans must be Strings since they are handled here as Strings
+        This has to do with the route-paths: In the route-paths the boolean-value is stored but they are sent as a String.
+        Since it is a bit complicated to turn Strings into booleans the booleans will be represented as Strings.
     */
     if(stripOpts.isBgColorOnOff === 'true') {
         /* 
@@ -104,9 +114,37 @@ colorApp.post("/set-color", (req, res) => {
             stripOpts.bgColorOpts.rgba.alpha    = alpha
             ledStrip.setBgLight(stripOpts)
         } else {
-            red     = arrayRGB[0]
-            green   = arrayRGB[1]
-            blue    = arrayRGB[2]
+            /*
+                If "isRandColPerKey" or "isColorShuffle" set to true you can't access the key-color. You  have to deactivate either function first!
+            */
+            if(stripOpts.isRandColPerKey === 'true') {
+                res.json({ statusCode: 409, message: 'Turn OFF Random-Color per press!' })
+            } else if(stripOpts.isColorShuffle === 'true') {
+                res.json({ statusCode: 409, message: 'Turn OFF Color-Shuffle first!' })
+            } else {
+                red     = arrayRGB[0]
+                green   = arrayRGB[1]
+                blue    = arrayRGB[2]
+
+                if(stripOpts.isFreeze === 'true') {
+                    stripOpts.freezeOpts.rgba.red       = red
+                    stripOpts.freezeOpts.rgba.green     = green
+                    stripOpts.freezeOpts.rgba.blue      = blue
+                    stripOpts.freezeOpts.rgba.alpha     = alpha
+                }
+
+                res.json({ statusCode: 200, message: "Color set!"})
+            }
+        }
+    } else {
+        if(stripOpts.isRandColPerKey === 'true') {
+            res.json({ statusCode: 409, message: 'Turn OFF Random-Color per press!' })
+        } else if(stripOpts.isColorShuffle === 'true') {
+            res.json({ statusCode: 409, message: 'Turn OFF Color-Shuffle first!' })
+        } else {
+            red     = arrayRGB[0] / 2
+            green   = arrayRGB[1] / 2
+            blue    = arrayRGB[2] / 2
 
             if(stripOpts.isFreeze === 'true') {
                 stripOpts.freezeOpts.rgba.red       = red
@@ -114,20 +152,10 @@ colorApp.post("/set-color", (req, res) => {
                 stripOpts.freezeOpts.rgba.blue      = blue
                 stripOpts.freezeOpts.rgba.alpha     = alpha
             }
-        }
-    } else {
-        red     = arrayRGB[0]
-        green   = arrayRGB[1]
-        blue    = arrayRGB[2]
 
-        if(stripOpts.isFreeze === 'true') {
-            stripOpts.freezeOpts.rgba.red       = red
-            stripOpts.freezeOpts.rgba.green     = green
-            stripOpts.freezeOpts.rgba.blue      = blue
-            stripOpts.freezeOpts.rgba.alpha     = alpha
+            res.json({ statusCode: 200, message: "Color set!"})
         }
     }
-    res.json({ statusCode: 200, message: "Color set!"})
 })
 
 //setting the random color for keys
@@ -146,16 +174,16 @@ colorApp.post("/random-color", (req, res) => {
 
             res.json({ statusCode: 200, message: `Random Color Set! Color is RGB ${randRed}, ${randGreen}, ${randBlue}` })
         } else {
-            red     = randRed
-            green   = randGreen
-            blue    = randBlue
+            red     = randRed / 2
+            green   = randGreen / 2
+            blue    = randBlue / 2
 
             res.json({ statusCode: 200, message: `Random Color Set! Color is RGB ${randRed}, ${randGreen}, ${randBlue}` })
         }
     } else {
-        red     = randRed
-        green   = randGreen
-        blue    = randBlue
+        red     = randRed / 2
+        green   = randGreen / 2
+        blue    = randBlue / 2
 
         res.json({ statusCode: 200, message: `Random Color Set! Color is RGB ${randRed}, ${randGreen}, ${randBlue}` })
     }
@@ -172,10 +200,12 @@ colorApp.post("/random-color-per-press", (req, res) => {
                 green       = 128
                 blue        = 128
                 randomColor = false
+                stripOpts.isRandColPerKey = 'false'
                 
                 res.json({ statusCode: 418, message: "Random-Color per Press OFF!" })
             } else {
                 randomColor = true
+                stripOpts.isRandColPerKey = 'true'
 
                 res.json({ statusCode: 200, message: "Random-Color per Press ON!" })
             }
@@ -187,10 +217,12 @@ colorApp.post("/random-color-per-press", (req, res) => {
             green       = 128
             blue        = 128
             randomColor = false
+            stripOpts.isRandColPerKey = 'false'
             
             res.json({ statusCode: 418, message: "Random-Color per Press OFF!" })
         } else {
             randomColor = true
+            stripOpts.isRandColPerKey = 'true'
 
             res.json({ statusCode: 200, message: "Random-Color per Press ON!" })
         }
@@ -211,16 +243,16 @@ colorApp.post("/custom-color", (req, res) => {
             ledStrip.setBgLight(stripOpts)
             res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
         } else {
-            red     = customRed
-            green   = customGreen
-            blue    = customBlue
+            red     = customRed / 2
+            green   = customGreen / 2
+            blue    = customBlue / 2
 
             res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
         } 
     } else {
-        red     = customRed
-        green   = customGreen
-        blue    = customBlue
+        red     = customRed / 2
+        green   = customGreen / 2
+        blue    = customBlue / 2
 
         res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
     }
@@ -286,27 +318,78 @@ colorApp.post('/bg-lighting', (req, res) => {
 
 
 colorApp.post("/set-shuffle-colors", (req, res) => {
+    // Next Step: Bei lightStrip.js programmieren!
     let colorArrayRed       = []
     let colorArrayGreen     = []
     let colorArrayBlue      = []
     let isColorShuffle      = req.query.isColorShuffle
     let numberOfInputs      = parseInt(req.query.genShufInput)
 
-    if(isColorShuffle === 'true') {
+    if(stripOpts.isBgColorOnOff === 'true') {
+        if(stripOpts.isBgColor === 'true') {
+            res.json({ statusCode: 409, message: 'Switch to "Change Key-Color"' })
+        } else {
+            if(stripOpts.isRandColPerKey === 'true') {
+                res.json({ statusCode: 409, message: 'Turn OFF "random-color per press"!' })
+            } else {
+                if(isColorShuffle === 'true') {
+                    colorArrayRed       = req.query.colorArrayRed.split(',').map(Number)
+                    colorArrayGreen     = req.query.colorArrayGreen.split(',').map(Number)
+                    colorArrayBlue      = req.query.colorArrayBlue.split(',').map(Number)
+            
+                    for(let counter = 0; counter < numberOfInputs; counter++) {
+                        colorArrayRed[counter]      = Math.round(colorArrayRed[counter] / 2)
+                        colorArrayGreen[counter]    = Math.round(colorArrayGreen[counter] / 2)
+                        colorArrayBlue[counter]     = Math.round(colorArrayBlue[counter] / 2)
+                    }
 
-        colorArrayRed       = req.query.colorArrayRed.split(',').map(Number)
-        colorArrayGreen     = req.query.colorArrayGreen.split(',').map(Number)
-        colorArrayBlue      = req.query.colorArrayBlue.split(',').map(Number)
+                    stripOpts.isColorShuffle                        = isColorShuffle
+                    stripOpts.colorShuffleOpts.rgba.arrayRed        = colorArrayRed
+                    stripOpts.colorShuffleOpts.rgba.arrayGreen      = colorArrayGreen
+                    stripOpts.colorShuffleOpts.rgba.arrayBlue       = colorArrayBlue
+            
+                    res.json({ statusCode: 200, message: 'Colors for Color-Shuffle set. Color-Shuffle is ON!' })
 
-        for(let counter = 0; counter < numberOfInputs; counter++) {
-            colorArrayRed[counter]      = Math.round(colorArrayRed[counter])
-            colorArrayGreen[counter]    = Math.round(colorArrayGreen[counter])
-            colorArrayBlue[counter]     = Math.round(colorArrayBlue[counter])
+                } else {
+                    stripOpts.isColorShuffle                        = isColorShuffle
+                    stripOpts.colorShuffleOpts.rgba.arrayRed        = []
+                    stripOpts.colorShuffleOpts.rgba.arrayGreen      = []
+                    stripOpts.colorShuffleOpts.rgba.arrayBlue       = []
+                    
+                    res.json({ statusCode: 403, message: 'Color-Shuffle is OFF!' })
+                }
+            }
         }
-
-        res.json({ statusCode: 200, message: 'In progress' })
     } else {
-        res.json({ statusCode: 400, message: 'In progress' })
+        if(stripOpts.isRandColPerKey === 'true') {
+            res.json({ statusCode: 409, message: 'Turn OFF "random-color per press"!' })
+        } else {
+            if(isColorShuffle === 'true') {
+                colorArrayRed       = req.query.colorArrayRed.split(',').map(Number)
+                colorArrayGreen     = req.query.colorArrayGreen.split(',').map(Number)
+                colorArrayBlue      = req.query.colorArrayBlue.split(',').map(Number)
+        
+                for(let counter = 0; counter < numberOfInputs; counter++) {
+                    colorArrayRed[counter]      = Math.round(colorArrayRed[counter] / 2)
+                    colorArrayGreen[counter]    = Math.round(colorArrayGreen[counter] / 2)
+                    colorArrayBlue[counter]     = Math.round(colorArrayBlue[counter] / 2)
+                }
+        
+                stripOpts.isColorShuffle                        = isColorShuffle
+                stripOpts.colorShuffleOpts.rgba.arrayRed        = colorArrayRed
+                stripOpts.colorShuffleOpts.rgba.arrayGreen      = colorArrayGreen
+                stripOpts.colorShuffleOpts.rgba.arrayBlue       = colorArrayBlue
+        
+                res.json({ statusCode: 200, message: 'Colors for Color-Shuffle set. Color-Shuffle is ON!' })
+            } else {
+                stripOpts.isColorShuffle                        = isColorShuffle
+                stripOpts.colorShuffleOpts.rgba.arrayRed        = []
+                stripOpts.colorShuffleOpts.rgba.arrayGreen      = []
+                stripOpts.colorShuffleOpts.rgba.arrayBlue       = []
+                
+                res.json({ statusCode: 403, message: 'Color-Shuffle is OFF!' })
+            }
+        }
     }
 })
 

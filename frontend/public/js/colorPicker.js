@@ -299,6 +299,8 @@ async function setShuffleColor() {
 
     if(res.statusCode >= 200 && res.statusCode <= 299) {
         createAlert(showAlertId, res.message, 'success')
+    } else if(res.statusCode === 409) {
+        createAlert(showAlertId, res.message, 'warning')
     } else {
         createAlert(showAlertId, res.message, 'danger')
     }
