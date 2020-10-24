@@ -1,5 +1,6 @@
-//Making a post to set the random-color
-//Different response-cases are shown in different ways
+/*
+    In this file different color-effects are handled
+*/
 
 //global variables:
 let counterBgColorOnOff = 1
@@ -114,6 +115,51 @@ async function setBgLighting(btnValue) {
         }
 
         if(res.statusCode === 200) {
+            createAlert(showAlertId, res.message, 'success')
+        } else {
+            createAlert(showAlertId, res.message, 'danger')
+        }
+    }
+}
+
+//Sending a true so that the option for randomShuffleOrder is set 
+async function setRandomShuffleOrder() {
+    let showAlertId = document.getElementById("colorShuffleAlert")
+    let res         = await fetch('/set-random-shuffle-order', {
+        method: 'post'
+    }).then((response) => {
+        return response.json()
+    })
+
+    if(res.statusCode >= 200 && res.statusCode <= 299) {
+        createAlert(showAlertId, res.message, 'success')
+    } else {
+        createAlert(showAlertId, res.message, 'danger')
+    }
+}
+
+// Sending a true so that the option for randomShuffleColors is set
+async function setRandomShuffleColors(event) {
+    event.preventDefault()
+
+    let showAlertId             = document.getElementById("colorShuffleAlert")
+    let inputNumber             = document.getElementById("randomShuffleColors")
+
+    if(inputNumber.value < 2 || inputNumber.value > 6) {
+        createAlert(showAlertId, 'Your number might be too high or too low!', 'warning')
+        inputNumber.value = ''
+
+    } else {
+        let isColorShuffleOnOff     = true
+        let res                     = await fetch(`/set-random-shuffle-colors?isColorShuffle=${isColorShuffleOnOff}&colors=${inputNumber.value}`, {
+            method: 'post'
+        }).then((response) => {
+            return response.json()
+        })
+
+        inputNumber.value = ''
+
+        if(res.statusCode >= 200 && res.statusCode <= 299) {
             createAlert(showAlertId, res.message, 'success')
         } else {
             createAlert(showAlertId, res.message, 'danger')

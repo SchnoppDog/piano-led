@@ -1,3 +1,7 @@
+/*
+  This file matches the set color to the correct key-led.
+  It also sets the background-light
+*/
 const dotstar                   = require('dotstar')
 const SPI                       = require('pi-spi')
 const spi                       = SPI.initialize('/dev/spidev0.1')    //Pins: SCLK: 23 | MOSI: 19
@@ -15,6 +19,7 @@ const keyLed1                   = 31
 const keyLed2                   = 32
 let colorShuffleCounterLightOn  = 0
 let colorShuffleCounterLightOff = 0
+let keyFreezeRandomShuffle      = 0
 
 //Setting the backround-light for the strip
 exports.setBgLight = function(bgOptions) {
@@ -27,25 +32,42 @@ exports.setBgLight = function(bgOptions) {
   strip.sync()
 }
 
+// if the color-shuffle is on colors are shuffled.
 exports.lightOn = function(keyNote, options) {                 // r, g, b, a
     const ledNum1 = keyNote - keyLed1 + (keyNote - keyLed2)   //I.E: 31-31+(31-32)=-1
     const ledNum2 = keyNote - keyLed1 + (keyNote - keyLed1)   //31-31+(31-31)=0 etc...
     let r, g, b, a
     let shuffleArrayLength
+    let randomShufflePosition
 
     if(options.isColorShuffle === 'true') {
       shuffleArrayLength    = options.colorShuffleOpts.rgba.arrayRed.length
 
-      if(colorShuffleCounterLightOn >= shuffleArrayLength) {
-        colorShuffleCounterLightOn = 0
+      if(options.isColorShuffleRandom === 'true') {
+        randomShufflePosition = Math.floor(Math.random() * shuffleArrayLength)
+
+        r                     = options.colorShuffleOpts.rgba.arrayRed[randomShufflePosition]
+        g                     = options.colorShuffleOpts.rgba.arrayGreen[randomShufflePosition]
+        b                     = options.colorShuffleOpts.rgba.arrayBlue[randomShufflePosition]
+        a                     = options.colorShuffleOpts.rgba.alpha
+
+        keyFreezeRandomShuffle = randomShufflePosition
+
+      } else {
+
+        if(colorShuffleCounterLightOn >= shuffleArrayLength) {
+          colorShuffleCounterLightOn = 0
+
+        }
+
+        r                     = options.colorShuffleOpts.rgba.arrayRed[colorShuffleCounterLightOn]
+        g                     = options.colorShuffleOpts.rgba.arrayGreen[colorShuffleCounterLightOn]
+        b                     = options.colorShuffleOpts.rgba.arrayBlue[colorShuffleCounterLightOn]
+        a                     = options.colorShuffleOpts.rgba.alpha  
+        
+        colorShuffleCounterLightOn++
 
       }
-
-      r                     = options.colorShuffleOpts.rgba.arrayRed[colorShuffleCounterLightOn]
-      g                     = options.colorShuffleOpts.rgba.arrayGreen[colorShuffleCounterLightOn]
-      b                     = options.colorShuffleOpts.rgba.arrayBlue[colorShuffleCounterLightOn]
-      a                     = options.colorShuffleOpts.rgba.alpha    
-
     } else {
       r = options.lightOnColorOpts.rgba.red
       g = options.lightOnColorOpts.rgba.green
@@ -68,12 +90,11 @@ exports.lightOn = function(keyNote, options) {                 // r, g, b, a
           strip.sync()
       }
     }
-
-    colorShuffleCounterLightOn++
 }
 
 //same goes for lightOff the LEDs for each key
 //if freezeoption is set the pressed keys stay lit after given time has passed
+// if the color-shuffle is on colors are shuffled. This also applies to the key-freeze
 //if background-color set to true color after the key press remains on the set background-color
 exports.lightOff = function(keyNote, options) {
   let r,g,b,a
@@ -88,17 +109,25 @@ exports.lightOff = function(keyNote, options) {
         if(options.isColorShuffle === 'true') {
           shuffleArrayLength = options.colorShuffleOpts.rgba.arrayRed.length
 
-          if(colorShuffleCounterLightOff >= shuffleArrayLength) {
-            colorShuffleCounterLightOff = 0
+          if(options.isColorShuffleRandom === 'true') {
+            r                     = options.colorShuffleOpts.rgba.arrayRed[keyFreezeRandomShuffle]
+            g                     = options.colorShuffleOpts.rgba.arrayGreen[keyFreezeRandomShuffle]
+            b                     = options.colorShuffleOpts.rgba.arrayBlue[keyFreezeRandomShuffle]
+            a                     = options.colorShuffleOpts.rgba.alpha
+
+          } else {
+
+            if(colorShuffleCounterLightOff >= shuffleArrayLength) {
+              colorShuffleCounterLightOff = 0
+            }
+
+            r = options.colorShuffleOpts.rgba.arrayRed[colorShuffleCounterLightOff]
+            g = options.colorShuffleOpts.rgba.arrayGreen[colorShuffleCounterLightOff]
+            b = options.colorShuffleOpts.rgba.arrayBlue[colorShuffleCounterLightOff]
+            a = options.colorShuffleOpts.rgba.alpha
+
+            colorShuffleCounterLightOff++
           }
-
-          r = options.colorShuffleOpts.rgba.arrayRed[colorShuffleCounterLightOff]
-          g = options.colorShuffleOpts.rgba.arrayGreen[colorShuffleCounterLightOff]
-          b = options.colorShuffleOpts.rgba.arrayBlue[colorShuffleCounterLightOff]
-          a = options.colorShuffleOpts.rgba.alpha
-
-          colorShuffleCounterLightOff++
-
         } else {
           r        = options.freezeOpts.rgba.red
           g        = options.freezeOpts.rgba.green

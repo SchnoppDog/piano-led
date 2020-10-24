@@ -1,3 +1,8 @@
+/*
+    This file only contains the yet to be created button in the "choose your color"-tab. 
+    It is also setting each color to either background-lighting or key-color
+*/
+
 document.addEventListener("DOMContentLoaded", () => {
     buildColorButtons()
 
@@ -8,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 })
 
-//Function for generating each preset-color-button
+//Function for generating each preset-color, random-color and random-color per press
 function buildColorButtons() {
     const colorButtonsName = ["Red","Green","Blue","Orange","Purple","Cyan","Yellow","Scooter","Wine Berry",
                             "Bahama Blue","Tropical Forest","Crimson","Jade","Cerulean","Radical Red","Limeade","Grassy Green","Grenadier","LEDs Off","Default", "Random", "Rand p. Press"]
@@ -42,7 +47,6 @@ function buildColorButtons() {
     customColorButton.setAttribute("id", `${customColorId}`)
     customColorButton.setAttribute("type", "button")
     customColorButton.appendChild(document.createTextNode(customColorNode))
-    //customColPicker.appendChild(customColorButton)
 }
 
 //function for setting each color with a post-request

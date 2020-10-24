@@ -1,4 +1,6 @@
-//Generating new colors every key-press
+/*
+    This file has only one function which produces the random color for either the one-time-random-color or the random-color-per-key-press
+*/
 function _getRandomColor() {
     let round       = Math.round
     let random      = Math.random

@@ -1,5 +1,6 @@
 /*
-    This section is for the two color-picker for background-color and key-color.
+    This file contains the custom-color for each background- and key-color.
+    It also contains the various created color pickers for the shuffle-color-effect
     For more information read here: https://github.com/Simonwep/pickr#readme
 */
 // ############################## Color Picker for Custom Background- and Key-Color #####################
@@ -11,6 +12,7 @@ function customColor() {
     let colPickButtonNode           = 'Color Picker'
     colorPickerButton.style.color   = 'white'
 
+    // Adding a new button to the colors-tab
     colorPickerButton.setAttribute('class', 'btn m-1')
     colorPickerButton.setAttribute('type', 'button')
     colorPickerButton.appendChild(document.createTextNode(colPickButtonNode))
@@ -67,6 +69,7 @@ function customColor() {
 
     colorPickerDivId.appendChild(colorPickerButton)
 
+    // Event-Listeners
     colorPicker.on('init', pickr => {
         colorPickerButton.style.backgroundColor    = pickr.getColor().toRGBA().toString(0)
     }).on('change', (color, pickr) => {
@@ -114,6 +117,9 @@ function customColor() {
 
 // #################################### Form-Color-Picker ###################################
 
+/*
+    The color-shuffle form with the color pickers is created here.
+*/
 let colorArrayRed           = []
 let colorArrayGreen         = []
 let colorArrayBlue          = []
@@ -156,6 +162,7 @@ async function createColorShuffleForm(event) {
         } else {
             event.preventDefault()
 
+            // Creating the HTML-Form with color-pickers as input-buttons
             let createForm              = document.createElement("form")
             let createSubmitButton      = document.createElement("button")
             let createDivFormGroup      = document.createElement("div")
@@ -247,6 +254,7 @@ async function createColorShuffleForm(event) {
                     }
                 })
 
+                // Event-Driven functions
                 shufflePicker.on('init', pickr => {
                     shuffleInputArray[counter].style.backgroundColor    = pickr.getColor().toRGBA().toString(0)
                 }).on('clear', pickr => {
@@ -268,6 +276,8 @@ async function createColorShuffleForm(event) {
                     colorArrayGreen[$(shuffleInputArray[counter]).data('inputNumber')]  = colorRGBA[1]
                     colorArrayBlue[$(shuffleInputArray[counter]).data('inputNumber')]   = colorRGBA[2]
                     pickr.hide()
+                    // for more information on "$(shuffleInputArray[counter]).data('inputNumber')" lookup jquery arbitrary data: 
+                    // https://api.jquery.com/data/
                 })
                 generatedShuffleInput++
             }
@@ -276,6 +286,9 @@ async function createColorShuffleForm(event) {
 
 }
 
+/*
+    Here the colors for the shuffle function are set. the colorArray-types are global so there is no need to complicate thing by somehow getting the colors from the color-pcikers which are created in the createColorShuffleForm()-function
+*/
 async function setShuffleColor() {
     for(let counter = 0; counter < generatedShuffleInput; counter++) {
         if(!colorArrayRed[counter]) {

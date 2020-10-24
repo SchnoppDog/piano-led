@@ -1,3 +1,7 @@
+/*
+    This is the main-file containing all necessary routes to make the project work
+*/
+
 const pianoMidi      = require('easymidi')
 const usbDetect      = require('usb-detection')
 const convert        = require('color-convert')
@@ -18,6 +22,7 @@ let randColOnOff            = 0
 let counterBgColor          = 1
 let counterBgColorOnOff     = 1
 let freezeTime              = 0
+let randomShuffleOrderOnOff = 0
 let stripOpts               = {
     lightOnColorOpts: {
         rgba: {
@@ -365,7 +370,10 @@ colorApp.post('/bg-lighting', (req, res) => {
     stripOpts.isBgColor = bgColor
 })
 
-
+/*
+    Here the colors for the shuffle-function are set
+    Since each rgb-array is send in string-format we need to map these into numbers since this function works with colors as numbers
+*/
 colorApp.post("/set-shuffle-colors", (req, res) => {
     let colorArrayRed       = []
     let colorArrayGreen     = []
@@ -438,6 +446,67 @@ colorApp.post("/set-shuffle-colors", (req, res) => {
                 res.json({ statusCode: 403, message: 'Color-Shuffle is OFF!' })
             }
         }
+    }
+})
+
+// Here the option for a randomized shuffle-color-order is set
+colorApp.post('/set-random-shuffle-order', (req, res) => {
+    if(randomShuffleOrderOnOff % 2 === 0) {
+        stripOpts.isColorShuffleRandom = 'true'
+        randomShuffleOrderOnOff++
+        res.json({ statusCode: 200, message: 'Random Shuffle Order is now ON!' })
+    } else {
+        stripOpts.isColorShuffleRandom = 'false'
+        randomShuffleOrderOnOff--
+        res.json({ statusCode: 403, message: 'Random Shuffle Order is now OFF!' })
+    }
+})
+
+// Here are the random shuffle-colors generated and packed into the needed options-field
+colorApp.post('/set-random-shuffle-colors', (req, res) => {
+    let randArrayRed        = []
+    let randArrayGreen      = []
+    let randArrayBlue       = []
+    let colorsMax           = parseInt(req.query.colors)
+    let isColorShuffle      = req.query.isColorShuffle
+    let randRbgValues
+
+    if(stripOpts.isBgColorOnOff === 'true') {
+        if(stripOpts.isBgColor === 'true') {
+            res.json({ statusCode: 409, message: 'Switch to "Change Key-Color"' })
+        } else {
+            if(stripOpts.isRandColPerKey === 'true') {
+                res.json({ statusCode: 409, message: 'Turn OFF "random-color per press"!' })
+            } else {
+                for(let counter = 0; counter < colorsMax; counter++) {
+                    randRbgValues               = colorEffects.getRandomColor()
+                    randArrayRed[counter]       = randRbgValues[0]
+                    randArrayGreen[counter]     = randRbgValues[1]
+                    randArrayBlue[counter]      = randRbgValues[2]
+                }
+
+                stripOpts.isColorShuffle                        = isColorShuffle
+                stripOpts.colorShuffleOpts.rgba.arrayRed        = randArrayRed
+                stripOpts.colorShuffleOpts.rgba.arrayGreen      = randArrayGreen
+                stripOpts.colorShuffleOpts.rgba.arrayBlue       = randArrayBlue
+
+                res.json({ statusCode: 200, message: 'Set Randomized Shuffle Colors!' })
+            }
+        }
+    } else {
+        for(let counter = 0; counter < colorsMax; counter++) {
+            randRbgValues               = colorEffects.getRandomColor()
+            randArrayRed[counter]       = randRbgValues[0]
+            randArrayGreen[counter]     = randRbgValues[1]
+            randArrayBlue[counter]      = randRbgValues[2]
+        }
+
+        stripOpts.isColorShuffle                        = isColorShuffle
+        stripOpts.colorShuffleOpts.rgba.arrayRed        = randArrayRed
+        stripOpts.colorShuffleOpts.rgba.arrayGreen      = randArrayGreen
+        stripOpts.colorShuffleOpts.rgba.arrayBlue       = randArrayBlue
+
+        res.json({ statusCode: 200, message: 'Set Randomized Shuffle Colors!' })
     }
 })
 
