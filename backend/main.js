@@ -9,8 +9,8 @@ const ledStrip       = require('../backend/lib/expModules/lightStrip.js')
 const colorEffects   = require('../backend/lib/expModules/colorEffects.js')
 const express        = require('express')
 const bodyParser     = require('body-parser')
-const colorApp       = express()
 const colorAppConfig = require('../backend/config')
+const colorApp       = express()
 
 //Default Values if Script fails or has to restart
 const alpha                 = 0.5
@@ -65,6 +65,7 @@ let stripOpts               = {
     }
 }
 
+colorApp.use(require('./routes')(stripOpts))
 colorApp.use(bodyParser.urlencoded({extended: false}))
 colorApp.use(express.static(colorAppConfig.html.public))     //to access the html files in it. Can be named anything you like
 
