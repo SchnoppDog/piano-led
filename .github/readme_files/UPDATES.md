@@ -1,4 +1,14 @@
 # Updates
+## Version 3.1
+**Release Date: 25.10.2020**
+A new feauture and some structure work has been done in this version of 3.1!
+
+### Added
+- **Color-Shuffle**: This new feature allows you to set multiple colors at once. You can assign between 2 to 6 colors. After every key-press the colors get shuffled through. Let's assume you assigned 3 colors in the color-scheme of RGB: `red, green and blue`. After every key-press those colors are lighten up in the expected order: `red -> green -> blue -> red \[...]`.
+    - **Random-Shuffle-Order**: If you want a random order of your selected colors you can activate this function. The assigned colors appear in a completly randomized order.
+    - **Random-Shuffle-Colors**: You are too lazy to set your own shuffle-colors? No problem I got you covered! Activate this function by typing in how many individual colors you want to get. These colors are randomly created.
+
+
 ## Version 3.0
 **Release Date: 03.08.2020**  
 With a new "major" feature this project is welcomed to version 3.0!
