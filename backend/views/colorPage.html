@@ -20,46 +20,27 @@
         </nav>
         <div class="container-fluid" style="background-color: #A1D7FF;">
             <div class="row">
-                <div class="col mt-2 mb-2 colorButtonsClass" id="colorButtons">
-                    <h3>Preset Colors</h3>
+                <div class="col-sm mt-2 mb-2">
+                    <h3>Choose your Color</h3>
                     <hr class="horizontalRuler">
                     <div id="show-alert">
                     </div>
+                    <div class="colorButtonsClass" id="colorButtons">
+                    </div>
+                    <div id="colorPickerDiv">
+                    </div>
                 </div>
-                <div class="col mt-2 mb-2">
-                    <h3>Background-Lighting</h3>
+                <div class="col-sm mt-2 mb-2">
+                    <h3>Background- and Key-Lighting</h3>
                     <hr class="horizontalRuler">
                     <div id="show-alert-bgLighting">
                     </div>
-                    <button type="button" class="btn" id="bgColorPicker">Your Color</button>
-                    <button type="button" class="btn m-1" id="bg-lighting-rand-color" value="BG-Lighting-Rand" onclick="setBgRandomLighting()">Random BG-Color</button>
-                    <button type="button" class="btn btn-primary m-1" id="change-bg-lighting" value="BG-Color" onclick="setBgLighting(this.value)">Change BG-Lighting</button>
+                    <button type="button" class="btn btn-primary m-1" id="change-bg-lighting" value="BG-Color" onclick="setBgLighting(this.value)" disabled>Change BG-Lighting</button>
                     <button type="button" class="btn btn-dark m-1" id="bg-lighting-off" value="BG-Color-On-Off" onclick="setBgLighting(this.value)">BG-Lighting On/Off</button>
                 </div>
             </div>
             <div class="row">
-                <div class="col mt-2 mb-2">
-                    <h3>Your Color!</h3>
-                    <hr class="horizontalRuler">
-                    <div id="show-alert-key-picker"></div>
-                    <button type="button" class="btn" id="keyColorPicker">Your Color</button>
-                    <!-- <div id="colorPicker"></div> -->
-                    <!-- <button type="button" id="colorPicker">Color Picker</button> -->
-                    <!-- <button type="button" class="btn btn-primary" id="colorPicker">Color Picker</button> -->
-                </div>
-                <div class="col mt-2 mb-2">
-                    <h3>Color-Effects</h3>
-                    <hr>
-                    <div id="show-alert-colorEffects">
-                    </div>
-                    <button type="button" class="btn m-1" id="randomColor" value="Random Color" onclick="randomColor()">Random Color</button>
-                    <!-- <button type="button" class="btn btn-danger" id="cancelFreeze" onclick="keyFreeze()">Stop Freeze</button> -->
-                </div>
-            </div>
-            <div class="row">
-                <div class="col mt-2 mb-2">
-                </div>
-                <div class="col mt-2 mb-2">
+                <div class="col-sm mt-2 mb-2">
                     <h3>Key-Freeze</h3>
                     <hr>
                     <div id="key-freeze-alert">
@@ -73,12 +54,36 @@
                         <button type="button" class="btn btn-danger float-right" id="cancelFreeze" onclick="keyFreeze()">Stop Freeze</button>
                     </form>
                 </div>
+                <div class="col-sm mt-2 mb-2">
+                    <h3>Color-Shuffle</h3>
+                    <hr>
+                    <div id="colorShuffleAlert">
+                    </div>
+                    <form onsubmit="createColorShuffleForm(event)">
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="shuffleInputNumber" aria-describedby="colorShuffleHelp" placeholder="How many color-inputs?" required>
+                            <small id="colorShuffleHelp" class="form-text text-muted">Note: Minimum is: 2, maximum is: 6</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-2 mr-2" id="submitShuffleInputButton">Submit</button>
+                        <button type="button" class="btn btn-danger float-right mb-2" id="cancelColorShuffle" onclick="createColorShuffleForm()">Stop Shuffle</button>
+                        <button type="button" class="btn btn-info mb-2" id="randomColorShuffle" onclick="setRandomShuffleOrder()">Randomize Order</button>
+                    </form>
+                    <div id="shuffleColorInputs">
+                    </div>
+                    <p class="mt-3">If you don't want to select colors by your own you can create randomized colors. Just type in how many colors you want to create</p>
+                    <form onsubmit="setRandomShuffleColors(event)">
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="randomShuffleColors" aria-describedby="randomShuffleColorHelp" placeholder="How many colors?" required>
+                            <small id="randomShuffleColorHelp" class="form-text text-muted">Note: Minimum is: 2, maximum is: 6</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-2" id="submitRandomShuffleColor">Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
         <div class="card-footer border-ft">
         </div>
     </body>
-    <!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> -->
     <script src="js/dist/jquery-3.5.1.js"></script>
     <script src="js/dist/bootstrap.bundle.js"></script>
     <script src="js/dist/pickr-1.7.2.js"></script>
@@ -86,5 +91,4 @@
     <script src="js/colorEffects.js"></script>
     <script src="js/colorPicker.js"></script>
     <script src="js/createAlert.js"></script>
-    <!-- <script src="js/colorPicker.js"></script> -->
 </html>
