@@ -37,11 +37,7 @@ If you booted into raspbian successfully you need to get some packages before st
 sudo apt-get update
 sudo apt install curl
 sudo apt-get install nodejs
-<<<<<<< HEAD
-sudp apt-get install npm
-=======
 sudo apt-get install npm
->>>>>>> master
 sudo apt install python3
 sudo apt install gcc
 sudo apt install g++
