@@ -109,7 +109,7 @@ To wire up your strip you need four female-to-female wires:
 - One for DATA. Color is often green.
 - One for Clock-Rate. Color is often blue
   
-Now you need to connect all four wires to each correspondending color on the strip. After connecting the wires to the strip you need to connect them to the raspberry pi too. The pins needed for raspberry pi version 3 can be reviewed with this pinout. Simply connect GND to GND, 5V to 5V, Clock-Rate to Pin 23 (SCLK) and DATA to Pin 19 (MOSI) on your pi.
+Now you need to connect all four wires to each correspondending color on the strip. After connecting the wires to the strip you need to connect them to the raspberry pi too. The pins needed for raspberry pi version 3 can be reviewed with this [pinout](https://pinout.xyz/). Simply connect GND to GND, 5V to 5V, Clock-Rate to Pin 23 (SCLK) and DATA to Pin 19 (MOSI) on your pi.
 
 ### Background-LED-Wiring
 To wire up your strip you need these additional materials:

@@ -19,20 +19,20 @@ Please notice that I can't replicate the entire steps given since I don't have t
     - With that in mind you need to search for a power supply of 5V and your calculated amps. 
     - For more information on additional materials refer to the [wiring-guide](#background-led-wiring)
 
-## Installing Raspbian
+## Software-Preparations
 I recommend using the official installation [tutorial](https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up) for installing raspbian on your raspberry pi.
-
 ## On Raspbian
 If you booted into raspbian successfully you need to get some packages before starting. Some of these packages might be already installed on your system. Open up a terminal and type in following commands:
 ```
 sudo apt-get update
 sudo apt install curl
 sudo apt-get install nodejs
-curl -L https://npmjs.org/install.sh | sudo.sh
+sudo apt-get install npm
 sudo apt install python3
 sudo apt install gcc
 sudo apt install g++
 sudo apt install libasound2-dev
+sudo apt-get install libudev-dev
 ```
 If you're done installing verify the nodejs-package with those two commands:
 ```
@@ -42,46 +42,31 @@ npm -v
 The outputs for `node -v` should be v10.15.2 or higher and for `npm -v` 5.8.0 or higher
 
 ## Copying the Project
-Navigate into any directory you want to install this project. I recommend using the `documents` folder. Download the project into your directory using `git clone https://github.com/SchnoppDog/piano-led.git`. After your download change into the newly created directory called led piano. Now use the command `npm install` to install the project with its modules.
+Navigate into any directory you want to install this project. I recommend using the `documents` folder. Download the project into your directory using `git clone https://github.com/SchnoppDog/piano-led.git`. After your download change into the newly created directory called led piano. Delete the `package-lock.json` file. Now use the command `npm install` to install the project with its modules.
 
-## Setting Variables
-Now comes a more tricky part of this installation-guide, but don't worry.
-
-### Creating and updating mainConfig.js
-First open the file called `mainConfig.txt`. Copy the text and close the file again. Navigate to `backend` and create a new file called `config.js`. Open up `config.js` and paste your copied text. Change the `config.server.port` to `8080` 
-```
-config.server.port = 8080
-```
-Then change the `config.server.ipPi` to your rapsberry pi's IPv4-adress. If you don't know how to obtain the ipv4-adress of your rapsberry pi simply type `ifoncfig | grep inet` into the terminal. The output should be like this:
-```
-inet 192.168.0.0  netmask 255.255.255.0  broadcast 192.168.0.255
-```
-Copy your inet number (in this example 192.168.0.0) and paste it into the `config.server.ipPi` variable:
+## Updating variables
+### Creating and Updating config.js
+Open the file called `mainConfig.txt`. Copy its contents and create a new file called `config.js` in folder `backend`. Paste the copied contents into `config.js`. Change `config.server.port` to `8080`. After that change `config.server.ipPi` to your pis ipv4-address. This should look like this example:
 ```
 config.server.ipPi = "192.168.0.0"
 ```
-Quotation marks are need.
+**Important:** Quotation-marks need to be set!
 
 ### Piano-Variables
-Now connect your piano with a USB-to-Host cable to your raspberry-pi and turn it on. To verify that you piano is detected as MIDI-Device open up a terminal and type in `aconnect -i`. Your piano should be listed something like:
-```
-client 20: 'Digital Piano' [type=Kernel,card=1]
-    0 'Digital Piano MIDI 1'
-```
-After verifying that your piano is listed with this command use the `yourPianoName.js`-file in `/backend/lib/test`. Open the JavaScript-File with this command: `node yourPianoName.js`. The **first** output should be like this:
+User the file `yourPianoName.js` in folder `backend/lib/test` to list your piano-name and device-name. Simply type `node yourPianoName.js` into the terminal. The **first** output you get should be something like:
 ```
 Midi Through:Midi Through Port-0 14:0,Digital Piano:Digital Piano MIDI 1 20:0
 ```
-Copy your piano name (in this example `Digital Piano:Digital Piano MIDI 1 20:0`) and paste is somewhere safe so you can access it again.
-The **second** output you get should be like this:
+Copy your piano-name, in this example `Digital Piano:Digital Piano MIDI 1 20:0` and paste it somewhere save.
+The **second** output you get should be a list of different devices. Search your piano until you find something like this:
 ```
-locationId: 0,
-   vendorId: 1177,
-   productId: 5647,
-   deviceName: 'Digital Piano',
-   manufacturer: 'Yamaha Corporation',
-   serialNumber: '',
-   deviceAddress: 0 
+ locationId: 0,
+    vendorId: 1177,
+    productId: 5647,
+    deviceName: 'Digital Piano',
+    manufacturer: 'Yamaha Corporation',
+    serialNumber: '',
+    deviceAddress: 0 
 ```
 Copy your device after the `deviceName`-variable and open up `main.js` in folder `/backend`. Scroll down until you see this:
 ```
@@ -89,20 +74,20 @@ usbDetect.startMonitoring()
 usbDetect.on('add',(device) => { 
     if(device.deviceName === "Digital_Piano")
 ```
-Replace in this if-statemant the `Digital_Piano` with your saved value (the value you copied in the second step). In this if-statemant you should also see this:
+Replace the `Digital_Piano` with your recently copied value. In this if-statemant you should also see this:
 ```
 const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
-``` 
+```
 Replace `Digital Piano:Digital Piano MIDI 1 20:0` with your stored value from step one. **After changing these files don't forget to save them!**
 
 ## Installing PM2
-Now you are nearly done! All you need is to put the `main.js`-file into startup using pm2. This is used to make sure your script is running even if the pi unexpectedly shuts down or needs to be restarted. To install pm2 simply navigate into the root-directory and type `npm install pm2 -g`. After the installation navigate to `/backend` and run this command: `pm2 start ecosystem.config.js`. Your output should be like this:
+Now you are nearly done! All you need is to put the `main.js`-file into startup using pm2. This is used to make sure your script is running even if the pi unexpectedly shuts down or needs to be restarted. To install pm2 simply navigate into the root-directory and type `sudo npm install pm2 -g`. After the installation navigate to `/backend` and run this command: `pm2 start ecosystem.config.js`. Your output should be like this:
 ```
 LED-Piano    │ default     │ 1.0.2   │ cluster │ 23556    │ 14h    │ 1    │ online    │ 2.6%     │ 49.9mb   │ pi       │ disabled 
 ```
 
 ## Enable SPI
-To use this application you need to activate SPI. To do that go into your pi's `settings` and click on `raspberry-pi-configuration`. Then you navigate to `interfaces` and activate SPI. Close the window with OK. 
+To use this application you need to activate SPI. To do that go into your pi's `settings` and click on `raspberry-pi-configuration`. Then you navigate to `interfaces` and activate SPI. Close the window with OK.
 
 ## Wiring your strip
 If you want to use the background-led-function and you have the needed power supply then follow [these steps](#background-led-wiring) to wire up your strip with the power supply and the raspberry pi. If you don't want to use this function or don't have the needed power supply then follow [these steps](#normal-wiring) to wire up your strip to your raspberry pi.
