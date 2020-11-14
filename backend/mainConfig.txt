@@ -1,0 +1,11 @@
+config 							= {}
+
+config.html						= {}
+config.html.public				= `${__dirname}/../frontend/public`
+config.html.views				= `${__dirname}/views`
+
+config.server 					= {}
+config.server.port				= 3000
+config.server.ipPi				= ""
+
+module.exports					= config
