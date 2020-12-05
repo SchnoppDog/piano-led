@@ -94,6 +94,7 @@ usbDetect.on('add',(device) => {
                         stripOpts.lightOnColorOpts.rgba.gren        = green
                         stripOpts.lightOnColorOpts.rgba.blue        = blue
                     }
+
                     ledStrip.lightOn(msg.note,stripOpts)
                 }
             }else {

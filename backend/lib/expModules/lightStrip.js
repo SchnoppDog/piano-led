@@ -69,13 +69,13 @@ exports.lightOn = function(keyNote, options) {                 // r, g, b, a
 
       }
     } else {
+
       r = options.lightOnColorOpts.rgba.red
       g = options.lightOnColorOpts.rgba.green
       b = options.lightOnColorOpts.rgba.blue
       a = options.lightOnColorOpts.rgba.alpha
 
     }
-
 
     if(keyNote >= firstRangeKey && keyNote <= lastRangeKey) {
       if(ledNum1 === -1) {    //is needed so strip.set() doesn't end in an error
