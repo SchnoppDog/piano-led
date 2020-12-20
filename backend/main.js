@@ -2,14 +2,15 @@
     This is the main-file containing all necessary routes to make the project work
 */
 
-const pianoMidi      = require('easymidi')
-const usbDetect      = require('usb-detection')
-const ledStrip       = require('../backend/lib/expModules/lightStrip.js')
-const colorEffects   = require('../backend/lib/expModules/colorEffects.js')
-const express        = require('express')
-const bodyParser     = require('body-parser')
-const colorAppConfig = require('../backend/config')
-const colorApp       = express()
+const pianoMidi         = require('easymidi')
+const usbDetect         = require('usb-detection')
+const ledStrip          = require('../backend/lib/expModules/lightStrip.js')
+const colorEffects      = require('../backend/lib/expModules/colorEffects.js')
+const express           = require('express')
+const bodyParser        = require('body-parser')
+const colorAppConfig    = require('../backend/config')
+const server            = require('http')
+const colorApp          = express()
 
 //Default Values if Script fails or has to restart
 const alpha                 = 0.5

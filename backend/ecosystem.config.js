@@ -7,7 +7,7 @@ module.exports = {
     args: 'one two',
     instances: 1,
     autorestart: true,
-    watch: ["lib/sites","configs"],
+    watch: ["lib","routes"],
     ignore_watch: ["node_modules"],
     max_memory_restart: '1G',
     env: {

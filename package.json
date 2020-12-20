@@ -1,6 +1,6 @@
 {
   "name": "piano-led",
-  "version": "1.0.2",
+  "version": "3.0.0",
   "description": "With this project you can make your own piano lighten up!",
   "main": "backend/main.js",
   "scripts": {
