@@ -9,8 +9,9 @@ const colorEffects      = require('../backend/lib/expModules/colorEffects.js')
 const express           = require('express')
 const bodyParser        = require('body-parser')
 const colorAppConfig    = require('../backend/config')
-const server            = require('http')
 const colorApp          = express()
+const pianoServer       = require('http').createServer(colorApp)
+const io                = require('socket.io')(pianoServer)
 
 //Default Values if Script fails or has to restart
 const alpha                 = 0.5
@@ -68,43 +69,62 @@ let stripOpts               = {
 colorApp.use(require('./routes')(stripOpts, express))
 colorApp.use(bodyParser.urlencoded({extended: false}))
 
+
+
+// io.on('connection', (socket) => {
+//     // io.emit('pianoKeyPress', msg)
+//     console.log('Connected!')
+//     socket.on('test', (msg) => {
+//         console.log(msg)
+//     })
+//     socket.on('disconnect', () => {
+//         console.log('Disconnected!')
+//     })
+// })
+
 //Starting Monitoring Service for piano
 //You need to edit the first "if"-Statemant if your piano has a other name than shown here
-usbDetect.startMonitoring()
-usbDetect.on('add',(device) => { 
-    if(device.deviceName === "Digital_Piano") {
-        console.log("Device found!")
-        
-        //Edit this variable if your input-name of your piano is different than shown here
-        const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
-        midiInput.on('noteon', (msg) => {
-            if(msg.velocity > 0 ) {
-                if(msg.note === msg.note) {
-                    //setting the options for random color if freezeTime is set to 0 from before freeze will be deactivated
-                    if(stripOpts.isRandColPerKey === 'true') {
-                        let rgbValues                               = colorEffects.getRandomColor()
-                        red                                         = rgbValues[0]
-                        green                                       = rgbValues[1]
-                        blue                                        = rgbValues[2]
+io.on('connection', (socket) => {
+    console.log('Client connected!')
+    usbDetect.startMonitoring()
+    usbDetect.on('add',(device) => { 
+        if(device.deviceName === "Digital_Piano") {
+            console.log("Piano connected!")
 
-                        stripOpts.freezeOpts.rgba.red               = red
-                        stripOpts.freezeOpts.rgba.green             = green
-                        stripOpts.freezeOpts.rgba.blue              = blue
+            //Edit this variable if your input-name of your piano is different than shown here
+            const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
+            midiInput.on('noteon', (msg) => {
 
-                        stripOpts.lightOnColorOpts.rgba.red         = red
-                        stripOpts.lightOnColorOpts.rgba.gren        = green
-                        stripOpts.lightOnColorOpts.rgba.blue        = blue
+                io.emit('pianoKeyPress', msg)
+                
+                if(msg.velocity > 0 ) {
+                    if(msg.note === msg.note) {
+                        //setting the options for random color if freezeTime is set to 0 from before freeze will be deactivated
+                        if(stripOpts.isRandColPerKey === 'true') {
+                            let rgbValues                               = colorEffects.getRandomColor()
+                            red                                         = rgbValues[0]
+                            green                                       = rgbValues[1]
+                            blue                                        = rgbValues[2]
+
+                            stripOpts.freezeOpts.rgba.red               = red
+                            stripOpts.freezeOpts.rgba.green             = green
+                            stripOpts.freezeOpts.rgba.blue              = blue
+
+                            stripOpts.lightOnColorOpts.rgba.red         = red
+                            stripOpts.lightOnColorOpts.rgba.gren        = green
+                            stripOpts.lightOnColorOpts.rgba.blue        = blue
+                        }
+
+                        ledStrip.lightOn(msg.note,stripOpts)
                     }
-
-                    ledStrip.lightOn(msg.note,stripOpts)
+                }else {
+                    if(msg.note === msg.note) {
+                        ledStrip.lightOff(msg.note, stripOpts)
+                    }
                 }
-            }else {
-                if(msg.note === msg.note) {
-                    ledStrip.lightOff(msg.note, stripOpts)
-                }
-            }
-        })
-    }
+            })
+        }
+    })
 })
 
-colorApp.listen(colorAppConfig.server.port, "0.0.0.0")
+pianoServer.listen(colorAppConfig.server.port, "0.0.0.0")
