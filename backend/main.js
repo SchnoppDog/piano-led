@@ -12,6 +12,7 @@ const colorAppConfig    = require('../backend/config')
 const colorApp          = express()
 const pianoServer       = require('http').createServer(colorApp)
 const io                = require('socket.io')(pianoServer)
+const pianoNote         = require('./lib/expModules/convertToPianoScale')
 
 //Default Values if Script fails or has to restart
 const alpha                 = 0.5
@@ -69,19 +70,6 @@ let stripOpts               = {
 colorApp.use(require('./routes')(stripOpts, express))
 colorApp.use(bodyParser.urlencoded({extended: false}))
 
-
-
-// io.on('connection', (socket) => {
-//     // io.emit('pianoKeyPress', msg)
-//     console.log('Connected!')
-//     socket.on('test', (msg) => {
-//         console.log(msg)
-//     })
-//     socket.on('disconnect', () => {
-//         console.log('Disconnected!')
-//     })
-// })
-
 //Starting Monitoring Service for piano
 //You need to edit the first "if"-Statemant if your piano has a other name than shown here
 io.on('connection', (socket) => {
@@ -94,11 +82,15 @@ io.on('connection', (socket) => {
             //Edit this variable if your input-name of your piano is different than shown here
             const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
             midiInput.on('noteon', (msg) => {
-
-                io.emit('pianoKeyPress', msg)
                 
                 if(msg.velocity > 0 ) {
                     if(msg.note === msg.note) {
+                        // Sending piano-note-on-event to client
+                        let pubNote     = pianoNote.convertToPianoScale(msg.note)
+                        let pubScale    = pianoNote.getPianoScaleNum(msg.note)
+                        let stringNote  = pianoNote.getPianoStringNote(msg.note)
+                        io.emit('pianoKeyPress', pubNote, pubScale, stringNote)
+
                         //setting the options for random color if freezeTime is set to 0 from before freeze will be deactivated
                         if(stripOpts.isRandColPerKey === 'true') {
                             let rgbValues                               = colorEffects.getRandomColor()
