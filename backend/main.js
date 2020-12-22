@@ -12,7 +12,6 @@ const colorAppConfig    = require('../backend/config')
 const colorApp          = express()
 const pianoServer       = require('http').createServer(colorApp)
 const io                = require('socket.io')(pianoServer)
-const pianoNote         = require('./lib/expModules/convertToPianoScale')
 
 //Default Values if Script fails or has to restart
 const alpha                 = 0.5
@@ -70,27 +69,29 @@ let stripOpts               = {
 colorApp.use(require('./routes')(stripOpts, express))
 colorApp.use(bodyParser.urlencoded({extended: false}))
 
+// Maximum Connections
+io.setMaxListeners(5)
+
 //Starting Monitoring Service for piano
 //You need to edit the first "if"-Statemant if your piano has a other name than shown here
-io.on('connection', (socket) => {
-    console.log('Client connected!')
-    usbDetect.startMonitoring()
-    usbDetect.on('add',(device) => { 
-        if(device.deviceName === "Digital_Piano") {
-            console.log("Piano connected!")
+usbDetect.startMonitoring()
+usbDetect.on('add',(device) => { 
+    if(device.deviceName === "Digital_Piano") {
+        console.log("Piano connected!")
+
+        // Socket.io handling real-time piano-key hitting
+        io.on('connection', (socket) => {
+            console.log('Client connected!')
+
+            // When Piano has connected the clients browser has to reload to make a connection
+            socket.emit('pianoConnect', true)
 
             //Edit this variable if your input-name of your piano is different than shown here
             const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
+            
             midiInput.on('noteon', (msg) => {
-                
                 if(msg.velocity > 0 ) {
                     if(msg.note === msg.note) {
-                        // Sending piano-note-on-event to client
-                        let pubNote     = pianoNote.convertToPianoScale(msg.note)
-                        let pubScale    = pianoNote.getPianoScaleNum(msg.note)
-                        let stringNote  = pianoNote.getPianoStringNote(msg.note)
-                        io.emit('pianoKeyPress', pubNote, pubScale, stringNote)
-
                         //setting the options for random color if freezeTime is set to 0 from before freeze will be deactivated
                         if(stripOpts.isRandColPerKey === 'true') {
                             let rgbValues                               = colorEffects.getRandomColor()
@@ -108,15 +109,26 @@ io.on('connection', (socket) => {
                         }
 
                         ledStrip.lightOn(msg.note,stripOpts)
+
+                        // Sending piano-note-on-event to client
+                        socket.emit('pianoKeyPress', msg.note)
                     }
                 }else {
                     if(msg.note === msg.note) {
                         ledStrip.lightOff(msg.note, stripOpts)
+
+                        // Sending piano-note-off-event to client
+                        socket.emit('pianoKeyRelease', msg.note)
                     }
                 }
             })
-        }
-    })
+
+            socket.on('disconnect', () => {
+                console.log("Client Disconnected")
+            })
+        })
+    }
 })
+
 
 pianoServer.listen(colorAppConfig.server.port, "0.0.0.0")
