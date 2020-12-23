@@ -84,7 +84,7 @@ usbDetect.on('add',(device) => {
             console.log('Client connected!')
 
             // When Piano has connected the clients browser has to reload to make a connection
-            socket.emit('pianoConnect', true)
+            // socket.emit('pianoConnect', true)
 
             //Edit this variable if your input-name of your piano is different than shown here
             const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
