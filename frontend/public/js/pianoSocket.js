@@ -1,5 +1,6 @@
 /*
     This file takes care of the real-time function between the server and the piano keys hit.
+    It also manages other components directly intertwined with this feature like setting real-time-play on and off.
 */
 
 // Creating the 88 Key-Layout of a standard piano.
@@ -24,8 +25,74 @@ function createPianoLayout() {
     }
 }
 
-createPianoLayout()
+// Creating buttons with individual functions for each real-time pianoplay-feature
+function createPianoSocketButtons() {
+    let btnGroups       = 1
+    let btnCountGroup   = [2]
+    let btnNames        = [['Enable Pianoplay', 'Disable Pianoplay']]
+    let btnClass        = [['btn btn-primary', 'btn btn-danger ml-2']]
+    let btnValue        = [['enable', 'disable']]
+    let clickFunktions  = ['changePianoSocketState(this.value)']
+    let getDocumentId   = document.getElementById('pianoOptions')
+    let btnGroupDiv
+    let btn
 
+    for(let groupCounter = 0; groupCounter < btnGroups; groupCounter++) {
+        btnGroupDiv = document.createElement('div')
+        btnGroupDiv.setAttribute('class', 'mt-3')
+
+        for(let btnCounter = 0; btnCounter < btnCountGroup[groupCounter]; btnCounter++) {
+            btn = document.createElement('button')
+
+            btn.setAttribute('class', `${btnClass[groupCounter][btnCounter]}`)
+            btn.setAttribute('value', `${btnValue[groupCounter][btnCounter]}`)
+            btn.setAttribute('type', 'button')
+            btn.setAttribute('onclick', `${clickFunktions[groupCounter]}`)
+            btn.innerHTML = `${btnNames[groupCounter][btnCounter]}`
+
+            btnGroupDiv.appendChild(btn)
+        }
+        getDocumentId.append(btnGroupDiv)
+    }
+}
+
+// Setting the real-time pianoplay on or off
+async function changePianoSocketState(btnValue) {
+    let changePianoSocketState
+    let statusMessage
+    let showAlertId = document.getElementById('piano-options-alert')
+
+    if(btnValue === 'enable') {
+        changePianoSocketState  = true
+        statusMessage           = await fetch(`/changePianoSocketState?pianoSocketState=${changePianoSocketState}`, {
+            method: 'post'
+        }).then((response) => {
+            return response.json()
+        })
+    } else {
+        changePianoSocketState  = false
+        statusMessage           = await fetch(`/changePianoSocketState?pianoSocketState=${changePianoSocketState}`, {
+            method: 'post'
+        }).then((response) => {
+            return response.json()
+        })
+    }
+
+    if(statusMessage !== undefined) {
+        if(statusMessage.statusCode >= 200 && statusMessage.statusCode <= 299) {
+            createAlert(showAlertId, `${statusMessage.message}`, 'success')
+        } else if(statusMessage.statusCode >= 300 && statusMessage.statusCode <= 399) {
+            createAlert(showAlertId, statusMessage.message, 'warning')
+        } else if(statusMessage.statusCode >= 400 && statusMessage.statusCode <= 499) {
+            createAlert(showAlertId, `${statusMessage.message}`, 'danger')
+        }
+    }
+}
+
+createPianoLayout()
+createPianoSocketButtons()
+
+//### Socket Connections ###
 // Initializing the socket.io connection to the backend
 const socket = io()
 

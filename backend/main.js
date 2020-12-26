@@ -18,6 +18,7 @@ const alpha                 = 0.5
 let red                     = 128
 let green                   = 128
 let blue                    = 128
+// Strip-values for each function
 let stripOpts               = {
     lightOnColorOpts: {
         rgba: {
@@ -66,7 +67,15 @@ let stripOpts               = {
     }
 }
 
-colorApp.use(require('./routes')(stripOpts, express))
+// Options for the real time pianoplay
+let pianoSocketOpts = {
+    buttonConfig: {
+        realTimePlayState: true,
+    },
+    // colorOpts: stripOpts
+}
+
+colorApp.use(require('./routes')(stripOpts, pianoSocketOpts, express))
 colorApp.use(bodyParser.urlencoded({extended: false}))
 
 // Maximum Connections
@@ -111,14 +120,18 @@ usbDetect.on('add',(device) => {
                         ledStrip.lightOn(msg.note,stripOpts)
 
                         // Sending piano-note-on-event to client
-                        socket.emit('pianoKeyPress', msg.note)
+                        if(pianoSocketOpts.buttonConfig.realTimePlayState === true) {
+                            socket.emit('pianoKeyPress', msg.note)
+                        }
                     }
-                }else {
+                } else {
                     if(msg.note === msg.note) {
                         ledStrip.lightOff(msg.note, stripOpts)
 
                         // Sending piano-note-off-event to client
-                        socket.emit('pianoKeyRelease', msg.note)
+                        if(pianoSocketOpts.buttonConfig.realTimePlayState === true) {
+                            socket.emit('pianoKeyRelease', msg.note)
+                        }
                     }
                 }
             })

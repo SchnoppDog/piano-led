@@ -1,4 +1,4 @@
-module.exports = function(stripOpts, express) {
+module.exports = function(stripOpts, pianoSocketOpts, express) {
     const router = require('express').Router()
 
     router.use(require('./colorPage')(express))
@@ -9,6 +9,7 @@ module.exports = function(stripOpts, express) {
     router.use(require('./keyFreeze')(stripOpts))
     router.use(require('./bgColor')(stripOpts))
     router.use(require('./colorShuffle')(stripOpts))
+    router.use(require('./realTimePiano')(pianoSocketOpts))
 
     return router
 }
