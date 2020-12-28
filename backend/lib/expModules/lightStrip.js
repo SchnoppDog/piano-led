@@ -4,6 +4,7 @@
 */
 const dotstar                   = require('dotstar')
 const SPI                       = require('pi-spi')
+const shufflePosition           = require('./randColShufflePos')
 const spi                       = SPI.initialize('/dev/spidev0.1')    //Pins: SCLK: 23 | MOSI: 19
 const stripLength               = 144   //max LED number
 const strip                     = new dotstar.Dotstar(spi, {
@@ -39,12 +40,13 @@ exports.lightOn = function(keyNote, options) {                 // r, g, b, a
     let r, g, b, a
     let shuffleArrayLength
     let randomShufflePosition
+    let callerId = 'lightStrip'
 
     if(options.isColorShuffle === 'true') {
       shuffleArrayLength    = options.colorShuffleOpts.rgba.arrayRed.length
 
       if(options.isColorShuffleRandom === 'true') {
-        randomShufflePosition = Math.floor(Math.random() * shuffleArrayLength)
+        randomShufflePosition = shufflePosition.getRandomShufflePosition(callerId, shuffleArrayLength)   // Math.floor(Math.random() * shuffleArrayLength)
 
         r                     = options.colorShuffleOpts.rgba.arrayRed[randomShufflePosition]
         g                     = options.colorShuffleOpts.rgba.arrayGreen[randomShufflePosition]

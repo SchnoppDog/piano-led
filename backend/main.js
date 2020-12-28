@@ -12,6 +12,8 @@ const colorAppConfig    = require('../backend/config')
 const colorApp          = express()
 const pianoServer       = require('http').createServer(colorApp)
 const io                = require('socket.io')(pianoServer)
+const mainPianoSocket   = io.of('/mainPianoSocket')
+const cssKeyColorSocket = io.of('/cssKeyColorSocket')
 
 //Default Values if Script fails or has to restart
 const alpha                 = 0.5
@@ -63,7 +65,7 @@ let stripOpts               = {
             arrayBlue: [],
             alpha: alpha
         },
-        randomShuffleOrderOnOff: 0
+        randomShuffleOrderOnOff: 0,
     }
 }
 
@@ -72,14 +74,29 @@ let pianoSocketOpts = {
     buttonConfig: {
         realTimePlayState: true,
     },
+    colorConfig: {
+        isRandColPerKey: stripOpts.isRandColPerKey,
+        isColorShuffle: stripOpts.isColorShuffle,
+        isColorShuffleRandom: stripOpts.isColorShuffleRandom,
+        isCustomColor: 'false',
+        isRandomColor: 'false'
+    }
     // colorOpts: stripOpts
 }
 
-colorApp.use(require('./routes')(stripOpts, pianoSocketOpts, express))
+cssKeyColorSocket.setMaxListeners(5)
+
+colorApp.use(require('./routes')(stripOpts, pianoSocketOpts, express, io))
 colorApp.use(bodyParser.urlencoded({extended: false}))
 
+
+// mainPianoSocket.on('connection', (socket) => {
+//     console.log("Hello from mainPianoSocket")
+// })
+
 // Maximum Connections
-io.setMaxListeners(5)
+// mainPianoSocket.setMaxListeners(5)
+// io.setMaxListeners(5)
 
 //Starting Monitoring Service for piano
 //You need to edit the first "if"-Statemant if your piano has a other name than shown here
@@ -89,7 +106,7 @@ usbDetect.on('add',(device) => {
         console.log("Piano connected!")
 
         // Socket.io handling real-time piano-key hitting
-        io.on('connection', (socket) => {
+        mainPianoSocket.on('connection', (socket) => {
             console.log('Client connected!')
 
             // When Piano has connected the clients browser has to reload to make a connection
@@ -115,12 +132,26 @@ usbDetect.on('add',(device) => {
                             stripOpts.lightOnColorOpts.rgba.red         = red
                             stripOpts.lightOnColorOpts.rgba.gren        = green
                             stripOpts.lightOnColorOpts.rgba.blue        = blue
+
+                            pianoSocketOpts.colorConfig.isRandColPerKey         = true
+                            pianoSocketOpts.colorConfig.isColorShuffle          = false
+                            pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
+                            pianoSocketOpts.colorConfig.isCustomColor           = false
+                            pianoSocketOpts.colorConfig.isRandomColor           = false
+
+                            cssKeyColorSocket.emit('setCssKeyColorVars', pianoSocketOpts.colorConfig, red, green, blue)
                         }
+                        // cssKeyColorSocket.emit('setCssKeyColorVars', pianoSocketOpts.colorConfig, stripOpts.lightOnColorOpts.rgba.red, stripOpts.lightOnColorOpts.rgba.green, stripOpts.lightOnColorOpts.rgba.blue)
 
                         ledStrip.lightOn(msg.note,stripOpts)
 
                         // Sending piano-note-on-event to client
                         if(pianoSocketOpts.buttonConfig.realTimePlayState === true) {
+                            // if(stripOpts.isColorShuffle === 'true') {
+                            //     socket.emit('pianoKeyPress', msg.note, stripOpts.isColorShuffle, stripOpts.colorShuffleOpts.rgba, stripOpts.isColorShuffleRandom)
+                            // } else {
+                            //     socket.emit('pianoKeyPress', msg.note, stripOpts.isColorShuffle, stripOpts.lightOnColorOpts.rgba)
+                            // }
                             socket.emit('pianoKeyPress', msg.note)
                         }
                     }

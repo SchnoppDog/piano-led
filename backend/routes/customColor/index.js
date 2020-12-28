@@ -2,7 +2,7 @@
     Here you can set the custom color for either background-lighting or key-color.
     The key-color is only accessible if the color-shuffle is turned off
 */
-module.exports = function (stripOpts) {
+module.exports = function (stripOpts, pianoSocketOpts, socket) {
     const router        = require('express').Router()
     const ledStrip      = require('../../lib/expModules/lightStrip')
 
@@ -31,6 +31,14 @@ module.exports = function (stripOpts) {
                 stripOpts.lightOnColorOpts.rgba.red         = red
                 stripOpts.lightOnColorOpts.rgba.gren        = green
                 stripOpts.lightOnColorOpts.rgba.blue        = blue
+
+                pianoSocketOpts.colorConfig.isRandColPerKey         = false
+                pianoSocketOpts.colorConfig.isColorShuffle          = false
+                pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
+                pianoSocketOpts.colorConfig.isCustomColor           = false
+                pianoSocketOpts.colorConfig.isRandomColor           = true
+
+                socket.emit('setCssKeyColorVars', pianoSocketOpts.colorConfig, red, green, blue)
     
                 res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
             } 
@@ -45,6 +53,14 @@ module.exports = function (stripOpts) {
                 stripOpts.lightOnColorOpts.rgba.red         = red
                 stripOpts.lightOnColorOpts.rgba.gren        = green
                 stripOpts.lightOnColorOpts.rgba.blue        = blue
+
+                pianoSocketOpts.colorConfig.isRandColPerKey         = false
+                pianoSocketOpts.colorConfig.isColorShuffle          = false
+                pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
+                pianoSocketOpts.colorConfig.isCustomColor           = false
+                pianoSocketOpts.colorConfig.isRandomColor           = true
+
+                socket.emit('setCssKeyColorVars', pianoSocketOpts.colorConfig, red, green, blue)
     
                 res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
             }

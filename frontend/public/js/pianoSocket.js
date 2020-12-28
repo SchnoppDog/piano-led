@@ -94,12 +94,24 @@ createPianoSocketButtons()
 
 //### Socket Connections ###
 // Initializing the socket.io connection to the backend
-const socket = io()
+// const socket = io()
+const cssKeyColorSocket = io.connect('/cssKeyColorSocket')
+const pianoMainSocket   = io.connect('/mainPianoSocket')
+let red = 128, green = 128, blue = 128
+let randShufPos = 0
+
+cssKeyColorSocket.on('setCssKeyColorVars', (pianoColorConfig, r, g, b) => {
+    red = r
+    green = g
+    blue = b
+    console.log(pianoColorConfig)
+    console.log(r, g, b)
+})
 
 // Changing the class of a key-div to active
-socket.on('pianoKeyPress', (pianoNote) => {
-    console.log(pianoNote)
+pianoMainSocket.on('pianoKeyPress', (pianoNote) => {
     let pianoKeys = document.querySelectorAll('.pianoKey')
+    console.log(red, green, blue)
 
     pianoKeys.forEach(key => {
         if($(key).data('pianoNote') === pianoNote) {
@@ -113,7 +125,7 @@ socket.on('pianoKeyPress', (pianoNote) => {
 })
 
 // Changing the class of a key-div to normal
-socket.on('pianoKeyRelease', (pianoNote) => {
+pianoMainSocket.on('pianoKeyRelease', (pianoNote) => {
     let pianoKeys = document.querySelectorAll('.pianoKey')
 
     pianoKeys.forEach(key => {
@@ -128,8 +140,8 @@ socket.on('pianoKeyRelease', (pianoNote) => {
 })
 
 // Reloading page when piano has connected
-socket.on('pianoConnect', (isConnected) => {
-    if(isConnected) {
-        location.reload()
-    }
-})
+// socket.on('pianoConnect', (isConnected) => {
+//     if(isConnected) {
+//         location.reload()
+//     }
+// })
