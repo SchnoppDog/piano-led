@@ -60,10 +60,12 @@ module.exports = function (stripOpts, pianoSocketOpts, socketio) {
                         stripOpts.freezeOpts.rgba.blue      = blue
                     }
                     
+                    // Setting the color for the  backend led-strip
                     stripOpts.lightOnColorOpts.rgba.red                 = red
                     stripOpts.lightOnColorOpts.rgba.green               = green
                     stripOpts.lightOnColorOpts.rgba.blue                = blue
 
+                    // Setting the color for the frontend liveColor-piano-feature
                     pianoSocketOpts.colorConfig.isColorShuffle          = false
                     pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
                     pianoSocketOpts.colorConfig.rgbColor.red            = red
@@ -90,11 +92,13 @@ module.exports = function (stripOpts, pianoSocketOpts, socketio) {
                     stripOpts.freezeOpts.rgba.green     = green
                     stripOpts.freezeOpts.rgba.blue      = blue
                 }
-    
+                
+                // Setting the color for the backend led-strip
                 stripOpts.lightOnColorOpts.rgba.red      = red
                 stripOpts.lightOnColorOpts.rgba.green    = green
                 stripOpts.lightOnColorOpts.rgba.blue     = blue
 
+                // Setting the color for the frontend liveColor-piano-feature
                 pianoSocketOpts.colorConfig.isColorShuffle          = false
                 pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
                 pianoSocketOpts.colorConfig.rgbColor.red            = red

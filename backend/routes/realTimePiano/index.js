@@ -1,8 +1,9 @@
-// Here the state of the real-time pianoplay is handled. 
+// This file handles all the real-time piano button-functions
 
 module.exports = (pianoSocketOpts, socketio) => {
     const router = require('express').Router()
 
+    // de- / activating real time pianoplay
     router.post('/changePianoSocketState', (req, res) => {
         if (req.query.pianoSocketState === 'true') {
             if(pianoSocketOpts.buttonConfig.realTimePlayState === true) {
@@ -21,6 +22,7 @@ module.exports = (pianoSocketOpts, socketio) => {
         }
     })
 
+    // Changing liveColor to live-version or static generated color
     router.post('/changeLiveColorState', (req, res) => {
         if(req.query.liveColorState === 'true') {
             if(pianoSocketOpts.buttonConfig.liveColorState === true) {

@@ -1,15 +1,19 @@
 /*
     This file takes care of the real-time function between the server and the piano keys hit.
-    It also manages other components directly intertwined with this feature like setting real-time-play on and off.
+    It also manages other components directly intertwined with this feature:
+        - Setting real time pianoplay on or off
+        - Setting active color to the live-color play on the piano or a default static color
 */
 
+// ###### Function-Section ######
 // Creating the 88 Key-Layout of a standard piano.
 function createPianoLayout() {
     const totalKeys     = 88
     const pianoDiv      = document.getElementById('pianoLayout')
     let pianoKey        = 9
+    // the key-pattern names need to be 'white' and 'black', because they are the css-ids for each created piano-key
     let pianoKeyPattern = ['white', 'black', 'white', 'black', 'white', 'white', 'black', 'white', 'black', 'white', 'black', 'white']
-    let pianoNote       = 21
+    let pianoNote       = 21        // First key of the piano
 
     for(counter = 1; counter <= totalKeys; counter++) {
         if(pianoKey === pianoKeyPattern.length) {
@@ -91,6 +95,7 @@ async function changePianoSocketState(btnValue) {
     }
 }
 
+// Setting the active piano-key-color to the live color or a static generated color.
 async function changeLiveColorState(btnValue) {
     let changeLiveColorState
     let statusMessage
@@ -123,19 +128,21 @@ async function changeLiveColorState(btnValue) {
     }
 }
 
+// Creating dynamic css for the live-color
 function createOnHitStyle(red, green, blue) {
     let style               = document.createElement('style')
-    let whiteblbbRed        = red, whiteblbbGreen = green, whiteblbbBlue = blue
-    let whitebs1Red         = red, whitebs1Green = green, whitebs1Blue = blue
-    let whitebs2Red         = red, whitebs2Green = green, whitebs2Blue = blue
-    let whiteblg1Red        = red, whiteblg1Green = green, whiteblg1Blue = blue
-    let whiteblg2Red        = red, whiteblg2Green = green, whiteblg2Blue = blue
-    let blackbRed           = red, blackbGreen = green, blackbBlue = blue
-    let blackbs1Red         = red, blackbs1Green = green, blackbs1Blue = blue 
-    let blackblg1Red        = red, blackblg1Green = green, blackblg1Blue = blue
-    let blackblg2Red        = red, blackblg2Green = green, blackblg2Blue = blue
+    let whiteblbbRed        = red, whiteblbbGreen = green, whiteblbbBlue = blue         // white key border-left and border-bottom
+    let whitebs1Red         = red, whitebs1Green = green, whitebs1Blue = blue           // white key box-shadow 1
+    let whitebs2Red         = red, whitebs2Green = green, whitebs2Blue = blue           // white key box-shadow 2
+    let whiteblg1Red        = red, whiteblg1Green = green, whiteblg1Blue = blue         // white key background linear-gradient 1
+    let whiteblg2Red        = red, whiteblg2Green = green, whiteblg2Blue = blue         // white key background linear-gradient 2
+    let blackbRed           = red, blackbGreen = green, blackbBlue = blue               // black key border
+    let blackbs1Red         = red, blackbs1Green = green, blackbs1Blue = blue           // black key box-shadow 1
+    let blackblg1Red        = red, blackblg1Green = green, blackblg1Blue = blue         // black key background linear-gradient 1
+    let blackblg2Red        = red, blackblg2Green = green, blackblg2Blue = blue         // black key background linear-gradient 2
     let css
 
+    // Exmperimenting with the colors
     whiteblbbRed - 15 <= 0 ? whiteblbbRed = 0 : whiteblbbRed = whiteblbbRed - 15
     whiteblbbGreen - 15 <= 0 ? whiteblbbGreen = 0 : whiteblbbGreen = whiteblbbGreen - 15
     whiteblbbBlue - 15 <= 0 ? whiteblbbBlue = 0 : whiteblbbBlue = whiteblbbBlue - 15
@@ -172,6 +179,7 @@ function createOnHitStyle(red, green, blue) {
     blackblg2Green + 50 >= 255 ? blackblg2Green = 255 : blackblg2Green = blackblg2Green + 50
     blackblg2Blue + 50 >= 255 ? blackblg2Blue = 255 : blackblg2Blue = blackblg2Blue + 50
 
+    // Setting the dynamic css
     css = `.onHitWhiteDyn {
         width: 1.5rem;
         height: 6.0rem;
@@ -202,10 +210,12 @@ function createOnHitStyle(red, green, blue) {
 createPianoLayout()
 createPianoSocketButtons()
 
-//### Socket Connections ###
-// Initializing the socket.io connection to the backend
+//###### Socket-Connections ######
+// Initializing two socket.io namespaces to the backend
 const pianoMainSocket   = io.connect('/mainPianoSocket')
 const cssKeyColorSocket = io.connect('/cssKeyColorSocket')
+
+// Default values
 let red                 = 128
 let green               = 128
 let blue                = 128
@@ -215,8 +225,10 @@ let isShuffle           = false
 let isRandomShuffle     = false
 let isLiveColor         = false
 
-createOnHitStyle(red, green, blue)
+// createOnHitStyle(red, green, blue)
 
+// Setting global variable-values needed for the live-color
+// The dynamic css is only created when 'isLiveColor === true' 
 cssKeyColorSocket.on('setCssKeyColorVars', (pianoColorConfig) => {
     if(isLiveColor) {
         red     = pianoColorConfig.rgbColor.red
@@ -240,6 +252,7 @@ cssKeyColorSocket.on('setCssKeyColorVars', (pianoColorConfig) => {
     }
 })
 
+// Getting the live-color state
 cssKeyColorSocket.on('setKeyColorButtonConfig', (pianoButtonConfig) => {
     if(pianoButtonConfig.liveColorState) {
         isLiveColor = true
@@ -248,7 +261,7 @@ cssKeyColorSocket.on('setKeyColorButtonConfig', (pianoButtonConfig) => {
     }
 })
 
-// Changing the class of a key-div to active
+// Setting the onHit-css design for the browser-created piano when a piano-key is hit.
 pianoMainSocket.on('pianoKeyPress', (pianoNote) => {
     let pianoKeys = document.querySelectorAll('.pianoKey')
     let classNameWhite
@@ -280,7 +293,7 @@ pianoMainSocket.on('pianoKeyPress', (pianoNote) => {
     })
 })
 
-// Changing the class of a key-div to normal
+// Changing the pressed and colored key back to normal
 pianoMainSocket.on('pianoKeyRelease', (pianoNote) => {
     let pianoKeys = document.querySelectorAll('.pianoKey')
 

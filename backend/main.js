@@ -12,7 +12,7 @@ const colorAppConfig    = require('../backend/config')
 const colorApp          = express()
 const pianoServer       = require('http').createServer(colorApp)
 const io                = require('socket.io')(pianoServer)
-const mainPianoSocket   = io.of('/mainPianoSocket')
+const mainPianoSocket   = io.of('/mainPianoSocket') 
 const cssKeyColorSocket = io.of('/cssKeyColorSocket')
 
 //Default Values if Script fails or has to restart
@@ -87,9 +87,9 @@ let pianoSocketOpts = {
         shufflePos: 0,
         randomShufflePos: 0
     }
-    // colorOpts: stripOpts
 }
-// Maximum Connections
+
+// Maximum Client-Connections
 mainPianoSocket.setMaxListeners(5)
 cssKeyColorSocket.setMaxListeners(5)
 
@@ -139,7 +139,7 @@ usbDetect.on('add',(device) => {
 
                         ledStrip.lightOn(msg.note, stripOpts, io, pianoSocketOpts.colorConfig)
 
-                        // Sending piano-note-on-event to client
+                        // Sending piano-note-on-event to client only if 'realTimePlay' is set to true
                         if(pianoSocketOpts.buttonConfig.realTimePlayState === true) {
                             socket.emit('pianoKeyPress', msg.note)
                         }
@@ -148,14 +148,13 @@ usbDetect.on('add',(device) => {
                     if(msg.note === msg.note) {
                         ledStrip.lightOff(msg.note, stripOpts)
 
-                        // Sending piano-note-off-event to client
+                        // Sending piano-note-off-event to client only if 'realTimePlay' is set to true
                         if(pianoSocketOpts.buttonConfig.realTimePlayState === true) {
                             socket.emit('pianoKeyRelease', msg.note)
                         }
                     }
                 }
             })
-
             socket.on('disconnect', () => {
                 console.log("Client Disconnected")
             })

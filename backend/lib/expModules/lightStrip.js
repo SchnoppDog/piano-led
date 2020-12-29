@@ -4,7 +4,6 @@
 */
 const dotstar                   = require('dotstar')
 const SPI                       = require('pi-spi')
-const shufflePosition           = require('./addPianoFuncs')
 const spi                       = SPI.initialize('/dev/spidev0.1')    //Pins: SCLK: 23 | MOSI: 19
 const stripLength               = 144   //max LED number
 const strip                     = new dotstar.Dotstar(spi, {
@@ -55,6 +54,7 @@ exports.lightOn = function(keyNote, options, socketio, pianoSocketOpts) {
 
         keyFreezeRandomShuffle = randomShufflePosition
 
+        // Setting the color for the frontend liveColor-piano-feature
         pianoSocketOpts.rgbColor.red    = r
         pianoSocketOpts.rgbColor.green  = g
         pianoSocketOpts.rgbColor.blue   = b
@@ -72,6 +72,7 @@ exports.lightOn = function(keyNote, options, socketio, pianoSocketOpts) {
         b                     = options.colorShuffleOpts.rgba.arrayBlue[colorShuffleCounterLightOn]
         a                     = options.colorShuffleOpts.rgba.alpha
 
+        // Setting the color for the frontend liveColor-piano-feature
         pianoSocketOpts.rgbColor.red    = r
         pianoSocketOpts.rgbColor.green  = g
         pianoSocketOpts.rgbColor.blue   = b
