@@ -5,7 +5,7 @@ module.exports = function(stripOpts, pianoSocketOpts, express, socketio) {
     router.use(require('./keyFreeze')(stripOpts))
     router.use(require('./bgColor')(stripOpts))
     router.use(require('./randColPerPress')(stripOpts))
-    router.use(require('./realTimePiano')(pianoSocketOpts))
+    router.use(require('./realTimePiano')(pianoSocketOpts, socketio))
     router.use(require('./setColor')(stripOpts, pianoSocketOpts, socketio))
     router.use(require('./randomColor')(stripOpts, pianoSocketOpts, socketio))
     router.use(require('./customColor')(stripOpts, pianoSocketOpts, socketio))

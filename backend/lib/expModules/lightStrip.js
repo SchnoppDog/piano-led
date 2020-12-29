@@ -55,8 +55,9 @@ exports.lightOn = function(keyNote, options, socketio, pianoSocketOpts) {
 
         keyFreezeRandomShuffle = randomShufflePosition
 
-        // pianoSocketOpts.isColorShuffleRandom  = true
-        pianoSocketOpts.randomShufflePos      = randomShufflePosition
+        pianoSocketOpts.rgbColor.red    = r
+        pianoSocketOpts.rgbColor.green  = g
+        pianoSocketOpts.rgbColor.blue   = b
         socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts)
 
       } else {
@@ -69,7 +70,12 @@ exports.lightOn = function(keyNote, options, socketio, pianoSocketOpts) {
         r                     = options.colorShuffleOpts.rgba.arrayRed[colorShuffleCounterLightOn]
         g                     = options.colorShuffleOpts.rgba.arrayGreen[colorShuffleCounterLightOn]
         b                     = options.colorShuffleOpts.rgba.arrayBlue[colorShuffleCounterLightOn]
-        a                     = options.colorShuffleOpts.rgba.alpha  
+        a                     = options.colorShuffleOpts.rgba.alpha
+
+        pianoSocketOpts.rgbColor.red    = r
+        pianoSocketOpts.rgbColor.green  = g
+        pianoSocketOpts.rgbColor.blue   = b
+        socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts)
         
         colorShuffleCounterLightOn++
 

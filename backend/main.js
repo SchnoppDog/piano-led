@@ -74,6 +74,7 @@ let stripOpts               = {
 let pianoSocketOpts = {
     buttonConfig: {
         realTimePlayState: true,
+        liveColorState: false
     },
     colorConfig: {
         isColorShuffle: false,
@@ -83,6 +84,7 @@ let pianoSocketOpts = {
             green: 0,
             blue: 0
         },
+        shufflePos: 0,
         randomShufflePos: 0
     }
     // colorOpts: stripOpts
@@ -104,9 +106,6 @@ usbDetect.on('add',(device) => {
         // Socket.io handling real-time piano-key hitting
         mainPianoSocket.on('connection', (socket) => {
             console.log('Client connected!')
-
-            // When Piano has connected the clients browser has to reload to make a connection
-            // socket.emit('pianoConnect', true)
 
             //Edit this variable if your input-name of your piano is different than shown here
             const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
@@ -139,23 +138,15 @@ usbDetect.on('add',(device) => {
                         }
 
                         ledStrip.lightOn(msg.note, stripOpts, io, pianoSocketOpts.colorConfig)
-                        // socket.emit('pianoKeyPress', msg.note)
+
                         // Sending piano-note-on-event to client
                         if(pianoSocketOpts.buttonConfig.realTimePlayState === true) {
-                            // if(stripOpts.isColorShuffle === 'true') {
-                            //     socket.emit('pianoKeyPress', msg.note, stripOpts.isColorShuffle, stripOpts.colorShuffleOpts.rgba, stripOpts.isColorShuffleRandom)
-                            // } else {
-                            //     socket.emit('pianoKeyPress', msg.note, stripOpts.isColorShuffle, stripOpts.lightOnColorOpts.rgba)
-                            // }
-                            // console.log(msg.note)
                             socket.emit('pianoKeyPress', msg.note)
-                            // socket.emit('pianoKeyPress', 'this is quite a long messages which should be triggered instantly')
                         }
                     }
                 } else {
                     if(msg.note === msg.note) {
                         ledStrip.lightOff(msg.note, stripOpts)
-                        // socket.emit('pianoKeyRelease', msg.note)
 
                         // Sending piano-note-off-event to client
                         if(pianoSocketOpts.buttonConfig.realTimePlayState === true) {
