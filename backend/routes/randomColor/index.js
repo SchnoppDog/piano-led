@@ -1,4 +1,4 @@
-module.exports = function (stripOpts, pianoSocketOpts, cssKeyColorSocket) {
+module.exports = function (stripOpts, pianoSocketOpts, socketio) {
     const router        = require('express').Router()
     const colorEffects  = require('../../lib/expModules/colorEffects')
     const ledStrip      = require('../../lib/expModules/lightStrip')
@@ -27,13 +27,13 @@ module.exports = function (stripOpts, pianoSocketOpts, cssKeyColorSocket) {
                 stripOpts.lightOnColorOpts.rgba.gren     = green
                 stripOpts.lightOnColorOpts.rgba.blue     = blue
 
-                pianoSocketOpts.colorConfig.isRandColPerKey         = false
                 pianoSocketOpts.colorConfig.isColorShuffle          = false
                 pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
-                pianoSocketOpts.colorConfig.isCustomColor           = false
-                pianoSocketOpts.colorConfig.isRandomColor           = true
+                pianoSocketOpts.colorConfig.rgbColor.red            = red
+                pianoSocketOpts.colorConfig.rgbColor.green          = green
+                pianoSocketOpts.colorConfig.rgbColor.blue           = blue
 
-                cssKeyColorSocket.emit('setCssKeyColorVars', pianoSocketOpts.colorConfig, red, green, blue)
+                socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
     
                 res.json({ statusCode: 200, message: `Random Color Set! Color is RGB ${randRed}, ${randGreen}, ${randBlue}` })
             }
@@ -46,13 +46,13 @@ module.exports = function (stripOpts, pianoSocketOpts, cssKeyColorSocket) {
             stripOpts.lightOnColorOpts.rgba.gren     = green
             stripOpts.lightOnColorOpts.rgba.blue     = blue
 
-            pianoSocketOpts.colorConfig.isRandColPerKey         = false
             pianoSocketOpts.colorConfig.isColorShuffle          = false
             pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
-            pianoSocketOpts.colorConfig.isCustomColor           = false
-            pianoSocketOpts.colorConfig.isRandomColor           = true
+            pianoSocketOpts.colorConfig.rgbColor.red            = red
+            pianoSocketOpts.colorConfig.rgbColor.green          = green
+            pianoSocketOpts.colorConfig.rgbColor.blue           = blue
 
-            cssKeyColorSocket.emit('setCssKeyColorVars', pianoSocketOpts.colorConfig, red, green, blue)
+            socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
     
             res.json({ statusCode: 200, message: `Random Color Set! Color is RGB ${randRed}, ${randGreen}, ${randBlue}` })
         }

@@ -4,7 +4,7 @@
 */
 const dotstar                   = require('dotstar')
 const SPI                       = require('pi-spi')
-const shufflePosition           = require('./randColShufflePos')
+const shufflePosition           = require('./addPianoFuncs')
 const spi                       = SPI.initialize('/dev/spidev0.1')    //Pins: SCLK: 23 | MOSI: 19
 const stripLength               = 144   //max LED number
 const strip                     = new dotstar.Dotstar(spi, {
@@ -34,7 +34,7 @@ exports.setBgLight = function(bgOptions) {
 }
 
 // if the color-shuffle is on colors are shuffled.
-exports.lightOn = function(keyNote, options) {                 // r, g, b, a
+exports.lightOn = function(keyNote, options, socketio, pianoSocketOpts) {                
     const ledNum1 = keyNote - keyLed1 + (keyNote - keyLed2)   //I.E: 31-31+(31-32)=-1
     const ledNum2 = keyNote - keyLed1 + (keyNote - keyLed1)   //31-31+(31-31)=0 etc...
     let r, g, b, a
@@ -46,7 +46,7 @@ exports.lightOn = function(keyNote, options) {                 // r, g, b, a
       shuffleArrayLength    = options.colorShuffleOpts.rgba.arrayRed.length
 
       if(options.isColorShuffleRandom === 'true') {
-        randomShufflePosition = shufflePosition.getRandomShufflePosition(callerId, shuffleArrayLength)   // Math.floor(Math.random() * shuffleArrayLength)
+        randomShufflePosition = Math.floor(Math.random() * shuffleArrayLength)      //shufflePosition.getRandomShufflePosition(callerId)
 
         r                     = options.colorShuffleOpts.rgba.arrayRed[randomShufflePosition]
         g                     = options.colorShuffleOpts.rgba.arrayGreen[randomShufflePosition]
@@ -54,6 +54,10 @@ exports.lightOn = function(keyNote, options) {                 // r, g, b, a
         a                     = options.colorShuffleOpts.rgba.alpha
 
         keyFreezeRandomShuffle = randomShufflePosition
+
+        // pianoSocketOpts.isColorShuffleRandom  = true
+        pianoSocketOpts.randomShufflePos      = randomShufflePosition
+        socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts)
 
       } else {
 
@@ -90,6 +94,14 @@ exports.lightOn = function(keyNote, options) {                 // r, g, b, a
           strip.set(ledNum1,r,g,b,a)
           strip.set(ledNum2,r,g,b,a)
           strip.sync()
+      }
+    } else {
+      if(ledNum1 <= -1) {
+        strip.set(0, 0, 0, 0, 0)
+        strip.sync()
+      } else if(ledNum2 >= 145) {
+        strip.set(144, 0, 0, 0, 0)
+        strip.sync()
       }
     }
 }
@@ -202,5 +214,7 @@ exports.lightOff = function(keyNote, options) {
           strip.sync()
         }
       }
+    } else {
+      return
     }
 }

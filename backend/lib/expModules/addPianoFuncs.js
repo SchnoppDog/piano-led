@@ -3,10 +3,10 @@ let rtPianoPosition = 0
 function _getRandomShufflePosition(callerId, arrayLength) {
     let randShufPos     = Math.floor(Math.random() * arrayLength)
 
-    if(callerId === 'lightStrip') {
+    if(callerId === 'socketPianoCss') {
         rtPianoPosition = randShufPos
         return randShufPos
-    } else if(callerId === 'socketPianoKeyPress') {
+    } else if(callerId === 'lightStrip') {
         return rtPianoPosition
     }
 }

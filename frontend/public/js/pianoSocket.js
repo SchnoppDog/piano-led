@@ -95,23 +95,43 @@ createPianoSocketButtons()
 //### Socket Connections ###
 // Initializing the socket.io connection to the backend
 // const socket = io()
-const cssKeyColorSocket = io.connect('/cssKeyColorSocket')
 const pianoMainSocket   = io.connect('/mainPianoSocket')
-let red = 128, green = 128, blue = 128
-let randShufPos = 0
+const cssKeyColorSocket = io.connect('/cssKeyColorSocket')
+let red                 = 128
+let green               = 128
+let blue                = 128
+let randShufPos         = 0
+let isShuffle           = false
+let isRandomShuffle     = false
 
-cssKeyColorSocket.on('setCssKeyColorVars', (pianoColorConfig, r, g, b) => {
-    red = r
-    green = g
-    blue = b
-    console.log(pianoColorConfig)
-    console.log(r, g, b)
+cssKeyColorSocket.on('setCssKeyColorVars', (pianoColorConfig) => {
+    pianoColorConfig.isColorShuffle ? isShuffle = true : isShuffle = false
+    if(pianoColorConfig.isColorShuffleRandom) {
+        isRandomShuffle = true
+        randShufPos     = pianoColorConfig.randomShufflePos 
+    } else {
+        isRandomShuffle = false
+        randShufPos     = 0
+    }
+    
+    red     = pianoColorConfig.rgbColor.red
+    green   = pianoColorConfig.rgbColor.green
+    blue    = pianoColorConfig.rgbColor.blue
+
+    // console.log("RGB: ", red, green, blue)
+    // console.log("is Shuffle? ", isShuffle)
+    // console.log("is random Shuffle? ", isRandomShuffle)
+    // console.log("random shuffle Position: ", randShufPos)
+    
 })
 
 // Changing the class of a key-div to active
 pianoMainSocket.on('pianoKeyPress', (pianoNote) => {
     let pianoKeys = document.querySelectorAll('.pianoKey')
-    console.log(red, green, blue)
+    console.log("RGB: ", red, green, blue)
+    console.log("is Shuffle? ", isShuffle)
+    console.log("is random Shuffle? ", isRandomShuffle)
+    console.log("random shuffle Position: ", randShufPos)
 
     pianoKeys.forEach(key => {
         if($(key).data('pianoNote') === pianoNote) {
@@ -123,6 +143,10 @@ pianoMainSocket.on('pianoKeyPress', (pianoNote) => {
         }
     })
 })
+
+// pianoMainSocket.on('pianoKeyPress', (pianoNote) => {
+//     console.log(pianoNote)
+// })
 
 // Changing the class of a key-div to normal
 pianoMainSocket.on('pianoKeyRelease', (pianoNote) => {

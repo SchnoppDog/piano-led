@@ -20,6 +20,7 @@ const alpha                 = 0.5
 let red                     = 128
 let green                   = 128
 let blue                    = 128
+
 // Strip-values for each function
 let stripOpts               = {
     lightOnColorOpts: {
@@ -75,28 +76,23 @@ let pianoSocketOpts = {
         realTimePlayState: true,
     },
     colorConfig: {
-        isRandColPerKey: stripOpts.isRandColPerKey,
-        isColorShuffle: stripOpts.isColorShuffle,
-        isColorShuffleRandom: stripOpts.isColorShuffleRandom,
-        isCustomColor: 'false',
-        isRandomColor: 'false'
+        isColorShuffle: false,
+        isColorShuffleRandom: false,
+        rgbColor: {
+            red: 0,
+            green: 0,
+            blue: 0
+        },
+        randomShufflePos: 0
     }
     // colorOpts: stripOpts
 }
-
+// Maximum Connections
+mainPianoSocket.setMaxListeners(5)
 cssKeyColorSocket.setMaxListeners(5)
 
 colorApp.use(require('./routes')(stripOpts, pianoSocketOpts, express, io))
 colorApp.use(bodyParser.urlencoded({extended: false}))
-
-
-// mainPianoSocket.on('connection', (socket) => {
-//     console.log("Hello from mainPianoSocket")
-// })
-
-// Maximum Connections
-// mainPianoSocket.setMaxListeners(5)
-// io.setMaxListeners(5)
 
 //Starting Monitoring Service for piano
 //You need to edit the first "if"-Statemant if your piano has a other name than shown here
@@ -133,18 +129,17 @@ usbDetect.on('add',(device) => {
                             stripOpts.lightOnColorOpts.rgba.gren        = green
                             stripOpts.lightOnColorOpts.rgba.blue        = blue
 
-                            pianoSocketOpts.colorConfig.isRandColPerKey         = true
                             pianoSocketOpts.colorConfig.isColorShuffle          = false
                             pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
-                            pianoSocketOpts.colorConfig.isCustomColor           = false
-                            pianoSocketOpts.colorConfig.isRandomColor           = false
+                            pianoSocketOpts.colorConfig.rgbColor.red            = red
+                            pianoSocketOpts.colorConfig.rgbColor.green          = green
+                            pianoSocketOpts.colorConfig.rgbColor.blue           = blue
 
-                            cssKeyColorSocket.emit('setCssKeyColorVars', pianoSocketOpts.colorConfig, red, green, blue)
+                            cssKeyColorSocket.emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
                         }
-                        // cssKeyColorSocket.emit('setCssKeyColorVars', pianoSocketOpts.colorConfig, stripOpts.lightOnColorOpts.rgba.red, stripOpts.lightOnColorOpts.rgba.green, stripOpts.lightOnColorOpts.rgba.blue)
 
-                        ledStrip.lightOn(msg.note,stripOpts)
-
+                        ledStrip.lightOn(msg.note, stripOpts, io, pianoSocketOpts.colorConfig)
+                        // socket.emit('pianoKeyPress', msg.note)
                         // Sending piano-note-on-event to client
                         if(pianoSocketOpts.buttonConfig.realTimePlayState === true) {
                             // if(stripOpts.isColorShuffle === 'true') {
@@ -152,12 +147,15 @@ usbDetect.on('add',(device) => {
                             // } else {
                             //     socket.emit('pianoKeyPress', msg.note, stripOpts.isColorShuffle, stripOpts.lightOnColorOpts.rgba)
                             // }
+                            // console.log(msg.note)
                             socket.emit('pianoKeyPress', msg.note)
+                            // socket.emit('pianoKeyPress', 'this is quite a long messages which should be triggered instantly')
                         }
                     }
                 } else {
                     if(msg.note === msg.note) {
                         ledStrip.lightOff(msg.note, stripOpts)
+                        // socket.emit('pianoKeyRelease', msg.note)
 
                         // Sending piano-note-off-event to client
                         if(pianoSocketOpts.buttonConfig.realTimePlayState === true) {
