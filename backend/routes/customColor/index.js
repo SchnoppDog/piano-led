@@ -2,7 +2,7 @@
     Here you can set the custom color for either background-lighting or key-color.
     The key-color is only accessible if the color-shuffle is turned off
 */
-module.exports = function (stripOpts) {
+module.exports = function (stripOpts, pianoSocketOpts, socketio) {
     const router        = require('express').Router()
     const ledStrip      = require('../../lib/expModules/lightStrip')
 
@@ -27,10 +27,20 @@ module.exports = function (stripOpts) {
                 red                                         = customRed
                 green                                       = customGreen
                 blue                                        = customBlue
-    
+                
+                // Setting the color for the backend led-strip
                 stripOpts.lightOnColorOpts.rgba.red         = red
                 stripOpts.lightOnColorOpts.rgba.gren        = green
                 stripOpts.lightOnColorOpts.rgba.blue        = blue
+
+                // Setting the color for the frontend liveColor-piano-feature
+                pianoSocketOpts.colorConfig.isColorShuffle          = false
+                pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
+                pianoSocketOpts.colorConfig.rgbColor.red            = red
+                pianoSocketOpts.colorConfig.rgbColor.green          = green
+                pianoSocketOpts.colorConfig.rgbColor.blue           = blue
+
+                socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
     
                 res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
             } 
@@ -41,10 +51,20 @@ module.exports = function (stripOpts) {
                 red                                         = customRed
                 green                                       = customGreen
                 blue                                        = customBlue
-    
+                
+                // Setting the color for the backend led-strip
                 stripOpts.lightOnColorOpts.rgba.red         = red
                 stripOpts.lightOnColorOpts.rgba.gren        = green
                 stripOpts.lightOnColorOpts.rgba.blue        = blue
+
+                // Setting the color for the frontend liveColor-piano-feature
+                pianoSocketOpts.colorConfig.isColorShuffle          = false
+                pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
+                pianoSocketOpts.colorConfig.rgbColor.red            = red
+                pianoSocketOpts.colorConfig.rgbColor.green          = green
+                pianoSocketOpts.colorConfig.rgbColor.blue           = blue
+
+                socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
     
                 res.json({ statusCode: 200, message: 'Your color has been set successfully!' })
             }

@@ -1,4 +1,11 @@
 # Updates
+## Version 3.2
+**Release Date: 31.12.2020**
+Just before new years eve there is a new update to make! In this version a new feature was added. It's called "Live-Piano". More Information below.
+
+### Added
+- **Live-Piano**: This new feature allows you to see your pianoplay in the your webbrowser in **real-time**. If you know the software Synthesia, then you know how it's gonna look like. You have also two options. First you can decide if the live-play-feature should be turned off or on. Second you can decide if the color of the animated piano in the browser should be its default-green-color or if it should match the led-strips color.
+
 ## Version 3.1
 **Release Date: 25.10.2020**
 A new feauture and some structure work has been done in this version of 3.1!

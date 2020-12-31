@@ -1,4 +1,4 @@
-module.exports = function (stripOpts) {
+module.exports = function (stripOpts, pianoSocketOpts, socketio) {
     const router        = require('express').Router()
     const colorEffects  = require('../../lib/expModules/colorEffects')
 
@@ -24,25 +24,46 @@ module.exports = function (stripOpts) {
                         colorArrayRed       = req.query.colorArrayRed.split(',').map(Number)
                         colorArrayGreen     = req.query.colorArrayGreen.split(',').map(Number)
                         colorArrayBlue      = req.query.colorArrayBlue.split(',').map(Number)
-                
+                        
+                        // Rounding to integer-values for setting the color later on
                         for(let counter = 0; counter < numberOfInputs; counter++) {
                             colorArrayRed[counter]      = Math.round(colorArrayRed[counter])
                             colorArrayGreen[counter]    = Math.round(colorArrayGreen[counter])
                             colorArrayBlue[counter]     = Math.round(colorArrayBlue[counter])
                         }
-    
+                        
+                        // Setting the color for the led-strip
                         stripOpts.isColorShuffle                        = isColorShuffle
                         stripOpts.colorShuffleOpts.rgba.arrayRed        = colorArrayRed
                         stripOpts.colorShuffleOpts.rgba.arrayGreen      = colorArrayGreen
                         stripOpts.colorShuffleOpts.rgba.arrayBlue       = colorArrayBlue
+
+                        // Setting the color for the frontend liveColor-piano-feature
+                        pianoSocketOpts.colorConfig.isColorShuffle       = true
+                        pianoSocketOpts.colorConfig.isColorShuffleRandom = false
+                        pianoSocketOpts.colorConfig.rgbColor.red         = colorArrayRed
+                        pianoSocketOpts.colorConfig.rgbColor.green       = colorArrayGreen
+                        pianoSocketOpts.colorConfig.rgbColor.blue        = colorArrayBlue
+    
+                        socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
                 
                         res.json({ statusCode: 200, message: 'Colors for Color-Shuffle set. Color-Shuffle is ON!' })
     
                     } else {
+                        // Setting the shuffle-color to 0 when off
                         stripOpts.isColorShuffle                        = isColorShuffle
                         stripOpts.colorShuffleOpts.rgba.arrayRed        = []
                         stripOpts.colorShuffleOpts.rgba.arrayGreen      = []
                         stripOpts.colorShuffleOpts.rgba.arrayBlue       = []
+
+                        // Setting the color for the frontend liveColor-piano-feature
+                        pianoSocketOpts.colorConfig.isColorShuffle       = false
+                        pianoSocketOpts.colorConfig.isColorShuffleRandom = false
+                        pianoSocketOpts.colorConfig.rgbColor.red         = stripOpts.lightOnColorOpts.rgba.red
+                        pianoSocketOpts.colorConfig.rgbColor.green       = stripOpts.lightOnColorOpts.rgba.green
+                        pianoSocketOpts.colorConfig.rgbColor.blue        = stripOpts.lightOnColorOpts.rgba.blue
+    
+                        socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
                         
                         res.json({ statusCode: 403, message: 'Color-Shuffle is OFF!' })
                     }
@@ -56,24 +77,44 @@ module.exports = function (stripOpts) {
                     colorArrayRed       = req.query.colorArrayRed.split(',').map(Number)
                     colorArrayGreen     = req.query.colorArrayGreen.split(',').map(Number)
                     colorArrayBlue      = req.query.colorArrayBlue.split(',').map(Number)
-            
+                    
+                    // Rounding to integer-values for setting the color later on
                     for(let counter = 0; counter < numberOfInputs; counter++) {
                         colorArrayRed[counter]      = Math.round(colorArrayRed[counter])
                         colorArrayGreen[counter]    = Math.round(colorArrayGreen[counter])
                         colorArrayBlue[counter]     = Math.round(colorArrayBlue[counter])
                     }
-            
+                    
+                    // Setting the color for the led-strip
                     stripOpts.isColorShuffle                        = isColorShuffle
                     stripOpts.colorShuffleOpts.rgba.arrayRed        = colorArrayRed
                     stripOpts.colorShuffleOpts.rgba.arrayGreen      = colorArrayGreen
                     stripOpts.colorShuffleOpts.rgba.arrayBlue       = colorArrayBlue
+
+                    // Setting the color for the frontend liveColor-piano-feature
+                    pianoSocketOpts.colorConfig.isColorShuffle       = true
+                    pianoSocketOpts.colorConfig.isColorShuffleRandom = false
+                    pianoSocketOpts.colorConfig.rgbColor.red         = colorArrayRed
+                    pianoSocketOpts.colorConfig.rgbColor.green       = colorArrayGreen
+                    pianoSocketOpts.colorConfig.rgbColor.blue        = colorArrayBlue
+
+                    socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
             
                     res.json({ statusCode: 200, message: 'Colors for Color-Shuffle set. Color-Shuffle is ON!' })
                 } else {
+                    // Same as above
                     stripOpts.isColorShuffle                        = isColorShuffle
                     stripOpts.colorShuffleOpts.rgba.arrayRed        = []
                     stripOpts.colorShuffleOpts.rgba.arrayGreen      = []
                     stripOpts.colorShuffleOpts.rgba.arrayBlue       = []
+
+                    pianoSocketOpts.colorConfig.isColorShuffle       = false
+                    pianoSocketOpts.colorConfig.isColorShuffleRandom = false
+                    pianoSocketOpts.colorConfig.rgbColor.red         = stripOpts.lightOnColorOpts.rgba.red
+                    pianoSocketOpts.colorConfig.rgbColor.green       = stripOpts.lightOnColorOpts.rgba.green
+                    pianoSocketOpts.colorConfig.rgbColor.blue        = stripOpts.lightOnColorOpts.rgba.blue
+
+                    socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
                     
                     res.json({ statusCode: 403, message: 'Color-Shuffle is OFF!' })
                 }
@@ -85,13 +126,19 @@ module.exports = function (stripOpts) {
     router.post('/set-random-shuffle-order', (req, res) => {
         if(stripOpts.colorShuffleOpts.randomShuffleOrderOnOff % 2 === 0) {
             stripOpts.isColorShuffleRandom                      = 'true'
-            stripOpts.colorShuffleOpts.randomShuffleOrderOnOff  = 1
+            stripOpts.colorShuffleOpts.randomShuffleOrderOnOff  = 1 //socketPianoCss
+
+            pianoSocketOpts.colorConfig.isColorShuffleRandom    = true
+            socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
 
             res.json({ statusCode: 200, message: 'Random Shuffle Order is now ON!' })
 
         } else {
             stripOpts.isColorShuffleRandom                      = 'false'
             stripOpts.colorShuffleOpts.randomShuffleOrderOnOff  = 0
+
+            pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
+            socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
 
             res.json({ statusCode: 403, message: 'Random Shuffle Order is now OFF!' })
 
@@ -121,10 +168,20 @@ module.exports = function (stripOpts) {
                         randArrayBlue[counter]      = randRbgValues[2]
                     }
 
-                    stripOpts.isColorShuffle                        = isColorShuffle
-                    stripOpts.colorShuffleOpts.rgba.arrayRed        = randArrayRed
-                    stripOpts.colorShuffleOpts.rgba.arrayGreen      = randArrayGreen
-                    stripOpts.colorShuffleOpts.rgba.arrayBlue       = randArrayBlue
+                    // Setting the color for the led-strip
+                    stripOpts.isColorShuffle                            = isColorShuffle
+                    stripOpts.colorShuffleOpts.rgba.arrayRed            = randArrayRed
+                    stripOpts.colorShuffleOpts.rgba.arrayGreen          = randArrayGreen
+                    stripOpts.colorShuffleOpts.rgba.arrayBlue           = randArrayBlue
+
+                    // Setting the color for the frontend liveColor-piano-feature
+                    pianoSocketOpts.colorConfig.isColorShuffle          = true
+                    pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
+                    pianoSocketOpts.colorConfig.rgbColor.red            = randArrayRed
+                    pianoSocketOpts.colorConfig.rgbColor.green          = randArrayGreen
+                    pianoSocketOpts.colorConfig.rgbColor.blue           = randArrayBlue
+
+                    socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
 
                     res.json({ statusCode: 200, message: 'Set Randomized Shuffle Colors!' })
                 }
@@ -137,10 +194,20 @@ module.exports = function (stripOpts) {
                 randArrayBlue[counter]      = randRbgValues[2]
             }
 
-            stripOpts.isColorShuffle                        = isColorShuffle
-            stripOpts.colorShuffleOpts.rgba.arrayRed        = randArrayRed
-            stripOpts.colorShuffleOpts.rgba.arrayGreen      = randArrayGreen
-            stripOpts.colorShuffleOpts.rgba.arrayBlue       = randArrayBlue
+            // Setting the color for the led-strip
+            stripOpts.isColorShuffle                            = isColorShuffle
+            stripOpts.colorShuffleOpts.rgba.arrayRed            = randArrayRed
+            stripOpts.colorShuffleOpts.rgba.arrayGreen          = randArrayGreen
+            stripOpts.colorShuffleOpts.rgba.arrayBlue           = randArrayBlue
+
+            // Setting the color for the frontend liveColor-piano-feature
+            pianoSocketOpts.colorConfig.isColorShuffle          = true
+            pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
+            pianoSocketOpts.colorConfig.rgbColor.red            = randArrayRed
+            pianoSocketOpts.colorConfig.rgbColor.green          = randArrayGreen
+            pianoSocketOpts.colorConfig.rgbColor.blue           = randArrayBlue
+
+            socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
 
             res.json({ statusCode: 200, message: 'Set Randomized Shuffle Colors!' })
         }

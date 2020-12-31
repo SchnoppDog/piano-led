@@ -33,18 +33,19 @@ exports.setBgLight = function(bgOptions) {
 }
 
 // if the color-shuffle is on colors are shuffled.
-exports.lightOn = function(keyNote, options) {                 // r, g, b, a
+exports.lightOn = function(keyNote, options, socketio, pianoSocketOpts) {                
     const ledNum1 = keyNote - keyLed1 + (keyNote - keyLed2)   //I.E: 31-31+(31-32)=-1
     const ledNum2 = keyNote - keyLed1 + (keyNote - keyLed1)   //31-31+(31-31)=0 etc...
     let r, g, b, a
     let shuffleArrayLength
     let randomShufflePosition
+    let callerId = 'lightStrip'
 
     if(options.isColorShuffle === 'true') {
       shuffleArrayLength    = options.colorShuffleOpts.rgba.arrayRed.length
 
       if(options.isColorShuffleRandom === 'true') {
-        randomShufflePosition = Math.floor(Math.random() * shuffleArrayLength)
+        randomShufflePosition = Math.floor(Math.random() * shuffleArrayLength)      //shufflePosition.getRandomShufflePosition(callerId)
 
         r                     = options.colorShuffleOpts.rgba.arrayRed[randomShufflePosition]
         g                     = options.colorShuffleOpts.rgba.arrayGreen[randomShufflePosition]
@@ -52,6 +53,12 @@ exports.lightOn = function(keyNote, options) {                 // r, g, b, a
         a                     = options.colorShuffleOpts.rgba.alpha
 
         keyFreezeRandomShuffle = randomShufflePosition
+
+        // Setting the color for the frontend liveColor-piano-feature
+        pianoSocketOpts.rgbColor.red    = r
+        pianoSocketOpts.rgbColor.green  = g
+        pianoSocketOpts.rgbColor.blue   = b
+        socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts)
 
       } else {
 
@@ -63,19 +70,25 @@ exports.lightOn = function(keyNote, options) {                 // r, g, b, a
         r                     = options.colorShuffleOpts.rgba.arrayRed[colorShuffleCounterLightOn]
         g                     = options.colorShuffleOpts.rgba.arrayGreen[colorShuffleCounterLightOn]
         b                     = options.colorShuffleOpts.rgba.arrayBlue[colorShuffleCounterLightOn]
-        a                     = options.colorShuffleOpts.rgba.alpha  
+        a                     = options.colorShuffleOpts.rgba.alpha
+
+        // Setting the color for the frontend liveColor-piano-feature
+        pianoSocketOpts.rgbColor.red    = r
+        pianoSocketOpts.rgbColor.green  = g
+        pianoSocketOpts.rgbColor.blue   = b
+        socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts)
         
         colorShuffleCounterLightOn++
 
       }
     } else {
+
       r = options.lightOnColorOpts.rgba.red
       g = options.lightOnColorOpts.rgba.green
       b = options.lightOnColorOpts.rgba.blue
       a = options.lightOnColorOpts.rgba.alpha
 
     }
-
 
     if(keyNote >= firstRangeKey && keyNote <= lastRangeKey) {
       if(ledNum1 === -1) {    //is needed so strip.set() doesn't end in an error
@@ -88,6 +101,14 @@ exports.lightOn = function(keyNote, options) {                 // r, g, b, a
           strip.set(ledNum1,r,g,b,a)
           strip.set(ledNum2,r,g,b,a)
           strip.sync()
+      }
+    } else {
+      if(ledNum1 <= -1) {
+        strip.set(0, 0, 0, 0, 0)
+        strip.sync()
+      } else if(ledNum2 >= 145) {
+        strip.set(144, 0, 0, 0, 0)
+        strip.sync()
       }
     }
 }
@@ -200,5 +221,7 @@ exports.lightOff = function(keyNote, options) {
           strip.sync()
         }
       }
+    } else {
+      return
     }
 }

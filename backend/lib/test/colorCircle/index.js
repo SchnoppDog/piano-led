@@ -6,11 +6,14 @@ const strip         = new dotstar.Dotstar(spi, {
     length: stripLength
 })
 
-let red         = [128, 128, 0, 0]
-let green       = [128, 0, 128, 0]
-let blue        = [128, 0, 0, 128]
-let i           = 0
-let colorLength = red.length
+// let red         = [128, 128, 0, 0]
+// let green       = [128, 0, 128, 0]
+// let blue        = [128, 0, 0, 128]
+// let i           = 0
+// let colorLength = red.length
+
+strip.set(28, 128, 128, 128, 0.5)
+strip.sync()
 
 // while(true) {
 //     if(i === colorLength) {
@@ -46,8 +49,8 @@ let colorLength = red.length
 
 // strip.all(0,0,0,0)
 // strip.sync()
-if(1%2===0) {
-    console.log(true)
-} else {
-    console.log(false)
-}
+// if(1%2===0) {
+//     console.log(true)
+// } else {
+//     console.log(false)
+// }

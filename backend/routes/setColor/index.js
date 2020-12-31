@@ -1,4 +1,4 @@
-module.exports = function (stripOpts) {
+module.exports = function (stripOpts, pianoSocketOpts, socketio) {
     const router        = require('express').Router()
     const convert       = require('color-convert')
     const ledStrip      = require('../../lib/expModules/lightStrip')
@@ -13,6 +13,7 @@ module.exports = function (stripOpts) {
         bgRed            = ((arrayRGB[0] / 2) / 2) / 2
         bgGreen          = ((arrayRGB[1] / 2) / 2) /2
         bgBlue           = ((arrayRGB[2] / 2) / 2) /2
+        
     
         /* Setting various options for various behaviours such as:
             - Is the general On-Off-Button for the Background-Color turned on or off?
@@ -58,10 +59,20 @@ module.exports = function (stripOpts) {
                         stripOpts.freezeOpts.rgba.green     = green
                         stripOpts.freezeOpts.rgba.blue      = blue
                     }
-    
-                    stripOpts.lightOnColorOpts.rgba.red      = red
-                    stripOpts.lightOnColorOpts.rgba.gren     = green
-                    stripOpts.lightOnColorOpts.rgba.blue     = blue
+                    
+                    // Setting the color for the  backend led-strip
+                    stripOpts.lightOnColorOpts.rgba.red                 = red
+                    stripOpts.lightOnColorOpts.rgba.green               = green
+                    stripOpts.lightOnColorOpts.rgba.blue                = blue
+
+                    // Setting the color for the frontend liveColor-piano-feature
+                    pianoSocketOpts.colorConfig.isColorShuffle          = false
+                    pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
+                    pianoSocketOpts.colorConfig.rgbColor.red            = red
+                    pianoSocketOpts.colorConfig.rgbColor.green          = green
+                    pianoSocketOpts.colorConfig.rgbColor.blue           = blue
+
+                    socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
     
                     res.json({ statusCode: 200, message: "Color set!"})
                 }
@@ -81,10 +92,20 @@ module.exports = function (stripOpts) {
                     stripOpts.freezeOpts.rgba.green     = green
                     stripOpts.freezeOpts.rgba.blue      = blue
                 }
-    
+                
+                // Setting the color for the backend led-strip
                 stripOpts.lightOnColorOpts.rgba.red      = red
-                stripOpts.lightOnColorOpts.rgba.gren     = green
+                stripOpts.lightOnColorOpts.rgba.green    = green
                 stripOpts.lightOnColorOpts.rgba.blue     = blue
+
+                // Setting the color for the frontend liveColor-piano-feature
+                pianoSocketOpts.colorConfig.isColorShuffle          = false
+                pianoSocketOpts.colorConfig.isColorShuffleRandom    = false
+                pianoSocketOpts.colorConfig.rgbColor.red            = red
+                pianoSocketOpts.colorConfig.rgbColor.green          = green
+                pianoSocketOpts.colorConfig.rgbColor.blue           = blue
+
+                socketio.of('/cssKeyColorSocket').emit('setCssKeyColorVars', pianoSocketOpts.colorConfig)
     
                 res.json({ statusCode: 200, message: "Color set!"})
             }
