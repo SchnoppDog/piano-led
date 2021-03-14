@@ -3,14 +3,21 @@
 */
 
 const pianoMidi         = require('easymidi')
+const fs                = require('fs')
 const usbDetect         = require('usb-detection')
 const ledStrip          = require('../backend/lib/expModules/lightStrip.js')
 const colorEffects      = require('../backend/lib/expModules/colorEffects.js')
 const express           = require('express')
 const bodyParser        = require('body-parser')
 const colorAppConfig    = require('../backend/config')
+const privKey           = fs.readFileSync('/usr/local/certs/keys/pianoled.local.pem')
+const pubKey            = fs.readFileSync('/usr/local/certs/pianoled.local.pem')
 const colorApp          = express()
-const pianoServer       = require('http').createServer(colorApp)
+// const pianoServer       = require('http').createServer(colorApp)
+const pianoServer       = require('https').createServer({
+    key: privKey,
+    cert: pubKey
+}, colorApp)
 const io                = require('socket.io')(pianoServer)
 const mainPianoSocket   = io.of('/mainPianoSocket') 
 const cssKeyColorSocket = io.of('/cssKeyColorSocket')
@@ -163,4 +170,4 @@ usbDetect.on('add',(device) => {
 })
 
 
-pianoServer.listen(colorAppConfig.server.port, "0.0.0.0")
+pianoServer.listen(colorAppConfig.server.port, "0.0.0.0") //"0.0.0.0" | "127.0.0.1"
