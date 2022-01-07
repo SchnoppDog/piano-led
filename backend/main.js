@@ -103,6 +103,8 @@ cssKeyColorSocket.setMaxListeners(5)
 colorApp.use(require('./routes')(stripOpts, pianoSocketOpts, express, io))
 colorApp.use(bodyParser.urlencoded({extended: false}))
 
+
+
 //Starting Monitoring Service for piano
 //You need to edit the first "if"-Statemant if your piano has a other name than shown here
 usbDetect.startMonitoring()
@@ -115,7 +117,8 @@ usbDetect.on('add',(device) => {
             console.log('Client connected!')
 
             //Edit this variable if your input-name of your piano is different than shown here
-            const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
+            const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 24:0')
+            // console.log(midiInput)
             
             midiInput.on('noteon', (msg) => {
                 if(msg.velocity > 0 ) {
@@ -132,7 +135,7 @@ usbDetect.on('add',(device) => {
                             stripOpts.freezeOpts.rgba.blue              = blue
 
                             stripOpts.lightOnColorOpts.rgba.red         = red
-                            stripOpts.lightOnColorOpts.rgba.gren        = green
+                            stripOpts.lightOnColorOpts.rgba.green       = green
                             stripOpts.lightOnColorOpts.rgba.blue        = blue
 
                             pianoSocketOpts.colorConfig.isColorShuffle          = false
@@ -169,5 +172,12 @@ usbDetect.on('add',(device) => {
     }
 })
 
+usbDetect.on('remove', (device) => {
+    if(device.deviceName === "Digital_Piano") {
+        console.log("Piano disconnected!")
+        console.log("Restart usb-detection!")
+        usbDetect.startMonitoring()
+    }
+})
 
-pianoServer.listen(colorAppConfig.server.port, "0.0.0.0") //"0.0.0.0" | "127.0.0.1"
+pianoServer.listen(colorAppConfig.server.port, colorAppConfig.server.ipPi) //"0.0.0.0" | "127.0.0.1" | colorAppConfig.server.ipPi

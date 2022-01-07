@@ -54,7 +54,7 @@ module.exports = function (stripOpts, pianoSocketOpts, socketio) {
                 
                 // Setting the color for the backend led-strip
                 stripOpts.lightOnColorOpts.rgba.red         = red
-                stripOpts.lightOnColorOpts.rgba.gren        = green
+                stripOpts.lightOnColorOpts.rgba.green       = green
                 stripOpts.lightOnColorOpts.rgba.blue        = blue
 
                 // Setting the color for the frontend liveColor-piano-feature
