@@ -53,6 +53,8 @@ usbDetect.on('add', (device) => {
     if(device.deviceName === "Digital_Piano") {
         console.log("Piano is connected!")
         console.log('Creating piano as midi-input device...')
+
+        // Put your midi-piano device-name which you got from the "yourPianoName.js"-script in here
         piano = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 24:0')
         pianoConnected = true
         
