@@ -4,4 +4,5 @@ console.log(pianoMidi.getInputs())
 pianoUsb.startMonitoring()
 pianoUsb.find((err, devices) => {
     console.log(devices)
+    pianoUsb.stopMonitoring()
 })
