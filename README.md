@@ -4,6 +4,9 @@
 ## About
 This is a selfmade project inspired by videos from pianist Rousseau on Youtube. With this project you can light up your piano just like rousseau and other people. This project is entirely written in Node.js and a bit of HTML. I take no warranties that the project works for you.
 
+## IMPORTANT NOTICE
+Please read the newest [changelog](.github/readme_files/UPDATES.md) (.github/readme_files/UPDATES.md) if you want to know more about the future of this project!
+
 ## General Information
 There are several Readme-Files for different purposes:
 - Are you a beginner and have no experience in Linux, NodeJS or whatsoever? Click on this [Beginner's-Guide](.github/readme_files/BEGINNER.md)
