@@ -28,7 +28,7 @@ const mainPianoSocket   = io.of('/mainPianoSocket')
 const cssKeyColorSocket = io.of('/cssKeyColorSocket')
 
 // Variable for later initialized piano-midi device
-let pianoMidi           = null
+let piano               = null
 // Handling if the piano is connected or not to reduce errors
 let pianoConnected      = false
 
@@ -53,12 +53,12 @@ usbDetect.on('add', (device) => {
     if(device.deviceName === "Digital_Piano") {
         console.log("Piano is connected!")
         console.log('Creating piano as midi-input device...')
-        pianoMidi = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 24:0')
+        piano = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 24:0')
         pianoConnected = true
         
         // The lights will only light up when the piano is connected and initialized as midi-device.
         if(pianoConnected === true) {
-            pianoMidi.on('noteon', (msg) => {
+            piano.on('noteon', (msg) => {
                 if(msg.velocity > 0 ) {
                     if(msg.note === msg.note) {
                         // setting the options for random color if freezeTime is set to 0 from before freeze will be deactivated
@@ -114,16 +114,16 @@ usbDetect.on('remove', (device) => {
     if(device.deviceName === "Digital_Piano") {
         console.log("Piano has been disconnected!")
         console.log('Removing piano as midi-device...')
-        pianoMidi.close()
+        piano.close()
     }
 })
 
 mainPianoSocket.on('connection', (socket) => {
     console.log('Client is connected!')
-})
 
-mainPianoSocket.on('diconnect', () => {
-    console.log('Client has been disconnected!')
+    socket.on('disconnect', () => {
+        console.log('Client has been disconnected!')
+    })
 })
 
 pianoServer.listen(colorAppConfig.server.port, colorAppConfig.server.ipPi) //"0.0.0.0" | "127.0.0.1" | colorAppConfig.server.ipPi
