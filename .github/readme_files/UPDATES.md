@@ -1,4 +1,37 @@
 # Updates
+
+## Version 3.2.1
+**Release Date: 09.01.2022**
+Greetings! This is a update to this project and a notice on why this project hasn't been updated in quite a while. But first I get to the little changes I made.
+
+### Added
+You can again turn on the piano and light up the color in its base color when no client is connected to the websites GUI. This was a major problem for me, because sometimes I wanted just the led to light up when I play without connecting my phone or pc to the website.
+
+You are also able to connect to the websites GUI and change different key-colors etc. when your piano is turned off. All features like a new color, freeze-mode or piano-live play will be enabled at the time you power on your piano.
+
+### Bugfixes
+
+- Fixed a bug where the app crashed when a client connected multiple times when the piano is powered off and turned back on again.
+- Fixed a bug where the app crashed when a client connected to the website and the piano was not connected.
+
+### Why this porject did not receive any Updates
+Now I want to talk about why this project didn't receive any updates until now and might not be updated in the future aswell. First I want to talk about the beginning of this project. It was a mere idea of a simple guy (me) who watched pianists on YouTube which had this *cool* and *amazing* feature on their pianos which light up their keys when they were playing the piano. With me in my JavaScript learning phase wanted to get this done too. So I made a plan how I could accomplish this. What started out as a simple idea has been turned out as a nice project I really do appreciate to have done. It has many features like changing the key and background-color, "freezing" keys for a selected time, creating random colors and display a live play on the website. This is way more of what I could have imagined at the beginning. I also worked on some features which, unfortunately, will never be published since they do not work as expected. Those features are i.e. when you press a key and let it go that the color fades out instead of disappearing or make a circling rainbow background-color that, when you press a key, shows always a different color, or splitting the led-keys at a given led-number so that the right side can be in a different color than the left side and more. But those things have also one thing in common: **The lack of my motiviation to keep going**.
+
+I never was the programming-guy. In fact I don't like writing much code or big applications like this one (yes for me this is a *big* application). I am, if any, more a script-guy which writes some lines of code for differents tasks. I used to to learn JavaScript. But nowadays I don't write any code in JavaScript anymore due to the lack of motiviation. I dropped it, because of several reasons like job change or simple motivation. Right now I do like writing code in python and maybe, just maybe, I try to re-write this project with python.
+
+#### Now what does that mean for this project? 
+**Does it get any more updates?**
+I don't know. I may want to code again more in JavaScript sometime, but not now and not in the following months. I may come back and write new features for it, but this is not guaranteed.
+
+**What about bug fixes?**
+If you have an issue you can open it, but please keep in mind due to the lack of motivation that I may not response in time or even response at all. If you found a bug I might dig into it, but I won't guarantee that I will do it. If I find a bug for myself and if it really annoys me, this might get changed. But please don't ask for quick fixes.
+
+**Will there be a video tutorial?**
+No. Last year I tried to do a decent video, but I wasn't happy with it since I am not confident in making videos. So please don't ask me if there will be a video on how to make this project work for you. You can read all informations in the README.md. But keep in mind, that this project was never intended to be public. That's the reason why this application might not work in your case.
+
+With that said I want to thank everyone which read or even marked this repository with a star. I am glad that you may somewhat appreciate my work!
+**If you want to further develop this project you can, of course, fork this project and work on it!**
+
 ## Version 3.2
 **Release Date: 31.12.2020**
 Just before new years eve there is a new update to make! In this version a new feature was added. It's called "Live-Piano". More Information below.

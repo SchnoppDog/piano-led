@@ -7,9 +7,11 @@ module.exports = {
     args: 'one two',
     instances: 1,
     autorestart: true,
-    watch: ["lib","routes"],
-    ignore_watch: ["node_modules"],
+    watch: ["lib/expModules","routes/bgColor","routes/colorPage","routes/colorShuffle","routes/customColor","routes/keyFreeze","routes/randColPerPress",
+            "routes/randomColor","routes/realTimePiano","routes/setColor"],
+    ignore_watch: ["../node_modules"],
     max_memory_restart: '1G',
+    restart_delay: 5000,
     env: {
       NODE_ENV: 'development'
     },

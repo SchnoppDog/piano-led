@@ -2,18 +2,20 @@
 <img src=".github/images/title_screen.jpg">
 
 ## About
-This is a selfmade project inspired by videos from pianist Rousseau on Youtube. With this project you can light up your piano just like rousseau and other people on youtube. This project is entirely written in Node.js and a bit of HTML. I take no warranties that the project works for you.
+This is a selfmade project inspired by videos from pianist Rousseau on Youtube. With this project you can light up your piano just like rousseau and other people. This project is entirely written in Node.js and a bit of HTML. I take no warranties that the project works for you.
+
+## IMPORTANT NOTICE
+Please read the newest [changelog](.github/readme_files/UPDATES.md) (.github/readme_files/UPDATES.md) if you want to know more about the future of this project!
 
 ## General Information
 There are several Readme-Files for different purposes:
 - Are you a beginner and have no experience in Linux, NodeJS or whatsoever? Click on this [Beginner's-Guide](.github/readme_files/BEGINNER.md)
 - You do have some knowledge about Linux and or NodeJs? Go to the normal [Installation-Guide](#installation) in this file.
-- You want to develop this program for yourself? I provide some starting hints in this [Developer-File](.github/readme_files/DEV.md)
 - If you're interested in recent Updates just follow this [Update-File](.github/readme_files/UPDATES.md)
 
 # Installation
 ## About
-This installation-guid will provide you with information for setting up your own led-piano. I take no warranty for any damage in this process, loss of data or that the project won't work for you. 
+This installation-guide will provide you with information for setting up your own led-piano. I take no warranty for any damage in this process, loss of data or that the project won't work for you. 
 
 ## What you need
 - A standard piano with 88 keys. Depending on what led-strip you will actually use you can have a piano with more or less keys.
@@ -34,7 +36,7 @@ I recommend using the official installation [tutorial](https://projects.raspberr
 ## On Raspbian
 If you booted into raspbian successfully you need to get some packages before starting. Some of these packages might be already installed on your system. Open up a terminal and type in following commands:
 ```
-sudo apt-get update
+sudo apt-get update && apt-get upgrade
 sudo apt install curl
 sudo apt-get install nodejs
 sudo apt-get install npm
@@ -56,14 +58,14 @@ Navigate into any directory you want to install this project. I recommend using 
 
 ## Updating variables
 ### Creating and Updating config.js
-Open the file called `mainConfig.txt`. Copy its contents and create a new file called `config.js` in folder `backend`. Paste the copied contents into `config.js`. Change `config.server.port` to `8080`. After that change `config.server.ipPi` to your pis ipv4-address. This should look like this example:
+Rename the file called `mainConfig.txt` to `config.js` in the `backend` directory. Open the `config.js` file and change `config.server.port` to `8080`. After that change `config.server.ipPi` to your pis ipv4-address. This should look like this example:
 ```
 config.server.ipPi = "192.168.0.0"
 ```
 **Important:** Quotation-marks need to be set!
 
 ### Piano-Variables
-User the file `yourPianoName.js` in folder `backend/lib/test` to list your piano-name and device-name. Simply type `node yourPianoName.js` into the terminal. The **first** output you get should be something like:
+User the file `yourPianoName.js` in folder `backend/lib/test` to list your piano-name and device-name. Change the directory to `backend/lib/test` and simply type `node yourPianoName.js` into the terminal. The **first** output you get should be something like:
 ```
 Midi Through:Midi Through Port-0 14:0,Digital Piano:Digital Piano MIDI 1 20:0
 ```
@@ -86,9 +88,34 @@ usbDetect.on('add',(device) => {
 ```
 Replace the `Digital_Piano` with your recently copied value. In this if-statemant you should also see this:
 ```
-const midiInput = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 20:0')
+piano = new pianoMidi.Input('Digital Piano:Digital Piano MIDI 1 24:0')
 ```
-Replace `Digital Piano:Digital Piano MIDI 1 20:0` with your stored value from step one. **After changing these files don't forget to save them!**
+Replace `Digital Piano:Digital Piano MIDI 1 20:0` with your stored value from step one.
+
+### Use http-server instead of https
+In my network I secured the website by using self-signed certificates, which **is not mandatory**. Chances are you don't have a valid certificate or a self-signed certificate for this applications web GUI. In order to make the application work you need to comment these code lines in `main.js` (should be near the top of the file): 
+
+```javascript
+const privKey           = fs.readFileSync('/usr/local/certs/keys/pianoled.local.pem')
+const pubKey            = fs.readFileSync('/usr/local/certs/pianoled.local.pem')
+```
+
+And:
+
+```javascript
+const pianoServer       = require('https').createServer({
+    key: privKey,
+    cert: pubKey
+}, colorApp)
+```
+
+Then un-comment the following code line:
+
+```javascript
+const pianoServer       = require('http').createServer(colorApp)
+```
+
+If you want to use this applications website GUI over ssl you can simply create self-signed certificates. You can find many tutorials in the web or just use the [README](.github/readme_files/Create_SSL_Certs.md) in `.github/readme_files/Create_SSL_Certs.md`. **After changing these files don't forget to save them!**
 
 ## Installing PM2
 Now you are nearly done! All you need is to put the `main.js`-file into startup using pm2. This is used to make sure your script is running even if the pi unexpectedly shuts down or needs to be restarted. To install pm2 simply navigate into the root-directory and type `sudo npm install pm2 -g`. After the installation navigate to `/backend` and run this command: `pm2 start ecosystem.config.js`. Your output should be like this:
