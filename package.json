@@ -12,7 +12,7 @@
     "color-convert": "^2.0.1",
     "dotstar": "^1.0.0",
     "easymidi": "^1.0.3",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "jsdoc": "^3.6.6",
     "morgan": "^1.9.1",
     "node-gyp": "^5.0.7",
